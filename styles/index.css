@@ -1,0 +1,82 @@
+.banner {
+    height: 12.5rem;
+    max-height: 200px;
+    width: 60%;
+    position: relative;
+}
+
+.banner-content {
+    position: absolute;
+    top: 50%; 
+    left: 60%;
+    transform: translate(-50%, -50%); 
+    text-align: left;
+    color: white;
+    padding: .5rem; 
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.star-icon {
+    content: url(../imgs/icons/star.png);
+    width: 14px;
+    height: 14px;
+    margin-right: .25rem;
+}
+
+.products {
+    width: 100%;
+}
+
+.products-line {
+    margin-bottom: 1.5rem;
+}
+
+.product {
+    border: 1px solid #EDEDED;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 15%;
+    height: 25%;
+}
+
+.product:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    transform: scale(1.05);
+    transition: all .3s;
+}
+
+.product img {
+    width: 70%;/*126px-174px*/
+    height: 60%;
+}
+
+.product-info {
+    color: #222222;
+    font-weight: 600;
+    display: grid;
+    row-gap: .5rem;
+    padding: .5rem 1rem;
+}
+
+.product-info p {
+    margin: 0;
+}
+
+.title {
+    width: 80%;
+    margin: 0 auto;
+}
+
+p.title1 {
+    color: #666666;
+    margin: 0;
+    border-bottom: 3px solid #008ECC;
+    padding-bottom: .5rem;
+    width: 20%;
+}
+
+main {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}

@@ -1,0 +1,33 @@
+body {
+    background-color: #F2F4F5;
+}
+
+main {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.form-wrapper {
+    max-width: 30%;
+    border-radius: 4px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.login-option-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.5rem;
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.login-option-item.selected {
+    border-bottom: 4px solid #008ECC;
+}
+
+form button {
+    text-transform: uppercase;
+    margin: .5rem auto;
+}

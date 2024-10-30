@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 .bg-primary{
     background-color:#1FB5D4!important;
 }
@@ -53,6 +57,7 @@ a, a:hover {
     padding: .5rem;
     max-width: 50%;
     margin: 0 .5rem;
+    transition: all ease-in-out .3s;
 }
 
 .tab-selected {

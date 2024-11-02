@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech house</title>
+
+    <link rel="stylesheet" href="./styles/index.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+</head>
+
+<body>
+    <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
+    <!-- dont change code here -->
+
+    <!-- side bar -->
+    <div id="sidebar">
+        <div id="logo">
+            Tech House
+        </div>
+        <a href="#" class="nav-active">
+            <div>
+                <span>
+                    About
+                </span>
+            </div>
+        </a>
+        <a href="#">
+            <div>
+                <span>
+                    About
+                </span>
+            </div>
+        </a>
+        <a href="#">
+            <div>
+                <span>
+                    About
+                </span>
+            </div>
+        </a>
+
+    </div>
+
+
+    <!-- header -->
+    <div id="header">
+        <div id="search_bar">
+            <svg id="head_search_icon" width="17" height="17" viewBox="0 0 17 17" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <g opacity="0.5">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M9.69341 12.535C12.4232 11.3748 13.6957 8.22136 12.5356 5.49152C11.3754 2.76168 8.22196 1.4892 5.49212 2.64936C2.76229 3.80951 1.48981 6.96297 2.64996 9.69281C3.81011 12.4226 6.96357 13.6951 9.69341 12.535Z"
+                        stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M11.3901 11.3896L15.5555 15.5556" stroke="black" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </g>
+            </svg>
+            <input type="text" id="header_search_input" placeholder="Tìm kiếm...">
+        </div>
+
+        <div id="right_section">
+            <div id="notification_utility" class="dropdown">
+                <button class="btn dropdown-bs-toggle p-1" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <img id="notification_icon" src="./imgs/icons/notification-icon.png" alt="Notification utility">
+                </button>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Noti 1</a></li>
+                    <li><a class="dropdown-item" href="#">Noti 1</a></li>
+                    <li><a class="dropdown-item" href="#">Noti 1</a></li>
+                </ul>
+            </div>
+
+
+            <div id="language">
+                <img src="./imgs/icons/vietnam-lang.png" alt="English flag">
+
+                <div class="dropdown">
+                    <button class="btn dropdown-bs-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Tiếng Việt
+                        <i class='fas fa-angle-down' style='font-size:18px'></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Tiếng Anh</a></li>
+                        <li><a class="dropdown-item" href="#">Tiếng Nhật</a></li>
+                        <li><a class="dropdown-item" href="#">Tiếng Trung</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="profile">
+                <div id="profile_account">
+                    <img id="profile_avatar" src="./imgs/avartar/avatar.png" alt="avartar">
+                    <div id="profile_text">
+                        <div id="profile_name">Dung Bui</div>
+                        <div id="profile_role">Admin</div>
+                    </div>
+                </div>
+
+                <div id="profile_dropdown" class="dropdown">
+                    <a class="btn dropdown-bs-toggle p-0 rounded-circle" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg width="30" height="30" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M10 19.1C15.0258 19.1 19.1 15.0258 19.1 10C19.1 4.97421 15.0258 0.9 10 0.9C4.97421 0.9 0.9 4.97421 0.9 10C0.9 15.0258 4.97421 19.1 10 19.1Z"
+                                stroke="#5C5C5C" stroke-width="0.2" />
+                            <path
+                                d="M10 10.7929L7.73162 8.14645C7.56425 7.95118 7.29289 7.95118 7.12553 8.14645C6.95816 8.34171 6.95816 8.65829 7.12553 8.85355L9.69695 11.8536C9.86432 12.0488 10.1357 12.0488 10.303 11.8536L12.8745 8.85355C13.0418 8.65829 13.0418 8.34171 12.8745 8.14645C12.7071 7.95118 12.4358 7.95118 12.2684 8.14645L10 10.7929Z"
+                                fill="#565656" />
+                            <mask id="mask0_62_4256" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="8"
+                                width="6" height="4">
+                                <path
+                                    d="M10 10.7929L7.73162 8.14645C7.56425 7.95118 7.29289 7.95118 7.12553 8.14645C6.95816 8.34171 6.95816 8.65829 7.12553 8.85355L9.69695 11.8536C9.86432 12.0488 10.1357 12.0488 10.303 11.8536L12.8745 8.85355C13.0418 8.65829 13.0418 8.34171 12.8745 8.14645C12.7071 7.95118 12.4358 7.95118 12.2684 8.14645L10 10.7929Z"
+                                    fill="white" />
+                            </mask>
+                            <g mask="url(#mask0_62_4256)">
+                            </g>
+                        </svg>
+
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- end -->
+    <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
+
+    <!-- body content -->
+    <!-- add code here -->
+    <div id="body_section">
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
+        <!-- TODO -->
+        <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
+
+        <div id="content_wrapper">
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+            <p>
+                OPPO A18 - một trong những sản phẩm điện thoại giá rẻ được OPPO giới thiệu tại thị trường Việt Nam
+                trong
+                những tháng cuối năm 2023. Thiết kế của máy vẫn giữ nguyên phong cách quen thuộc như các sản phẩm
+                điện
+                thoại OPPO A, đi kèm với đó là một màn hình sắc nét cùng một hiệu năng ổn định.
+                Thiết kế trẻ trung bật tung cá tính
+                Khi cầm trên tay OPPO A18, điều thu hút mình đầu tiên chính là thiết kế vuông vức quen thuộc của
+                dòng
+                điện thoại OPPO A. Sự tinh tế và độc đáo trong hình dáng của máy đã tạo ra một ấn tượng mạnh mẽ từ
+                cái
+                nhìn đầu tiên.
+
+                Mặt lưng được làm từ thủy tinh hữu cơ, không chỉ mang lại vẻ đẹp và sự bền bỉ theo thời gian, nó còn
+                tạo
+                cảm giác sang trọng và cao cấp khi cầm nắm.
+            </p>
+        </div>
+
+
+        <!-- Dont have footer! -->
+        <div id="footer"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

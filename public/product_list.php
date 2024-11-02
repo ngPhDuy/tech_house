@@ -1,3 +1,31 @@
+<?php
+session_start();
+
+$conn = new mysqli("localhost", "root", "", "tech_house_db");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if (isset($_GET['product_type'])) {
+    $product_type = $_GET['product_type'];
+    $sql = "SELECT * FROM san_pham WHERE phan_loai = $product_type";
+} else {
+    $product_type = -1;
+    $sql = "SELECT * FROM san_pham";
+}
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $products = [];
+    while ($row = $result->fetch_assoc()) {
+        $products[] = $row;
+    }
+} else {
+    echo "0 results";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,30 +34,76 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="../styles/custom.css" rel="stylesheet">
     <link href="../styles/product_list.css" rel="stylesheet">
-    <title>Các sản phẩm</title>
+    <title>
+        <?php
+        switch ($product_type) {
+            case 0:
+                echo "Danh sách laptop";
+                break;
+            case 1:
+                echo "Danh sách điện thoại";
+                break;
+            case 2:
+                echo "Danh sách tablet";
+                break;
+            case 3:
+                echo "Danh sách tai nghe";
+                break;
+            case 4:
+                echo "Danh sách bàn phím";
+                break;
+            case 5:
+                echo "Danh sách sạc dự phòng";
+                break;
+            case 6:
+                echo "Danh sách bao da, ốp lưng";
+                break;
+            default:
+                echo "Danh sách sản phẩm";
+                break;
+        }
+        ?>
+    </title>
 </head>
 <body>
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-3 text-white d-flex justify-content-center align-items-center">
-                    <a href="../index.html" class="text-white">
+                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="../index.php" class="text-white">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm...">
+                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
                 </div>
-                <div class="login-cart col-3 d-flex align-items-center justify-content-evenly">
+                <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
-                        <a href="./login.html" class="fw-bold text-white"> 
-                            <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                            Đăng nhập
-                        </a>
+                        <?php
+                        if (isset($_SESSION['ten_dang_nhap'])) {
+                            echo 
+                            '<a href="./member/profile.html" class="fw-bold text-white">
+                                <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
+                                '.$_SESSION['ho_ten'].'</a>';
+                            echo '
+                            <div class="dropdown-content">
+                                <div><a href="./member/profile.html">Thông tin cá nhân</a></div>
+                                <div><a href="./member/change_password.html">Đổi mật khẩu</a></div>
+                                <div><a href="./member/order_history.html">Lịch sử mua hàng</a></div>
+                                <div><a href="./member/logout.php">Đăng xuất</a></div>
+                            </div>';
+                        } else {
+                            echo 
+                            '<a href="./login.php" class="fw-bold text-white">
+                                <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
+                                Đăng nhập
+                            </a>';
+                        }
+                        ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="./cart.html" class="fw-bold text-white">
+                        <a href="#" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -38,40 +112,40 @@
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="../index.html">
+                    <a href="./product_list.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="#">
+                    <a href="./product_list.php?product_type=1">
                         <img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
                         Điện thoại
                     </a>
                 </div>  
-                <div class="tab tab-selected col">
-                    <a href="#">
+                <div class="tab col">
+                    <a href="./product_list.php?product_type=0">
                         <img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
                         Laptop
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="#">
+                    <a href="./product_list.php?product_type=2">
                         <img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
                         Tablet
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="#">
+                    <a href="./product_list.php?product_type=3">
                         <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">
                         Phụ kiện
                         <img src="../imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
                     </a>
                     <div class="dropdown-content">
-                        <div><a href="#">Tai nghe</a></div>
-                        <div><a href="#">Bàn phím</a></div>
-                        <div><a href="#">Sạc dự phòng</a></div>
-                        <div><a href="#">Bao da</a></div>
+                        <div><a href="./product_list.php?product_type=3">Tai nghe</a></div>
+                        <div><a href="./product_list.php?product_type=4">Bàn phím</a></div>
+                        <div><a href="./product_list.php?product_type=5">Sạc dự phòng</a></div>
+                        <div><a href="./product_list.php?product_type=6">Ốp lưng</a></div>
                     </div>
                 </div>
                 <div class="col-4"></div>
@@ -97,145 +171,29 @@
                     </div>
                 </div>
                 <div class="result-count d-flex justify-content-end">
-                    <p class="m-0">Đã tìm thấy <span class="fw-bold">12</span> kết quả</p>
+                    <p class="m-0">Đã tìm thấy <span class="fw-bold">
+                        <?php echo count($products); ?>
+                    </span> kết quả</p>
                 </div>
                 <div class="product-list">
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
-                    <a class="product bg-white py-2" href="#">
-                        <img class="product-img d-block mx-auto" src="../imgs/products/apple_macbook_pro_m1.png" alt="apple macbook pro m1" width="80%" height="50%">
-                        <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
-                            <p class="m-0">Apple Macbook Pro M1</p>
-                            <p class="m-0">30.000.000đ</p>
-                            <p class="m-0"><span class="star-icon"></span>5.0</p>
-                        </div>
-                    </a>
+                    <?php
+                    foreach ($products as $product) {
+                        echo 
+                        '<a class="product bg-white py-2" 
+                        href="./product_detail.php?product_id='.$product['ma_sp'].'"
+                        price="'.($product['gia_thanh'] * (1 - $product['sale_off'])).'" 
+                        name="'.$product['ten_sp'].'" brand="'.strtolower($product['thuong_hieu']).'">
+                            <img class="product-img d-block mx-auto" 
+                            src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'" 
+                            width="80%" height="50%">
+                            <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
+                                <p class="m-0">'.$product['ten_sp'].'</p>
+                                <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])) .'đ</p>
+                                <p class="m-0"><span class="star-icon"></span>5.0</p>
+                            </div>
+                        </a>';
+                    }
+                    ?>
                 </div>
                 <div class="pagination mt-3 d-none">
                     <div class="page-numbers d-flex justify-content-center gap-2">
@@ -330,9 +288,9 @@
                             <label for="sony">Sony</label>
                         </div>
                         <div class="brand">
-                            <input type="checkbox" name="brand" id="huawai">
-                            <label for="huawai">Huawai</label>
-                        </div> 
+                            <input type="checkbox" name="brand" id="huawei">
+                            <label for="huawai">Huawei</label>
+                        </div>
                     </div>
                 </div>
                 <div class="price-filter col-6">
@@ -376,38 +334,86 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
     let brandsFilter = [];
     let priceFilter;
-    const filterWrapper = document.querySelector('.filter-wrapper');
-    const filterModalWrapper = document.querySelector('.filter-modal-wrapper');
     const filterModal = document.querySelector('.filter-modal');
-    const filterModalContent = document.querySelector('.filter-modal-content');
-    const filterModalFooter = document.querySelector('.filter-modal-footer');
-    const filterModalBrands = document.querySelector('.brands');
-    const filterModalPrices = document.querySelector('.prices');
-    const filterModalBrandsInputs = document.querySelectorAll('.brand input');
-    const filterModalPricesInputs = document.querySelectorAll('.price input');
-    const filterModalBrandsLabels = document.querySelectorAll('.brand label');
-    const filterModalPricesLabels = document.querySelectorAll('.price label');
 
-    filterWrapper.addEventListener('click', () => {
-        filterModalWrapper.classList.toggle('d-none');
+    const paginationLength = 3; 
+    const productsPerPage = 15;
+    let products = document.querySelectorAll('.product');
+    let oldProducts = products;
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = document.querySelector('.page-numbers');
+    let currentPage = 1;
+
+    $('.filter-wrapper').click((e) => {
+        e.preventDefault();
+        $('.filter-modal-wrapper').removeClass('d-none');
     });
 
-    filterModalWrapper.addEventListener('click', (e) => {
+    $('.filter-modal-footer button').click((e) => {
+        e.preventDefault();
+        $('.filter-modal-wrapper').addClass('d-none');
+
+        brandsFilter = [];
+        $('.brand input:checked').each((index, brand) => {
+            brandsFilter.push($(brand).attr('id'));
+        });
+
+        priceFilter = $('.price input:checked').attr('id');
+
+        console.log(brandsFilter, priceFilter);
+
+        products = Array.from(oldProducts);
+        if (brandsFilter.length > 0) {
+            products = products.filter(product => {
+                return brandsFilter.includes($(product).attr('brand'));
+            });
+        } 
+
+        if (priceFilter) {
+            products = products.filter(product => {
+                const price = +$(product).attr('price');
+                switch (priceFilter) {
+                    case '0-10':
+                        return price >= 0 && price <= 10000000;
+                    case '10-20':
+                        return price >= 10000000 && price <= 20000000;
+                    case '20-30':
+                        return price >= 20000000 && price <= 30000000;
+                    case '30-40':
+                        return price >= 30000000 && price <= 40000000;
+                    case '40-50':
+                        return price >= 40000000 && price <= 50000000;
+                    case '50+':
+                        return price >= 50000000;
+                    default:
+                        return true;
+                }
+            });
+        }
+
+        $('.product-list').empty();
+
+        products.forEach(product => {
+            $('.product-list').append(product);
+        });
+
+        currentPage = 1;
+        displayProducts();
+        updatePagination();
+    });
+
+    $('.filter-modal-wrapper').click((e) => {
+        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
         if (e.target === filterModalWrapper) {
             filterModalWrapper.classList.add('d-none');
         }
     });
 
     //Pagination
-    const paginationLength = 3; 
-    const productsPerPage = 15;
-    const products = document.querySelectorAll('.product');
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelector('.page-numbers');
-    let currentPage = 1;
 
     function displayProducts() {
         console.log(currentPage);
@@ -466,7 +472,47 @@
         pagination.classList.remove('d-none');
     }
 
+    $('#sort').change(() => {
+        const sortType = $('#sort').val();
+        products = Array.from(oldProducts);
+        switch (sortType) {
+            case 'price-asc':
+                products.sort((a, b) => {
+                    return +$(a).attr('price') - +$(b).attr('price');
+                });
+                break;
+            case 'price-desc':
+                products.sort((a, b) => {
+                    return +$(b).attr('price') - +$(a).attr('price');
+                });
+                break;
+            case 'name-asc':
+                products.sort((a, b) => {
+                    return $(a).attr('name').localeCompare($(b).attr('name'));
+                });
+                break;
+            case 'name-desc':
+                products.sort((a, b) => {
+                    return $(b).attr('name').localeCompare($(a).attr('name'));
+                });
+                break;
+            default:
+                products = oldProducts;
+                break;
+        }
+        $('.product-list').empty();
+        products.forEach(product => {
+            $('.product-list').append(product);
+        });
+        currentPage = 1;
+        displayProducts();
+        updatePagination();
+    });
+
     displayProducts();
     updatePagination();
 </script>
 </html>
+<?php
+$conn->close();
+?>

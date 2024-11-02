@@ -1,3 +1,54 @@
+<?php
+session_start();
+
+if (isset($_SESSION['ten_dang_nhap'])) {
+    header("Location: ../index.php");
+    return;
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $conn = new mysqli("localhost", "root", "", "tech_house_db");
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $stmt = $conn->prepare("SELECT * FROM tai_khoan WHERE ten_dang_nhap = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $verify = password_verify($password, $row['mat_khau']);
+
+        if (!$verify) {
+            echo "Đăng nhập thất bại";
+            $conn->close();
+            exit();
+        }
+
+        $_SESSION['ten_dang_nhap'] = $row['ten_dang_nhap'];
+        $tempArr = explode(" ", $row['ho_va_ten']);
+        $_SESSION['ho_ten'] = $tempArr[count($tempArr) - 2] . " " . $tempArr[count($tempArr) - 1];
+        $_SESSION['phan_loai_tk'] = $row['phan_loai_tk'];
+
+        if ($_SESSION['phan_loai_tk'] == "nv") {
+            echo "../admin/index.php";
+        } else {
+            echo "../index.php";
+        }
+    } else {
+        echo "Tài khoản không tồn tại";
+    }
+
+    $conn->close();
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,24 +63,41 @@
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-3 text-white d-flex justify-content-center align-items-center">
-                    <a href="../index.html" class="text-white">
+                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="../index.php" class="text-white">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm...">
+                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
                 </div>
-                <div class="login-cart col-3 d-flex align-items-center justify-content-evenly">
+                <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
-                        <a href="./login.html" class="fw-bold text-white"> 
-                            <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                            Đăng nhập
-                        </a>
+                        <?php
+                        if (isset($_SESSION['ten_dang_nhap'])) {
+                            echo 
+                            '<a href="./member/profile.html" class="fw-bold text-white">
+                                <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
+                                '.$_SESSION['ho_ten'].'</a>';
+                            echo '
+                            <div class="dropdown-content">
+                                <div><a href="./member/profile.html">Thông tin cá nhân</a></div>
+                                <div><a href="./member/change_password.html">Đổi mật khẩu</a></div>
+                                <div><a href="./member/order_history.html">Lịch sử mua hàng</a></div>
+                                <div><a href="./member/logout.php">Đăng xuất</a></div>
+                            </div>';
+                        } else {
+                            echo 
+                            '<a href="./login.php" class="fw-bold text-white">
+                                <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
+                                Đăng nhập
+                            </a>';
+                        }
+                        ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="./cart.html" class="fw-bold text-white">
+                        <a href="#" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -37,41 +105,41 @@
                 </div>
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
-                <div class="tab tab-selected col">
-                    <a href="../index.html">
-                        <img src="../imgs/icons/house_white.png" alt="home" width="24" height="24">
+                <div class="tab col">
+                    <a href="./product_list.php">
+                        <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="#">
+                    <a href="./product_list.php?product_type=1">
                         <img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
                         Điện thoại
                     </a>
                 </div>  
                 <div class="tab col">
-                    <a href="#">
+                    <a href="./product_list.php?product_type=0">
                         <img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
                         Laptop
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="#">
+                    <a href="./product_list.php?product_type=2">
                         <img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
                         Tablet
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="#">
+                    <a href="./product_list.php?product_type=3">
                         <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">
                         Phụ kiện
                         <img src="../imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
                     </a>
                     <div class="dropdown-content">
-                        <div><a href="#">Tai nghe</a></div>
-                        <div><a href="#">Bàn phím</a></div>
-                        <div><a href="#">Sạc dự phòng</a></div>
-                        <div><a href="#">Bao da</a></div>
+                        <div><a href="./product_list.php?product_type=3">Tai nghe</a></div>
+                        <div><a href="./product_list.php?product_type=4">Bàn phím</a></div>
+                        <div><a href="./product_list.php?product_type=5">Sạc dự phòng</a></div>
+                        <div><a href="./product_list.php?product_type=6">Ốp lưng</a></div>
                     </div>
                 </div>
                 <div class="col-4"></div>
@@ -81,12 +149,12 @@
             <div class="form-wrapper container bg-white">
                 <div class="row">
                             <div class="login-option-item col selected">
-                                <a href="./login.html" class="login-option-item-link fw-normal fs-5">
+                                <a href="./login.php" class="login-option-item-link fw-normal fs-5">
                                     Đăng nhập
                                 </a>
                             </div>
                             <div class="login-option-item col">
-                                <a href="./register.html" class="login-option-item-link fw-normal fs-5"">
+                                <a href="./register.php" class="login-option-item-link fw-normal fs-5"">
                                     Đăng ký
                                 </a>
                             </div>
@@ -161,7 +229,68 @@
                 <p class="text-center m-0">© 2024 Tech House. All rights reserved.</p>
             </div>
         </footer>
+        <div class="modal" tabindex="-1" id="message-modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h5 class="modal-title"></h5>
+                    </div>
+                    <div class="modal-body text-center text-dark">
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    $("form button").click(function(e) {
+        e.preventDefault();
+
+        let username = $("input[name='username']").val();
+        let password = $("input[name='password']").val();
+
+        console.log(username);
+        console.log(password);
+        if (username == "" || password == "") {
+            $("#message-modal .modal-title").text("Đăng nhập thất bại");
+            $("#message-modal .modal-body p").text("Vui lòng nhập đầy đủ thông tin");
+            $("#message-modal").css("color", "red");
+            $("#message-modal").modal("show");
+        } else {
+            $.ajax({
+                url: "./login.php",
+                type: "POST",
+                data: {
+                    username: username,
+                    password: password
+                },
+                success: function(data) {
+                    if (data === "Đăng nhập thất bại") {
+                        $("#message-modal .modal-title").text("Đăng nhập thất bại");
+                        $("#message-modal .modal-body p").text("Tên đăng nhập hoặc mật khẩu không đúng");
+                        $("#message-modal").css("color", "red");
+                        $("#message-modal").modal("show");
+                    } else if (data === "Tài khoản không tồn tại") {
+                        $("#message-modal .modal-title").text("Đăng nhập thất bại");
+                        $("#message-modal .modal-body p").text("Tài khoản không tồn tại");
+                        $("#message-modal").css("color", "red");
+                        $("#message-modal").modal("show");
+                    } else {
+                        $("#message-modal .modal-title").text("Đăng nhập thành công");
+                        $("#message-modal .modal-body p").text("Đang chuyển hướng...");
+                        $("#message-modal").css("color", "green");
+                        $("#message-modal").modal("show");
+                        console.log(data);
+                        setTimeout(function() {
+                            window.location.href = data;
+                        }, 1000);
+                    }
+                }
+            });
+        }
+    });
+</script>
 </html>

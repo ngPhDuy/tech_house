@@ -1,5 +1,9 @@
+.product-preview {
+    height: fit-content;
+}
+
 .product-preview img {
-    width: 50%;
+    width: 70%;
     height: 50%;
     display: block;
     margin: 0 auto;
@@ -73,6 +77,11 @@ input[type="radio"]:checked + .color {
     height: 33px;
     padding: 0.25rem;
     cursor: pointer;
+    border: 2px solid #B1B5B8;
+}
+
+.color.black {
+    background-color: #191C1F;
 }
 
 .color.gray {
@@ -83,12 +92,41 @@ input[type="radio"]:checked + .color {
     background-color: #E0E1E1;
 }
 
+.color.blue {
+    background-color: #2DA5F3;
+}
+
+.color.red {
+    background-color: #E74C3C;
+}
+
+.color.green {
+    background-color: #2ECC71;
+}
+
+.color.pink {
+    background-color: #E91E63;
+}
+
+.color.purple {
+    background-color: #9C27B0;
+}
+
+.color.gold {
+    background-color: #FFD700;
+}
+
+.color.silver {
+    background-color: #C0C0C0;
+}
+
 select {
     cursor: pointer;
 }
 
 .quantity-wrapper {
     max-width: 120px;
+    width: 100%;
     border: 2px solid #E4E7E9;
     border-radius: .25rem;
 }
@@ -122,6 +160,7 @@ select {
 .product-information {
     border: 2px solid #E4E7E9;
     border-radius: 4px;
+    height: fit-content;
 }
 
 .product-info-tab {
@@ -137,6 +176,7 @@ select {
     width: 80%;
     margin: 0 auto;
     line-height: 1.5;
+    text-align: justify;
 }
 
 .products-suggestion .content .price {
@@ -160,6 +200,19 @@ a.product {
 a.product:hover {
     border: 2px solid #1FB5D4;
     transform: translateY(-5px);
+}
+
+a.product p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+a.product p:first-child {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
 }
 
 .product img {
@@ -224,4 +277,16 @@ a.product:hover {
     content: url("../imgs/icons/star_in_detail_page.png");
     width: 15px;
     height: 15px;
+}
+/*-----Responsive-----*/
+@media screen and (max-width: 768px) {
+    .buttons {
+        flex-direction: column !important;
+
+    }
+
+    .quantity-wrapper {
+        width: 100%;
+        max-width: none;
+    }
 }

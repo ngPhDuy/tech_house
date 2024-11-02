@@ -28,6 +28,12 @@ html {
     outline: none;
 }
 
+.btn-primary:disabled {
+    background-color: #D9D9D9 !important;
+    color: #000000 !important;
+    cursor: not-allowed !important;
+}
+
 .border-primary{border-color:#008ECC!important}
 
 a, a:hover {
@@ -70,6 +76,10 @@ a, a:hover {
     color: #222222;
 }
 
+.tabs {
+    text-wrap: nowrap;
+}
+
 .tabs a {
     display: flex;
     justify-content: center;
@@ -80,6 +90,15 @@ a, a:hover {
 
 header {
     border-bottom: 2px solid #D9D9D9;
+}
+
+.login-cart > div {
+    transition: all ease-in-out .3s;
+}
+
+.login-cart > div:hover {
+    /* color: #dbdbdb; */
+    scale: 1.1;
 }
 
 /*---------footer---------*/
@@ -126,5 +145,13 @@ header {
 }
 
 .tab:hover .dropdown-content {
+    display: block; 
+}
+
+.login:hover {
+    z-index: 1000;
+}
+
+.login:hover .dropdown-content {
     display: block; 
 }

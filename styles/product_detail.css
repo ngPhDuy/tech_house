@@ -35,6 +35,12 @@
     gap: .5rem;
 }
 
+.no-rate {
+    color: gray;
+    font-style: italic;
+    font-weight: lighter;
+}
+
 .stars {
     font-size: .75rem;
 }

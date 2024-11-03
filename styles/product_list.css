@@ -85,6 +85,11 @@
     transition: all ease-in-out .3s;
 }
 
+.no-rate {
+    color: gray;
+    font-style: italic;
+}
+
 .page-number.arrow {
     border: 2px solid #008ECC;
     color: #008ECC;

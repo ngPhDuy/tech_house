@@ -121,7 +121,9 @@ if ($conn->connect_error) {
                     </div>
                     <div class="line d-flex justify-content-center gap-3 p-4">
                         <?php
-                        $sql = "SELECT * FROM san_pham WHERE phan_loai = 1 LIMIT 5";
+                        $sql = "select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
+                        from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
+                        where p.phan_loai = 1 group by p.ma_sp LIMIT 5";
                         $result = $conn->query($sql);
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
@@ -130,9 +132,13 @@ if ($conn->connect_error) {
                                     <img class="product-img d-block mx-auto" src="'.$row['hinh_anh'].'" alt="'.$row['ten_sp'].'" width="50px" height="50px">
                                     <div class="product-info">
                                         <p>'.$row['ten_sp'].'</p>
-                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>
-                                        <p><span class="star-icon"></span>5.0</p>
-                                    </div>
+                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>';
+                                if ($row['so_luong_danh_gia'] == 0) {
+                                    echo '<p class="no-rate">Chưa có đánh giá</p>';
+                                } else {
+                                    echo '<p><span class="star-icon"></span>'.round($row['diem_trung_binh'], 1).'</p>';
+                                }
+                                echo '</div>
                                 </a>';
                             }
                         }
@@ -148,7 +154,9 @@ if ($conn->connect_error) {
                     </div>
                     <div class="line d-flex justify-content-center gap-3 p-4">
                     <?php
-                        $sql = "SELECT * FROM san_pham WHERE phan_loai = 0 LIMIT 5";
+                        $sql = "select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
+                        from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
+                        where p.phan_loai = 0 group by p.ma_sp LIMIT 5";
                         $result = $conn->query($sql);
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
@@ -157,9 +165,13 @@ if ($conn->connect_error) {
                                     <img class="product-img d-block mx-auto" src="'.$row['hinh_anh'].'" alt="'.$row['ten_sp'].'" width="50px" height="50px">
                                     <div class="product-info">
                                         <p>'.$row['ten_sp'].'</p>
-                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>
-                                        <p><span class="star-icon"></span>5.0</p>
-                                    </div>
+                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>';
+                                if ($row['so_luong_danh_gia'] == 0) {
+                                    echo '<p class="no-rate">Chưa có đánh giá</p>';
+                                } else {
+                                    echo '<p><span class="star-icon"></span>'.round($row['diem_trung_binh'], 1).'</p>';
+                                }
+                                echo '</div>
                                 </a>';
                             }
                         }
@@ -175,7 +187,9 @@ if ($conn->connect_error) {
                     </div>
                     <div class="line d-flex justify-content-center gap-3 p-4">
                     <?php
-                        $sql = "SELECT * FROM san_pham WHERE phan_loai = 2 LIMIT 5";
+                        $sql = "select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
+                        from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
+                        where p.phan_loai = 2 group by p.ma_sp LIMIT 5";
                         $result = $conn->query($sql);
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
@@ -184,9 +198,13 @@ if ($conn->connect_error) {
                                     <img class="product-img d-block mx-auto" src="'.$row['hinh_anh'].'" alt="'.$row['ten_sp'].'" width="50px" height="50px">
                                     <div class="product-info">
                                         <p>'.$row['ten_sp'].'</p>
-                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>
-                                        <p><span class="star-icon"></span>5.0</p>
-                                    </div>
+                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>';
+                                if ($row['so_luong_danh_gia'] == 0) {
+                                    echo '<p class="no-rate">Chưa có đánh giá</p>';
+                                } else {
+                                    echo '<p><span class="star-icon"></span>'.round($row['diem_trung_binh'], 1).'</p>';
+                                }
+                                echo '</div>
                                 </a>';
                             }
                         }

@@ -180,7 +180,7 @@ create table Gio_hang (
 );
 
 create table Danh_gia (
-    thoi_diem_danh_gia date not null,
+    thoi_diem_danh_gia datetime not null,
     thanh_vien varchar(25),
     ma_sp int,
     diem_danh_gia int not null,
@@ -408,5 +408,17 @@ create procedure Tim_laptop_theo_mau_ma (
 
     select * from San_pham join Laptop on San_pham.ma_sp = Laptop.ma_sp 
     where ten_sp like concat(mau_ma_sp, '%');
+end//
+
+create procedure Them_vao_gio_hang (
+    in p_thanh_vien varchar(25),
+    in p_ma_sp int,
+    in p_so_luong int
+) begin
+    if exists (select * from Gio_hang where thanh_vien = p_thanh_vien and ma_sp = p_ma_sp) then
+        update Gio_hang set so_luong = so_luong + p_so_luong where thanh_vien = p_thanh_vien and ma_sp = p_ma_sp;
+    else
+        insert into Gio_hang values (p_thanh_vien, p_ma_sp, p_so_luong);
+    end if;
 end//
 delimiter ;

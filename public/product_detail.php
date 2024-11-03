@@ -120,7 +120,7 @@ $product = $result->fetch_assoc();
                 <div class="col-4"></div>
             </div>
         </header>
-        <main class="p-3">
+        <main class="p-3" product-id="<?php echo $product_id?>" product-type="<?php echo $product['phan_loai']?>">
             <div class="main-wrapper px-5">
                 <div class="product-detail-wrapper row">
                     <div class="product-preview col-6">
@@ -156,8 +156,32 @@ $product = $result->fetch_assoc();
                         </div>
                     </div>
                     <div class="product-detail col-6 d-flex flex-column gap-3">
+                        <?php
+                        $stmt = $conn->prepare("select count(*) as so_luong_danh_gia, avg(diem_danh_gia) as diem_danh_gia from Danh_gia where ma_sp = ? group by ma_sp");
+                        $stmt->bind_param("i", $product_id);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        $rate = $result->fetch_assoc();
+                        $stmt->close();
+                        $conn->next_result();
+                        ?>
                         <div class="product-content">
-                            <a href="#product-information" class="stars d-flex gap-0">
+                            <?php
+                            if ($rate && $rate['so_luong_danh_gia'] > 0) {
+                                echo '<a href="#product-information" class="stars d-flex gap-0">';
+                                for ($i = 0; $i < round($rate['diem_danh_gia']); $i++) {
+                                    echo '<span class="star-icon"></span>';
+                                }
+                                echo '<p class="rate m-0 fw-bold ms-2">'.round($rate['diem_danh_gia'], 1).' đánh giá</p>';
+                                echo '<p class="rate-count m-0 fw-light ms-2">('.$rate['so_luong_danh_gia'].' đánh giá)</p>';
+                                echo '</a>';
+                            } else {
+                                echo '<a href="#product-information" class="stars d-flex gap-0">';
+                                echo '<p class="rate m-0 fw-bold ms-2 no-rate">Chưa có đánh giá</p>';
+                                echo '</a>';
+                            }
+                            ?>
+                            <!-- <a href="#product-information" class="stars d-flex gap-0">
                                 <span class="star-icon"></span>
                                 <span class="star-icon"></span>
                                 <span class="star-icon"></span>
@@ -165,8 +189,8 @@ $product = $result->fetch_assoc();
                                 <span class="star-icon"></span>
                                 <p class="rate m-0 fw-bold ms-2">4.7 đánh giá</p>
                                 <p class="rate-count m-0 fw-light ms-2">(21,671 đánh giá)</p>
-                            </a>
-                            <p class="product-name m-0 fs-5">
+                            </a> -->
+                            <p class="product-name m-0 fs-5" id="product-name">
                                 <?php echo $product['ten_sp']; ?>
                             </p>
                         </div>
@@ -232,6 +256,23 @@ $product = $result->fetch_assoc();
                             }
                             $stmt->close();
                             $conn->next_result();
+                        } else if ($product['phan_loai'] == 0) {
+                            $stmt = $conn->prepare("call Tim_laptop_theo_mau_ma(?)");
+                            $stmt->bind_param("s", $product['ten_sp']);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $rams = [];
+                            $memorys = [];
+                            while ($row = $result->fetch_assoc()) {
+                                if (!in_array($row['ram'], $rams)) {
+                                    array_push($rams, $row['ram']);
+                                }
+                                if (!in_array($row['bo_nho'], $memorys)) {
+                                    array_push($memorys, $row['bo_nho']);
+                                }
+                            }
+                            $stmt->close();
+                            $conn->next_result();
                         }
                         ?>
                         <div class="form">
@@ -239,7 +280,7 @@ $product = $result->fetch_assoc();
                                 <p class="m-0 mb-2">Màu</p>
                                 <div class="colors d-flex gap-3">
                                     <?php
-                                    if ($product['phan_loai'] == 1) {
+                                    if ($product['phan_loai'] == 1 || $product['phan_loai'] == 2) {
                                         foreach ($colors as $color) {
                                             echo 
                                             '<label>
@@ -251,9 +292,9 @@ $product = $result->fetch_assoc();
                                     } else {
                                         echo 
                                         '<label>
-                                            <input type="radio" name="color" value="gray" 
+                                            <input type="radio" name="color" value="'.strtolower($product['mau_sac']).'" 
                                             class="color-input" checked>
-                                            <div class="color gray"></div>
+                                            <div class="color '.strtolower($product['mau_sac']).'"></div>
                                         </label>';
                                     }
                                     ?>
@@ -265,6 +306,25 @@ $product = $result->fetch_assoc();
                                     echo 
                                     '<div class="memory col-6">
                                         <p class="m-0 mb-2"> Dung lượng</p>
+                                        <select name="memory" id="memory" class="form-select">';
+                                        foreach ($memorys as $memory) {
+                                            echo '<option value="'.$memory.'" selected>'.$memory.'</option>';
+                                        }
+                                        echo '</select>
+                                    </div>';
+                                } else if ($product['phan_loai'] == 0) {
+                                    echo 
+                                    '<div class="ram col-6">
+                                        <p class="m-0 mb-2">RAM</p>
+                                        <select name="ram" id="ram" class="form-select">';
+                                        foreach ($rams as $ram) {
+                                            echo '<option value="'.$ram.'" selected>'.$ram.'</option>';
+                                        }
+                                        echo '</select>
+                                    </div>';
+                                    echo
+                                    '<div class="memory col-6">
+                                        <p class="m-0 mb-2">Dung lượng</p>
                                         <select name="memory" id="memory" class="form-select">';
                                         foreach ($memorys as $memory) {
                                             echo '<option value="'.$memory.'" selected>'.$memory.'</option>';
@@ -284,7 +344,7 @@ $product = $result->fetch_assoc();
                                 <button class="btn" id="increment">+</button>
                             </div>
                             <button class="btn btn-primary col 
-                            fw-bold text-uppercase">
+                            fw-bold text-uppercase" id="add-to-cart">
                             Thêm vào giỏ hàng</button>
                             <button class="buy-now-btn btn 
                             col fw-bold text-uppercase">
@@ -396,7 +456,10 @@ $product = $result->fetch_assoc();
                     <div class="content rate-content py-3 d-none">
                         <div class="rates-wrapper">
                             <?php
-                            $stmt = $conn->prepare("select * from Danh_gia join Tai_khoan on Danh_gia.thanh_vien = Tai_khoan.ten_dang_nhap where ma_sp = ?");
+                            $stmt = $conn->prepare("select * 
+                            from Danh_gia join Tai_khoan on Danh_gia.thanh_vien = Tai_khoan.ten_dang_nhap 
+                            where ma_sp = ?
+                            order by Danh_gia.thoi_diem_danh_gia desc");
                             $stmt->bind_param("i", $product_id);
                             $stmt->execute();
                             $result = $stmt->get_result();
@@ -505,6 +568,7 @@ $product = $result->fetch_assoc();
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
     const productInfoTabs = document.querySelectorAll('.product-info-tab');
     const descriptionContent = document.querySelector('.description-content');
@@ -534,22 +598,49 @@ $product = $result->fetch_assoc();
         });
     });
 
-    const decrementBtn = document.getElementById('decrement');
-    const incrementBtn = document.getElementById('increment');
-    const quantityInput = document.getElementById('quantity');
-
-    decrementBtn.addEventListener('click', () => {
-        if (quantityInput.value > 1) {
-            quantityInput.value = parseInt(quantityInput.value) - 1;
+    //quantity button
+    $('#decrement').click(() => {
+        if ($('#quantity').val() > 1) {
+            $('#quantity').val(parseInt($('#quantity').val()) - 1);
         }
     });
 
-    incrementBtn.addEventListener('click', () => {
-        quantityInput.value = parseInt(quantityInput.value) + 1;
+    $('#increment').click(() => {
+        $('#quantity').val(parseInt($('#quantity').val()) + 1);
     });
 
+    //add to cart
+    $("#add-to-cart").click((e) => {
+        e.preventDefault();
+        const productName = $("#product-name").text().split('-')[0].trim();
+        const productId = $("main").attr('product-id');
+        const productType = $("main").attr('product-type');
+        const color = $(".color-input:checked").val();
+        const memory = $("#memory").val();
+        const ram = $("#ram").val() ?? 'nan';
+        const quantity = $("#quantity").val();
+        console.log(productName, productId, productType, color, memory, ram, quantity);
+        $.ajax({
+            url: "../member/add_to_cart.php",
+            type: "POST",
+            data: {
+                product_id: productId,
+                product_name: productName,
+                product_type: productType,
+                color: color,
+                memory: memory,
+                ram: ram,
+                quantity: quantity
+            },
+            success: (response) => {
+                console.log(response);
+                alert(response);
+            }
+        });
+    })
+
     //pagination
-    const ratePerPage = 5;
+    const ratePerPage = 3;
     const paginationLength = 3;
     const pagination = document.querySelector('.pagination');
     const pageNumbers = document.querySelectorAll('.page-number');

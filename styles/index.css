@@ -77,6 +77,12 @@
     white-space: normal;
 }
 
+.no-rate {
+    color: gray;
+    font-style: italic;
+    font-weight: lighter;
+}
+
 .title {
     width: 80%;
     margin: 0 auto;

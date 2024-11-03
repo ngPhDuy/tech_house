@@ -9,10 +9,15 @@ if ($conn->connect_error) {
 
 if (isset($_GET['product_type'])) {
     $product_type = $_GET['product_type'];
-    $sql = "SELECT * FROM san_pham WHERE phan_loai = $product_type";
+    $sql = 'select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
+    from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
+    where p.phan_loai = '.$product_type.'
+    group by p.ma_sp';
 } else {
     $product_type = -1;
-    $sql = "SELECT * FROM san_pham";
+    $sql = 'select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
+    from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
+    group by p.ma_sp';
 }
 
 $result = $conn->query($sql);
@@ -188,9 +193,13 @@ if ($result->num_rows > 0) {
                             width="80%" height="50%">
                             <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
                                 <p class="m-0">'.$product['ten_sp'].'</p>
-                                <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])) .'đ</p>
-                                <p class="m-0"><span class="star-icon"></span>5.0</p>
-                            </div>
+                                <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])) .'đ</p>';
+                        if ($product['so_luong_danh_gia'] > 0) {
+                            echo '<p class="m-0"><span class="star-icon"></span>'.round($product['diem_trung_binh'], 1).'</p>';
+                        } else {
+                            echo '<p class="m-0 no-rate">Chưa có đánh giá</p>';
+                        }
+                        echo'</div>
                         </a>';
                     }
                     ?>

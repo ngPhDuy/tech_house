@@ -2,7 +2,9 @@ use tech_house_db;
 
 call Tao_nhan_vien('$admin1', '$2y$10$PkWYOa57Vf4uq2z5Wk8bVeE5PGHo//2MyzpsbZgzWc1r9VV20BbyC', 'Nguyễn Văn A', 'ngvanain gmail.com', '0123456789', 'Hà Nội', '123456789012', 'nam', '1999-01-01');
 /*mk: admin1*/
-call Tao_thanh_vien('khachhang1', '$2y$10$AmEuGyJEo3vuYOiOKU23FeKMKnX9UhctjSHnQuoKwpwMw4EOWivNS', '0123456789');
+/*call Tao_thanh_vien('khachhang1', '$2y$10$AmEuGyJEo3vuYOiOKU23FeKMKnX9UhctjSHnQuoKwpwMw4EOWivNS', '0123456789');*/
+insert Tai_khoan values ('khachhang1', '$2y$10$AmEuGyJEo3vuYOiOKU23FeKMKnX9UhctjSHnQuoKwpwMw4EOWivNS', 'Nguyễn Phi Long', 'nguyen.long@gmail.com', '01234567890', 'An Giang', 'tv', now());
+insert Thanh_vien values ('khachhang1', TRUE, null);
 /*mk: kh1*/
 /*------------
 Định dạng tên sp:

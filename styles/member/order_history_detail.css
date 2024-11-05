@@ -1,0 +1,131 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #f8f9fa;
+  font-size: 0.9rem;
+}
+
+.container-order{
+  max-width: 900px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #6c757d;
+}
+
+.order-details-back {
+  color: black;
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+.order-summary {
+  background-color: #fffbec;
+  padding: 15px;
+  border-radius: 8px;
+  color: #000;
+  border: 1px solid #F7E99E;
+}
+
+.order-price {
+  font-size: 24px;
+  color: #007bff;
+  font-weight: bold;
+  text-align: right;
+}
+
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-track {
+  display: flex;
+  align-items: center;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #fff;
+  font-size: 16px;
+  position: relative;
+  border: 1px solid #ff6f00;
+}
+
+.step.active {
+  background-color: #ff6f00;
+}
+
+.checkmark {
+  font-size: 16px;
+  color: white;
+}
+
+.line {
+  height: 4px;
+  background-color: #FFE7D6;
+  width: 150px;
+}
+
+.line.active {
+  background-color: #ff6f00;
+}
+
+.progress-labels {
+  display: flex;
+  margin-top: 8px;
+}
+
+.label {
+  font-size: 12px;
+  color: #595959;
+  text-align: center;
+  width: 80px;
+  margin: 10px 45px;
+}
+
+.label.active {
+  color: #000;
+}
+
+.product-name {
+  font-size: 14px;
+  color: #007bff;
+}
+
+.nav-link{
+  color: #5F6C72;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar {
+  display: flex;
+  position: relative;
+  top: 0;
+  left: 0;
+  padding: 0;
+}
+
+.sidebar-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.hello h3{
+  margin: 10px;
+}

@@ -1,0 +1,87 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #f8f9fa;
+  font-size: 0.9rem;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+}
+
+.title-row {
+  color: #000;
+  font-weight: normal;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.order-list .row {
+  border: none;
+}
+
+.order-list a, a:hover {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.pagination .page-item .page-link {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination .page-item {
+  margin: 0 5px;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #FA8232;
+  color: white;
+  border: 1px solid #FA8232;
+}
+
+.pagination .page-item .page-link.rounded-circle {
+  color: #FA8232;
+  border: 1px solid #FA8232;
+}
+
+.pagination .page-item .page-link.border-secondary {
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.nav-link{
+  color: #5F6C72;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar {
+  display: flex;
+  position: relative;
+  top: 0;
+  left: 0;
+  padding: 0;
+}
+
+.sidebar-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.hello h3{
+  margin: 10px;
+}

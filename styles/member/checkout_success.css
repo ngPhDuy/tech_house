@@ -1,0 +1,41 @@
+.icon {
+  font-size: 48px;
+  color: #4CAF50;
+}
+
+.button-group .btn {
+  padding: 10px 20px;
+}
+
+.button-group .btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.button-group .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.order-success {
+  max-width: 500px;
+  padding-top: 40px;
+}
+
+.arrow-right {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.success-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #e8edf3;
+  color: #2DB224;
+  font-size: 25px;
+  border: 2px solid #2DB224;
+  margin: auto;
+}

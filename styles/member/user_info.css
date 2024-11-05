@@ -1,0 +1,84 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #f8f9fa;
+  font-size: 0.9rem;
+}
+
+.hello h3{
+  margin: 10px;
+}
+
+.nav-link{
+  color: #5F6C72;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar {
+  display: flex;
+  position: relative;
+  top: 0;
+  left: 0;
+  padding: 0;
+}
+
+.sidebar-sticky {
+  position: sticky;
+  top: 0;
+}
+
+.account-info-card {
+  max-width: 800px;
+  margin: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #ffffff;
+}
+
+.profile-img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #ffffff;
+}
+
+.edit-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.edit-circle {
+  width: 15px;
+  height: 15px;
+  background-color: #1f1f1f;
+  border-radius: 50%;
+}
+
+.edit-text {
+  color: #1f1f1f;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+
+.border-bottom {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+.form-control:disabled{
+  background-color: #ffffff;
+}

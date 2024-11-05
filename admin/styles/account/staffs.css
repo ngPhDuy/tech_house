@@ -1,0 +1,101 @@
+:root {
+    --border-color-gray: #D9D9D9;
+}
+/* CSS for Utilies */
+
+/* CSS for search bar */
+
+#utilities .searchbar {
+    width: 380px;
+    height: 38px;
+    border: 1px var(--border-color-gray) solid;
+    border-radius: 5px;
+    display: flex;
+    
+}
+
+#utilities .searchbar input {
+    flex-grow: 1;
+    border: none;
+    padding-left: 10px;
+
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#utilities .searchbar input:focus {
+    outline: none;
+}
+
+#utilities .searchbar button {
+    width: 38px;
+    height: 38px;
+
+    border: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    background-color: #00A4FF;
+
+    color: white;
+    font-size: large;
+}
+
+
+
+
+/*  */
+/* CSS for product list */
+/*  */
+/* use boostrap */
+
+
+#table-list-product th {
+    height: 50px;
+}
+
+#table-list-product td {
+    height: 90px;
+}
+
+table {
+    border: 1px var(--border-color-gray) solid;
+}
+
+
+table > tbody > tr > td:last-child {
+    text-align: center;
+}
+
+
+.status-complete {
+    background-color: rgba(0, 182, 155, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+
+    width: 100px;
+
+    color: #00B69B;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+
+}
+.status-reject {
+    background-color: rgba(239, 56, 38, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+
+    width: 100px;
+
+    color: #EF3826;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+
+}
+
+.w-35 {
+    width: 35%;
+}
+

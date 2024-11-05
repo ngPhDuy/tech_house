@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="../styles/custom.css" rel="stylesheet">
+    <link href="../styles/member/checkout.css" rel="stylesheet">
+    <title>Tra cứu đơn hàng</title>
+</head>
+<body>
+    <div class="page-wrapper">
+        <header>
+            <div class="row bg-primary align-items-center">
+                <div class="logo col-3 text-white d-flex justify-content-center align-items-center">
+                    <a href="../index.html" class="text-white">
+                        <h1 class="fw-bold">Tech House</h1>
+                    </a>
+                </div>
+                <div class="search-bar col d-flex align-items-center bg-secondary">
+                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm...">
+                </div>
+                <div class="login-cart col-3 d-flex align-items-center justify-content-evenly">
+                    <div class="login w-50">
+                        <a href="./login.html" class="fw-bold text-white"> 
+                            <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
+                            Đăng nhập
+                        </a>
+                    </div>
+                    <div class="cart w-50">
+                        <a href="./cart.html" class="fw-bold text-white">
+                            <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
+                            Giỏ hàng
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
+                <div class="tab tab-selected col">
+                    <a href="#">
+                        <img src="../imgs/icons/house_white.png" alt="home" width="24" height="24">
+                        Trang chủ
+                    </a>
+                </div>
+                <div class="tab col">
+                    <a href="#">
+                        <img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
+                        Điện thoại
+                    </a>
+                </div>  
+                <div class="tab col">
+                    <a href="#">
+                        <img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
+                        Laptop
+                    </a>
+                </div>
+                <div class="tab col">
+                    <a href="#">
+                        <img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
+                        Tablet
+                    </a>
+                </div>
+                <div class="tab col">
+                    <a href="#">
+                        <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">
+                        Phụ kiện
+                        <img src="../imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
+                    </a>
+                    <div class="dropdown-content">
+                        <div><a href="#">Tai nghe</a></div>
+                        <div><a href="#">Bàn phím</a></div>
+                        <div><a href="#">Sạc dự phòng</a></div>
+                        <div><a href="#">Bao da</a></div>
+                    </div>
+                </div>
+                <div class="col-4"></div>
+            </div>
+        </header>
+        <main>
+            <nav class="navbar bg-light py-2">
+                <div class="container">
+                    <span class="navbar-text">Trang chủ &gt; Giỏ hàng &gt; <strong>Thanh toán</strong></span>
+                </div>
+            </nav>
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Thông tin thanh toán</h4>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">User name</label>
+                                    <input type="text" class="form-control" placeholder="First name">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Company Name (Optional)</label>
+                                    <input type="text" class="form-control" placeholder="Last name">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control" placeholder="Address">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Country</label>
+                                    <select class="form-select">
+                                        <option selected>Select...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Region/State</label>
+                                    <select class="form-select">
+                                        <option selected>Select...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">City</label>
+                                    <select class="form-select">
+                                        <option selected>Select...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Zip Code</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox">
+                                        <label class="form-check-label">Ship into different address</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container p-0">
+                                <div class="card p-3 border">
+                                    <div class="form-section ">
+                                        <h5>Payment Option</h5>
+                                        <div class="row payment-options">
+                                            <div class="col-2 payment-method d-flex flex-column align-items-center flex-fill">
+                                                <label class="text-center" for="cashOnDelivery">
+                                                    <img src="../imgs/icons/cod.png" alt="Cash on Delivery" class="payment-icon">
+                                                    <span>Cash on Delivery</span>
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="paymentOption" id="cashOnDelivery">
+                                            </div>
+                                        
+                                            <div class="col-2 payment-method d-flex flex-column align-items-center flex-fill">
+                                                <label class="text-center" for="venmo">
+                                                    <img src="../imgs/icons/venmo.png" alt="Venmo" class="payment-icon">
+                                                    <span>Venmo</span>
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="paymentOption" id="venmo">
+                                            </div>
+                                        
+                                            <div class="col-2 payment-method d-flex flex-column align-items-center flex-fill">
+                                                <label class="text-center" for="paypal">
+                                                    <img src="../imgs/icons/paypal.png" alt="Paypal" class="payment-icon">
+                                                    <span>Paypal</span>
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="paymentOption" id="paypal">
+                                            </div>
+                                        
+                                            <div class="col-2 payment-method d-flex flex-column align-items-center flex-fill">
+                                                <label class="text-center" for="amazonPay">
+                                                    <img src="../imgs/icons/amazone_pay.png" alt="Amazon Pay" class="payment-icon">
+                                                    <span>Amazon Pay</span>
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="paymentOption" id="amazonPay">
+                                            </div>
+                                        
+                                            <div class="col-2 payment-method d-flex flex-column align-items-center flex-fill">
+                                                <label class="text-center" for="creditCard">
+                                                    <img src="../imgs/icons/debit_credit.png" alt="Debit/Credit Card" class="payment-icon">
+                                                    <span>Debit/Credit Card</span>
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="paymentOption" id="creditCard">
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="mt-3">
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label class="form-label">Name on Card</label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Card Number</label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Expire Date</label>
+                                                <input type="text" class="form-control" placeholder="DD/YY">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">CVC</label>
+                                                <input type="text" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-section mt-4 mb-4">
+                                <h5>Additional Information</h5>
+                                <textarea class="form-control" rows="3" placeholder="Order Notes (Optional)"></textarea>
+                            </div>
+                        </form>
+                    </div>
+            
+                    <div class="col-md-4">
+                        <div class="order-summary">
+                            <h5>Tóm tắt đơn hàng</h5>
+                            <div class="d-flex justify-content-between">
+                                <img src="../imgs/products/canon_EOS.png" class="product-image me-3" alt="Product Image" width="80" height="80">
+                                <div>
+                                    <p class="mb-1">Canon EOS 1500D DSLR Camera Body+ 18-55mm</p>
+                                    <p>1 x $70</p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <img src="../imgs/products/headphone.png" class="product-image me-3" alt="Product Image" width="80" height="80">
+                                <div>
+                                    <p class="mb-1">Wired Over-Ear Gaming Headphones with USB</p>
+                                    <p>3 x $250</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <p>Sub-total</p>
+                                <p>$320</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Shipping</p>
+                                <p>Free</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Discount</p>
+                                <p>$24</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p>Tax</p>
+                                <p>$61.99</p>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <p>Total</p>
+                                <p class="text-danger">$357.99 USD</p>
+                            </div>
+                            <a href="./checkout_success.html" class="btn place-order-btn w-100 mt-3">PLACE ORDER</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="row bg-primary text-white p-3 justify-content-center">
+            <div class="row justify-content-evenly">
+                <div class="col-3 pt-4">
+                    <h5>Tổng đài hỗ trợ</h5>
+                    <div class="phone-wrapper">
+                        <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
+                        <span>Gọi mua:</span>
+                    </div>
+                    <p>1922-6067 (8:00 - 21:30)</p>
+                    <div class="phone-wrapper">
+                        <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
+                        <span>Bảo hành:</span>
+                    </div>
+                    <p>1922-6068 (8:00 - 21:30)</p>
+                    <div class="phone-wrapper">
+                        <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
+                        <span>Khiếu nại:</span>
+                    </div>
+                    <p>1922-6069 (8:00 - 21:30)</p>
+                </div>
+                <div class="category col-4">
+                    <h5>Danh mục sản phẩm</h5>
+                    <ul class="d-flex flex-column gap-1">
+                        <li><a href="#">Điện thoại</a></li>
+                        <li><a href="#">Laptop</a></li>
+                        <li><a href="#">Tablet</a></li>
+                        <li><a href="#">Tai nghe</a></li>
+                        <li><a href="#">Bàn phím</a></li>
+                        <li><a href="#">Sạc dự phòng</a></li>
+                        <li><a href="#">Bao da, ốp lưng</a></li>
+                    </ul>
+                </div>
+                <div class="other-info col-4">
+                    <h5>Các thông tin khác</h5>
+                    <ul class="d-flex flex-column gap-1">
+                        <li><a href="#">Giới thiệu công ty</a></li>
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                        <li><a href="#">Góp ý, khiếu nại</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <p class="text-center m-0">© 2024 Tech House. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</html>

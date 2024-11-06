@@ -23,6 +23,7 @@ if ($result->num_rows == 0) {
 }
 
 $product = $result->fetch_assoc();
+$model = explode(' - ', $product['ten_sp'])[0];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -127,8 +128,6 @@ $product = $result->fetch_assoc();
                         <?php
                         echo '<img src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'"width="100%" height="100%">';
                         ?>
-                        <!-- <img src="../imgs/products/apple_macbook_pro_m1.png" alt="apple_macbook_pro_m1" 
-                        width="100%" height="100%"> -->
                         <div class="features-wrapper px-3 mt-3">
                             <p class="feature-title fs-5">Chính sách cho sản phẩm</p>
                             <div class="features d-flex flex-wrap justify-content-between gap-3">
@@ -181,15 +180,6 @@ $product = $result->fetch_assoc();
                                 echo '</a>';
                             }
                             ?>
-                            <!-- <a href="#product-information" class="stars d-flex gap-0">
-                                <span class="star-icon"></span>
-                                <span class="star-icon"></span>
-                                <span class="star-icon"></span>
-                                <span class="star-icon"></span>
-                                <span class="star-icon"></span>
-                                <p class="rate m-0 fw-bold ms-2">4.7 đánh giá</p>
-                                <p class="rate-count m-0 fw-light ms-2">(21,671 đánh giá)</p>
-                            </a> -->
                             <p class="product-name m-0 fs-5" id="product-name">
                                 <?php echo $product['ten_sp']; ?>
                             </p>
@@ -222,57 +212,61 @@ $product = $result->fetch_assoc();
                         </div>
                         <?php
                         if ($product['phan_loai'] == 1) {
-                            $stmt = $conn->prepare("call Tim_mobile_theo_mau_ma(?)");
-                            $stmt->bind_param("s", $product['ten_sp']);
+                            $stmt = $conn->prepare("select * from mobile where ma_sp = ?");
+                            $stmt->bind_param("i", $product_id);
                             $stmt->execute();
                             $result = $stmt->get_result();
-                            $colors = [];
-                            $memorys = [];
+                            $spec = $result->fetch_assoc();
+                            $stmt->close();
+                            $conn->next_result();
+
+                            $stmt = $conn->prepare("select * from mobile m join san_pham s on m.ma_sp = s.ma_sp
+                            where m.bo_nho = ? and substring_index(s.ten_sp, ' - ', 1) = ?");
+                            $stmt->bind_param("ss", $spec['bo_nho'], $model);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $similarProducts = [];
                             while ($row = $result->fetch_assoc()) {
-                                if (!in_array($row['mau_sac'], $colors)) {
-                                    array_push($colors, $row['mau_sac']);
-                                }
-                                if (!in_array($row['bo_nho'], $memorys)) {
-                                    array_push($memorys, $row['bo_nho']);
-                                }
+                                array_push($similarProducts, $row);
                             }
                             $stmt->close();
                             $conn->next_result();
                         } else if ($product['phan_loai'] == 2) {
-                            echo '<p>Chọn màu sắc và dung lượng</p>';
-                            $stmt = $conn->prepare("call Tim_tablet_theo_mau_ma(?)");
-                            $stmt->bind_param("s", $product['ten_sp']);
+                            $stmt = $conn->prepare("select * from tablet where ma_sp = ?");
+                            $stmt->bind_param("i", $product_id);
                             $stmt->execute();
                             $result = $stmt->get_result();
-                            $colors = [];
-                            $memorys = [];
-                            while ($row = $result->fetch_assoc()) {
-                                if (!in_array($row['mau_sac'], $colors)) {
-                                    array_push($colors, $row['mau_sac']);
-                                }
-                                if (!in_array($row['bo_nho'], $memorys)) {
-                                    array_push($memorys, $row['bo_nho']);
-                                }
-                            }
+                            $spec = $result->fetch_assoc();
                             $stmt->close();
                             $conn->next_result();
+                            
+                            $stmt = $conn->prepare("select * from tablet t join san_pham s on t.ma_sp = s.ma_sp
+                            where s.mau_sac = ? and t.bo_nho = ? and substring_index(s.ten_sp, ' - ', 1) = ?");
+                            $stmt->bind_param("sss", $product['mau_sac'], $spec['bo_nho'], $model);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $similarProducts = [];
+                            while ($row = $result->fetch_assoc()) {
+                                array_push($similarProducts, $row);
+                            }
                         } else if ($product['phan_loai'] == 0) {
-                            $stmt = $conn->prepare("call Tim_laptop_theo_mau_ma(?)");
-                            $stmt->bind_param("s", $product['ten_sp']);
+                            $stmt = $conn->prepare("select * from laptop where ma_sp = ?");
+                            $stmt->bind_param("i", $product_id);
                             $stmt->execute();
                             $result = $stmt->get_result();
-                            $rams = [];
-                            $memorys = [];
-                            while ($row = $result->fetch_assoc()) {
-                                if (!in_array($row['ram'], $rams)) {
-                                    array_push($rams, $row['ram']);
-                                }
-                                if (!in_array($row['bo_nho'], $memorys)) {
-                                    array_push($memorys, $row['bo_nho']);
-                                }
-                            }
+                            $spec = $result->fetch_assoc();
                             $stmt->close();
                             $conn->next_result();
+
+                            $stmt = $conn->prepare("select * from laptop l join san_pham s on l.ma_sp = s.ma_sp 
+                            where l.ram = ? and l.bo_nho = ? and substring_index(ten_sp, ' - ', 1) = ?");
+                            $stmt->bind_param("sss", $spec['ram'], $spec['bo_nho'], $model);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $similarProducts = [];
+                            while ($row = $result->fetch_assoc()) {
+                                array_push($similarProducts, $row);
+                            }
                         }
                         ?>
                         <div class="form">
@@ -281,21 +275,17 @@ $product = $result->fetch_assoc();
                                 <div class="colors d-flex gap-3">
                                     <?php
                                     if ($product['phan_loai'] == 1 || $product['phan_loai'] == 2) {
-                                        foreach ($colors as $color) {
+                                        foreach ($similarProducts as $product) {
                                             echo 
-                                            '<label>
-                                                <input type="radio" name="color" value="'.strtolower($color).'" 
-                                                class="color-input" checked>
-                                                <div class="color '.strtolower($color).'"></div>
-                                            </label>';
+                                            '<a href="./product_detail.php?product_id='.$product['ma_sp'].'">
+                                                <div class="color '.strtolower($product['mau_sac']).'"></div>
+                                            </a>';
                                         }
                                     } else {
                                         echo 
-                                        '<label>
-                                            <input type="radio" name="color" value="'.strtolower($product['mau_sac']).'" 
-                                            class="color-input" checked>
+                                        '<a href="./product_detail.php?product_id='.$product_id.'">
                                             <div class="color '.strtolower($product['mau_sac']).'"></div>
-                                        </label>';
+                                        </a>';
                                     }
                                     ?>
                                 </div>
@@ -306,31 +296,19 @@ $product = $result->fetch_assoc();
                                     echo 
                                     '<div class="memory col-6">
                                         <p class="m-0 mb-2"> Dung lượng</p>
-                                        <select name="memory" id="memory" class="form-select">';
-                                        foreach ($memorys as $memory) {
-                                            echo '<option value="'.$memory.'" selected>'.$memory.'</option>';
-                                        }
-                                        echo '</select>
-                                    </div>';
+                                        <div class="specification-wrapper">'.$spec['bo_nho'].'</div>';
+                                    echo '</div>';
                                 } else if ($product['phan_loai'] == 0) {
                                     echo 
                                     '<div class="ram col-6">
                                         <p class="m-0 mb-2">RAM</p>
-                                        <select name="ram" id="ram" class="form-select">';
-                                        foreach ($rams as $ram) {
-                                            echo '<option value="'.$ram.'" selected>'.$ram.'</option>';
-                                        }
-                                        echo '</select>
-                                    </div>';
+                                        <div class="specification-wrapper">'.$spec['ram'].'</div>';
+                                    echo '</div>';
                                     echo
                                     '<div class="memory col-6">
                                         <p class="m-0 mb-2">Dung lượng</p>
-                                        <select name="memory" id="memory" class="form-select">';
-                                        foreach ($memorys as $memory) {
-                                            echo '<option value="'.$memory.'" selected>'.$memory.'</option>';
-                                        }
-                                        echo '</select>
-                                    </div>';
+                                        <div class="specification-wrapper">'.$spec['bo_nho'].'</div>';
+                                    echo '</div>';
                                 }
                                 ?>
                             </div>
@@ -625,16 +603,12 @@ $product = $result->fetch_assoc();
             type: "POST",
             data: {
                 product_id: productId,
-                product_name: productName,
-                product_type: productType,
-                color: color,
-                memory: memory,
-                ram: ram,
                 quantity: quantity
             },
             success: (response) => {
-                console.log(response);
-                alert(response);
+                if (response = 'Chưa đăng nhập') {
+                    window.location.href = './login.php';
+                }
             }
         });
     })

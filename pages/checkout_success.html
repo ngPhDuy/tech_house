@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link href="../styles/custom.css" rel="stylesheet" />
+    <link href="../styles/login.css" rel="stylesheet" />
+    <title>Checkout_success</title>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <header>
+        <div class="row bg-primary align-items-center">
+          <div
+            class="logo col-3 text-white d-flex justify-content-center align-items-center"
+          >
+            <a href="../index.html" class="text-white">
+              <h1 class="fw-bold">Tech House</h1>
+            </a>
+          </div>
+          <div class="search-bar col d-flex align-items-center bg-secondary">
+            <img
+              src="../imgs/icons/search.png"
+              alt="search"
+              width="24"
+              height="24"
+            />
+            <input
+              type="text"
+              class="search-input bg-secondary border-0"
+              placeholder="Tìm kiếm sản phẩm..."
+            />
+          </div>
+          <div
+            class="login-cart col-3 d-flex align-items-center justify-content-evenly"
+          >
+            <div class="login w-50">
+              <a href="./login.html" class="fw-bold text-white">
+                <img
+                  src="../imgs/icons/user.png"
+                  alt="user"
+                  width="32"
+                  height="32"
+                />
+                Đăng nhập
+              </a>
+            </div>
+            <div class="cart w-50">
+              <a href="./cart.html" class="fw-bold text-white">
+                <img
+                  src="../imgs/icons/cart.png"
+                  alt="user"
+                  width="32"
+                  height="32"
+                />
+                Giỏ hàng
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs row justify-content-between align-items-center bg-white p-3 ps-5"
+        >
+          <div class="tab tab-selected col">
+            <a href="#">
+              <img
+                src="../imgs/icons/house_white.png"
+                alt="home"
+                width="24"
+                height="24"
+              />
+              Trang chủ
+            </a>
+          </div>
+          <div class="tab col">
+            <a href="#">
+              <img
+                src="../imgs/icons/phone_iphone.png"
+                alt="phone"
+                width="24"
+                height="24"
+              />
+              Điện thoại
+            </a>
+          </div>
+          <div class="tab col">
+            <a href="#">
+              <img
+                src="../imgs/icons/laptop_mac.png"
+                alt="laptop"
+                width="24"
+                height="24"
+              />
+              Laptop
+            </a>
+          </div>
+          <div class="tab col">
+            <a href="#">
+              <img
+                src="../imgs/icons/tablet_android.png"
+                alt="tablet"
+                width="24"
+                height="24"
+              />
+              Tablet
+            </a>
+          </div>
+          <div class="tab col">
+            <a href="#">
+              <img
+                src="../imgs/icons/gamepad.png"
+                alt="other"
+                width="24"
+                height="24"
+              />
+              Phụ kiện
+              <img
+                src="../imgs/icons/keyboard_arrow_down.png"
+                alt="arrow-down"
+                width="24"
+                height="24"
+              />
+            </a>
+            <div class="dropdown-content">
+              <div><a href="#">Tai nghe</a></div>
+              <div><a href="#">Bàn phím</a></div>
+              <div><a href="#">Sạc dự phòng</a></div>
+              <div><a href="#">Bao da</a></div>
+            </div>
+          </div>
+          <div class="col-4"></div>
+        </div>
+
+        <div
+          class="d-flex flex-row justify-content-start p-2 ps-6 align-items-center bg-secondary"
+        >
+          <div class="">
+            <a href="#">Trang chủ ></a>
+          </div>
+          <div class="ps-3">
+            <a href="#">Giỏ hàng ></a>
+          </div>
+          <div class="ps-3 fw-bold">
+            <a href="#">Thanh toán</a>
+          </div>
+        </div>
+      </header>
+
+      <main
+        class="pt-0 pb-0 min-vh-100 d-flex align-items-center bg-white justify-content-center"
+      >
+        <div class="container">
+          <div class="justify-content-center align-items-center d-flex">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="88"
+              height="88"
+              viewBox="0 0 36 36"
+            >
+              <path
+                fill="#46bb3e"
+                d="M18 2a16 16 0 1 0 16 16A16 16 0 0 0 18 2m0 30a14 14 0 1 1 14-14a14 14 0 0 1-14 14"
+                class="clr-i-outline clr-i-outline-path-1"
+              />
+              <path
+                fill="#46bb3e"
+                d="M28 12.1a1 1 0 0 0-1.41 0l-11.1 11.05l-6-6A1 1 0 0 0 8 18.53L15.49 26L28 13.52a1 1 0 0 0 0-1.42"
+                class="clr-i-outline clr-i-outline-path-2"
+              />
+              <path fill="none" d="M0 0h36v36H0z" />
+            </svg>
+          </div>
+          <div class="text-center">
+            <div class="justify-content-center align-items-center d-flex">
+              <h1 class="fs-2" style="width: 500px">
+                Your order is successfully place
+              </h1>
+            </div>
+            <div
+              class="justify-content-center align-items-center d-flex text-center"
+            >
+              <h2 class="fs-6 fw-light" style="width: 500px">
+                Pellentesque sed lectus nec tortor tristique accumsan quis
+                dictum risus. Donec volutpat mollis nulla non facilisis.
+              </h2>
+            </div>
+          </div>
+          <div
+            class="justify-content-center align-items-center d-flex pb-3 pt-3 text-primary"
+          >
+            <div
+              class="border border-2 border-primary align-items-center justify-content-center d-flex fw-bold"
+              style="width: 200px; height: 40px; margin-right: 20px"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                style="margin-right: 4px"
+              >
+                <path
+                  fill="#1fb5d4"
+                  d="m20.083 15.2l1.202.721a.5.5 0 0 1 0 .858l-8.77 5.262a1 1 0 0 1-1.03 0l-8.77-5.262a.5.5 0 0 1 0-.858l1.202-.721L12 20.05zm0-4.7l1.202.721a.5.5 0 0 1 0 .858L12 17.649l-9.285-5.57a.5.5 0 0 1 0-.858l1.202-.721L12 15.35zm-7.569-9.191l8.771 5.262a.5.5 0 0 1 0 .858L12 12.999L2.715 7.43a.5.5 0 0 1 0-.858l8.77-5.262a1 1 0 0 1 1.03 0M12 3.332L5.887 7L12 10.668L18.113 7z"
+                />
+              </svg>
+              <span>GO TO DASHBOARD</span>
+            </div>
+
+            <div
+              class="border border-2 border-primary align-items-center justify-content-center d-flex fw-bold bg-primary text-white"
+              style="width: 200px; height: 40px"
+            >
+              <span>VIEW ORDER</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                style="margin-left: 4px"
+              >
+                <path
+                  fill="white"
+                  d="M4 12h12.25L11 6.75l.66-.75l6.5 6.5l-6.5 6.5l-.66-.75L16.25 13H4z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="row bg-primary text-white p-3 justify-content-center">
+        <div class="row justify-content-evenly">
+          <div class="col-3 pt-4">
+            <h5>Tổng đài hỗ trợ</h5>
+            <div class="phone-wrapper">
+              <img
+                src="../imgs/icons/call_icon.png"
+                alt="phone"
+                width="24"
+                height="24"
+              />
+              <span>Gọi mua:</span>
+            </div>
+            <p>1922-6067 (8:00 - 21:30)</p>
+            <div class="phone-wrapper">
+              <img
+                src="../imgs/icons/call_icon.png"
+                alt="phone"
+                width="24"
+                height="24"
+              />
+              <span>Bảo hành:</span>
+            </div>
+            <p>1922-6068 (8:00 - 21:30)</p>
+            <div class="phone-wrapper">
+              <img
+                src="../imgs/icons/call_icon.png"
+                alt="phone"
+                width="24"
+                height="24"
+              />
+              <span>Khiếu nại:</span>
+            </div>
+            <p>1922-6069 (8:00 - 21:30)</p>
+          </div>
+          <!-- <div class="col-1"></div> -->
+          <div class="category col-4">
+            <h5>Danh mục sản phẩm</h5>
+            <ul class="d-flex flex-column gap-1">
+              <li><a href="#">Điện thoại</a></li>
+              <li><a href="#">Laptop</a></li>
+              <li><a href="#">Tablet</a></li>
+              <li><a href="#">Tai nghe</a></li>
+              <li><a href="#">Bàn phím</a></li>
+              <li><a href="#">Sạc dự phòng</a></li>
+              <li><a href="#">Bao da, ốp lưng</a></li>
+            </ul>
+          </div>
+          <div class="other-info col-4">
+            <h5>Các thông tin khác</h5>
+            <ul class="d-flex flex-column gap-1">
+              <li><a href="#">Giới thiệu công ty</a></li>
+              <li><a href="#">Chính sách bảo hành</a></li>
+              <li><a href="#">Góp ý, khiếu nại</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <p class="text-center m-0">© 2024 Tech House. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+</html>

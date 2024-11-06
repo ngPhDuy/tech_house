@@ -16,7 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM tai_khoan WHERE ten_dang_nhap = ?");
+    $stmt = $conn->prepare("SELECT * FROM tai_khoan tk JOIN thanh_vien tv 
+    ON tk.ten_dang_nhap = tv.ten_dang_nhap WHERE tk.ten_dang_nhap = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -31,16 +32,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
 
+        if ($row['active_status'] == false) {
+            echo "Tài khoản đã bị khóa";
+            $conn->close();
+            exit();
+        }
+
         $_SESSION['ten_dang_nhap'] = $row['ten_dang_nhap'];
         $tempArr = explode(" ", $row['ho_va_ten']);
         $_SESSION['ho_ten'] = $tempArr[count($tempArr) - 2] . " " . $tempArr[count($tempArr) - 1];
         $_SESSION['phan_loai_tk'] = $row['phan_loai_tk'];
 
-        if ($_SESSION['phan_loai_tk'] == "nv") {
-            echo "../admin/index.php";
-        } else {
-            echo "../index.php";
-        }
+        echo "../index.php";
     } else {
         echo "Tài khoản không tồn tại";
     }
@@ -55,8 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="../styles/custom.css" rel="stylesheet">
-    <link href="../styles/login.css" rel="stylesheet">
+    <link href="../styles/public/custom.css" rel="stylesheet">
+    <link href="../styles/public/login.css" rel="stylesheet">
     <title>Đăng nhập</title>
 </head>
 <body>

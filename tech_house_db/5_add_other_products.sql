@@ -19,8 +19,43 @@ call Them_ban_phim('Bàn phím Apple Magic Keyboard 2 Kèm Phím Số Trắng', 
 call Them_ban_phim('Bàn phím gaming Logitech G813 Lightsync Rgb Mechanical Clicky', 'Logitech', 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/b/a/ban-phim-gaming-logitech-g813-lightsync-rgb-mechanical-tactile_2__2_1.png', 100, 2990000, 0.02, 'Bàn phím gaming Logitech G813 Lightsync Rgb Mechanical Clicky với thiết kế sang trọng, chất liệu cao cấp, giúp bạn làm việc hiệu quả hơn.', 'Black', 'Nhựa ABS', '104', 'Type-C');
 call Them_ban_phim('Bàn phím không dây Logitech MX Keys S Fullsize Graphite', 'Logitech', 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/b/a/ban-phim-khong-day-fullsize-logitech-mx-keys-s.png', 100, 2990000, 0.02, 'Bàn phím không dây Logitech MX Keys S Fullsize Graphite với thiết kế sang trọng, chất liệu cao cấp, giúp bạn làm việc hiệu quả hơn.', 'Graphite', 'Nhựa ABS', '104', 'Bluetooth');
 
+-- create table Don_hang (
+--     ma_don_hang int primary key auto_increment,
+--     thanh_vien varchar(25) not null,
+--     thoi_diem_dat_hang date not null,
+--     thoi_diem_nhan_hang date,
+--     tinh_trang int not null,
+--     /*
+--     0: chờ xác nhận
+--     1: đã xác nhận
+--     2: đang giao hàng
+--     3: đã giao hàng
+--     4: đã hủy
+--     */
+--     tong_gia int not null,
+
+--     foreign key (thanh_vien) references Thanh_vien(ten_dang_nhap)
+-- );
+
+insert into Don_hang(thanh_vien, thoi_diem_dat_hang, thoi_diem_nhan_hang, tinh_trang, tong_gia) values ('khachhang1', '2024-11-06 10:08', null, 0, 20000000);
+insert into Chi_tiet_don_hang(ma_don_hang, ma_sp, so_luong, don_gia) values (1, 1, 1, 20000000);
+
+insert into Don_hang(thanh_vien, thoi_diem_dat_hang, thoi_diem_nhan_hang, tinh_trang, tong_gia) values ('khachhang1', '2024-11-05 10:08', null, 1, 41990000);
+insert into Chi_tiet_don_hang(ma_don_hang, ma_sp, so_luong, don_gia) values (2, 2, 1, 41990000);
+insert Duyet_don_hang values(2, '$admin1', '2024-11-05 21:00');
+
+insert into Don_hang(thanh_vien, thoi_diem_dat_hang, thoi_diem_nhan_hang, tinh_trang, tong_gia) values ('khachhang1', '2024-11-03 10:08', null, 2, 41990000);
+insert into Chi_tiet_don_hang(ma_don_hang, ma_sp, so_luong, don_gia) values (3, 2, 1, 41990000);
+insert Duyet_don_hang values(3, '$admin1', '2024-11-03 21:00');
+
+insert into Don_hang(thanh_vien, thoi_diem_dat_hang, thoi_diem_nhan_hang, tinh_trang, tong_gia) values ('khachhang1', '2024-11-02 10:08', null, 3, 20500000);
+insert into Chi_tiet_don_hang(ma_don_hang, ma_sp, so_luong, don_gia) values (4, 3, 1, 20500000);
+insert Duyet_don_hang values(4, '$admin1', '2024-11-02 21:00');
+
+insert into Don_hang(thanh_vien, thoi_diem_dat_hang, thoi_diem_nhan_hang, tinh_trang, tong_gia) values ('khachhang1', '2024-11-01 10:08', '2024-11-01 12:08', 4, 41990000);
+insert into Chi_tiet_don_hang(ma_don_hang, ma_sp, so_luong, don_gia) values (5, 2, 1, 41990000);
 /*--Thêm khách hàng--*/
-insert Tai_khoan values ('khachhang2', '$2y$10$z.tG6grGSW5qv.OXj4amlufSZe4eOIry9ynQu9MKSG0u0EgxIX.Lq', 'Nguyễn Văn Lang', 'nguyen.lang@gmail.com', '01234567890', 'Hà Nội', 'tv', now());
+insert Tai_khoan values ('khachhang2', '$2y$10$z.tG6grGSW5qv.OXj4amlufSZe4eOIry9ynQu9MKSG0u0EgxIX.Lq', 'Nguyễn Văn Lang', 'nguyen.lang@gmail.com', '01234567890', 'Hà Nội', 'tv', now(), null);
 insert Thanh_vien values ('khachhang2', TRUE, null);
 /*--Thêm đánh giá--*/
 insert Danh_gia values ('2024-10-04 00:00', 'khachhang2', 1, 5, 'Sản phẩm rất tốt, chất lượng tốt, giá cả hợp lý.');

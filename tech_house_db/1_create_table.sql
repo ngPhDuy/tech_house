@@ -15,7 +15,8 @@ create table Tai_khoan (
     nv: nhân viên
     tv: thành viên
     */
-    thoi_diem_mo_tk date not null
+    thoi_diem_mo_tk date not null,
+    avatar varchar(500)
 );
 
 create table Nhan_vien (
@@ -132,10 +133,10 @@ create table Op_lung (
 );
 
 create table Don_hang (
-    ma_don_hang varchar(10) primary key,
+    ma_don_hang int primary key auto_increment,
     thanh_vien varchar(25) not null,
-    thoi_diem_dat_hang date not null,
-    thoi_diem_nhan_hang date,
+    thoi_diem_dat_hang datetime not null,
+    thoi_diem_nhan_hang datetime,
     tinh_trang int not null,
     /*
     0: chờ xác nhận
@@ -150,7 +151,7 @@ create table Don_hang (
 );
 
 create table Chi_tiet_don_hang (
-    ma_don_hang varchar(10),
+    ma_don_hang int,
     ma_sp int,
     so_luong int not null,
     don_gia int not null,
@@ -161,9 +162,9 @@ create table Chi_tiet_don_hang (
 );
 
 create table Duyet_don_hang (
-    ma_don_hang varchar(10) primary key,
+    ma_don_hang int primary key,
     nhan_vien varchar(25) not null,
-    thoi_diem_duyet date not null,
+    thoi_diem_duyet datetime not null,
 
     foreign key (ma_don_hang) references Don_hang(ma_don_hang),
     foreign key (nhan_vien) references Nhan_vien(ten_dang_nhap)
@@ -203,7 +204,7 @@ create procedure Tao_nhan_vien (
     in gioi_tinh varchar(3),
     in ngay_sinh date
 ) begin
-    insert into Tai_khoan values (p_ten_dang_nhap, mat_khau, ho_va_ten, email, sdt, dia_chi, 'nv', now());
+    insert into Tai_khoan values (p_ten_dang_nhap, mat_khau, ho_va_ten, email, sdt, dia_chi, 'nv', now(), null);
     insert into Nhan_vien values (p_ten_dang_nhap, cccd, gioi_tinh, ngay_sinh);
 
     select * from Tai_khoan where ten_dang_nhap = p_ten_dang_nhap;
@@ -214,7 +215,7 @@ create procedure Tao_thanh_vien (
     in mat_khau varchar(255),
     in sdt varchar(10)
 ) begin
-    insert into Tai_khoan values (p_ten_dang_nhap, mat_khau, "New User", null, sdt, null, 'tv', now());
+    insert into Tai_khoan values (p_ten_dang_nhap, mat_khau, "New User", null, sdt, null, 'tv', now(), null);
     insert into Thanh_vien values (p_ten_dang_nhap, TRUE, null);
 
     select * from Tai_khoan where ten_dang_nhap = p_ten_dang_nhap;
@@ -421,4 +422,5 @@ create procedure Them_vao_gio_hang (
         insert into Gio_hang values (p_thanh_vien, p_ma_sp, p_so_luong);
     end if;
 end//
+
 delimiter ;

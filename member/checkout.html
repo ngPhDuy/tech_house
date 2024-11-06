@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="../styles/custom.css" rel="stylesheet">
+    <link href="../styles/public/custom.css" rel="stylesheet">
     <link href="../styles/member/checkout.css" rel="stylesheet">
     <title>Tra cứu đơn hàng</title>
 </head>
@@ -77,12 +77,7 @@
                 <div class="col-4"></div>
             </div>
         </header>
-        <main>
-            <nav class="navbar bg-light py-2">
-                <div class="container">
-                    <span class="navbar-text">Trang chủ &gt; Giỏ hàng &gt; <strong>Thanh toán</strong></span>
-                </div>
-            </nav>
+        <main class="pb-3">
             <div class="container mt-4">
                 <div class="row">
                     <div class="col-md-8">
@@ -90,63 +85,35 @@
                         <form>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label">User name</label>
-                                    <input type="text" class="form-control" placeholder="First name">
+                                    <label class="form-label" for="firstName">Họ</label>
+                                    <input type="text" class="form-control" placeholder="First name" name="firstName">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Company Name (Optional)</label>
-                                    <input type="text" class="form-control" placeholder="Last name">
+                                    <label class="form-label" for="lastName">Tên</label>
+                                    <input type="text" class="form-control" placeholder="Last name" name="lastName">
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" placeholder="Address">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Country</label>
-                                    <select class="form-select">
-                                        <option selected>Select...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Region/State</label>
-                                    <select class="form-select">
-                                        <option selected>Select...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">City</label>
-                                    <select class="form-select">
-                                        <option selected>Select...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Zip Code</label>
-                                    <input type="text" class="form-control">
+                                    <label class="form-label" for="address">Địa chỉ nhận hàng</label>
+                                    <input type="text" class="form-control" placeholder="Address" name="address">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control">
+                                    <label class="form-label" for="email">Email</label>
+                                    <input type="email" class="form-control" name="email">
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Phone Number</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox">
-                                        <label class="form-check-label">Ship into different address</label>
-                                    </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="phone">Số điện thoại</label>
+                                    <input type="text" class="form-control" name="phone">
                                 </div>
                             </div>
                             <div class="container p-0">
                                 <div class="card p-3 border">
                                     <div class="form-section ">
-                                        <h5>Payment Option</h5>
+                                        <h5>Hình thức thanh toán</h5>
                                         <div class="row payment-options">
                                             <div class="col-2 payment-method d-flex flex-column align-items-center flex-fill">
                                                 <label class="text-center" for="cashOnDelivery">
                                                     <img src="../imgs/icons/cod.png" alt="Cash on Delivery" class="payment-icon">
-                                                    <span>Cash on Delivery</span>
+                                                    <span>Trả tiền mặt</span>
                                                 </label>
                                                 <input class="form-check-input" type="radio" name="paymentOption" id="cashOnDelivery">
                                             </div>
@@ -178,37 +145,36 @@
                                             <div class="col-2 payment-method d-flex flex-column align-items-center flex-fill">
                                                 <label class="text-center" for="creditCard">
                                                     <img src="../imgs/icons/debit_credit.png" alt="Debit/Credit Card" class="payment-icon">
-                                                    <span>Debit/Credit Card</span>
+                                                    <span>Credit Card</span>
                                                 </label>
                                                 <input class="form-check-input" type="radio" name="paymentOption" id="creditCard">
                                             </div>
                                         </div>
                                     </div>
-            
-                                    <div class="mt-3">
+                                    <div class="mt-3" id="card-form">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="form-label">Name on Card</label>
-                                                <input type="text" class="form-control">
+                                                <label class="form-label" for="card-owner">Tên chủ thẻ</label>
+                                                <input type="text" class="form-control" name="card-owner">
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label">Card Number</label>
-                                                <input type="text" class="form-control">
+                                                <label class="form-label" for="card-number">Số thẻ</label>
+                                                <input type="text" class="form-control" name="card-number">
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Expire Date</label>
-                                                <input type="text" class="form-control" placeholder="DD/YY">
+                                                <label class="form-label" for="expiration-date">Ngày hết hạn</label>
+                                                <input type="text" class="form-control" name="expiration-date">
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">CVC</label>
-                                                <input type="text" class="form-control">
+                                                <label class="form-label" for="cvv">CVV</label>
+                                                <input type="text" class="form-control" name="cvv">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-section mt-4 mb-4">
-                                <h5>Additional Information</h5>
+                                <h5>Ghi chú thêm</h5>
                                 <textarea class="form-control" rows="3" placeholder="Order Notes (Optional)"></textarea>
                             </div>
                         </form>
@@ -233,27 +199,27 @@
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between">
-                                <p>Sub-total</p>
-                                <p>$320</p>
+                                <p>Tổng giá sản phẩm</p>
+                                <p>$350</p>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <p>Shipping</p>
+                                <p>Vận chuyển</p>
                                 <p>Free</p>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <p>Discount</p>
-                                <p>$24</p>
+                                <p>Giảm giá</p>
+                                <p>-$50</p>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <p>Tax</p>
-                                <p>$61.99</p>
+                                <p>Thuế</p>
+                                <p>$7.99</p>
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between fw-bold">
-                                <p>Total</p>
+                                <p>Thành tiền</p>
                                 <p class="text-danger">$357.99 USD</p>
                             </div>
-                            <a href="./checkout_success.html" class="btn place-order-btn w-100 mt-3">PLACE ORDER</a>
+                            <button id="order-btn" class="btn place-order-btn w-100 mt-3">ĐẶT HÀNG</button>
                         </div>
                     </div>
                 </div>
@@ -304,7 +270,53 @@
                 <p class="text-center m-0">© 2024 Tech House. All rights reserved.</p>
             </div>
         </footer>
+        <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="container d-flex justify-content-center align-items-center p-0">
+                        <div class="card text-center order-success p-3 border-0">
+                            <div class="card-body">
+                                <div class="icon mb-3">
+                                    <div class="success-label">
+                                        <span class="checkmark">&#10003;</span>
+                                    </div>
+                                </div>
+                                <h5 class="card-title fw-bold">Your order is successfully place</h5>
+                                <p class="card-text text-muted">
+                                    Pellentesque sed lectus nec tortor tristique accumsan quis dictum risus. Donec volutpat mollis nulla non facilisis.
+                                </p>
+                                <div class="button-group d-flex justify-content-center gap-2">
+                                    <a href="./order_history_dashboard.html" class="btn btn-outline-primary fw-bold text-uppercase">Go to Dashboard</a>
+                                    <a href="./order_history_detail.html" class="btn btn-primary fw-bold text-uppercase">
+                                        View Order 
+                                        <span class="arrow-right">&rarr;</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".payment-method").click(function() {
+            $(".payment-method").removeClass("selected");
+            $(this).addClass("selected");
+            if ($(this).find("input").attr("id") == "cashOnDelivery") {
+                $("#card-form").hide();
+            } else {
+                $("#card-form").show();
+            }
+        });
+    });
+
+    $("#order-btn").click(function() {
+        $("#resultModal").modal("show");
+    });
+</script>
 </html>

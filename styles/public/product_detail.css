@@ -260,27 +260,27 @@ a.product p:first-child {
 }
 /*-------------------icons-------------------*/
 .medal-icon {
-    content: url("../imgs/icons/Medal.png");
+    content: url("../../imgs/icons/Medal.png");
 }
 
 .truck-icon {
-    content: url("../imgs/icons/Truck.png");
+    content: url("../../imgs/icons/Truck.png");
 }
 
 .handshake-icon {
-    content: url("../imgs/icons/Handshake.png");
+    content: url("../../imgs/icons/Handshake.png");
 }
 
 .headphones-icon {
-    content: url("../imgs/icons/Headphones.png");
+    content: url("../../imgs/icons/Headphones.png");
 }
 
 .creditcard-icon {
-    content: url("../imgs/icons/CreditCard.png");
+    content: url("../../imgs/icons/CreditCard.png");
 }
 
 .star-icon {
-    content: url("../imgs/icons/star_in_detail_page.png");
+    content: url("../../imgs/icons/star_in_detail_page.png");
     width: 15px;
     height: 15px;
 }

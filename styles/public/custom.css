@@ -41,6 +41,17 @@ a, a:hover {
     text-decoration: none;
 }
 
+.w-60 {
+    width: 60%;
+  }
+  
+  .w-10 {
+    width: 10%;
+  }
+  
+  w-20 {
+    width: 20%;
+  }
 /*---------header---------*/
 .search-bar {
     border-radius: 62px;
@@ -114,6 +125,38 @@ header {
     padding-bottom: .5rem;
     border-bottom: 3px solid white;
 }
+
+/*---------side bar in user info---------*/
+
+.sidebar {
+    display: flex;
+    position: relative;
+    top: 0;
+    left: 0;
+    padding: 0;
+  }
+  
+  .sidebar-sticky {
+    position: sticky;
+    top: 0;
+  }
+  
+  .sidebar-sticky ul {
+    display: flex;
+    flex-direction: column;
+    padding: .5rem;
+    margin: 0;
+  }
+  
+  .nav-item {
+    color: #5F6C72;
+    padding: .75rem;
+  }
+  
+  .nav-item:hover, .nav-item.active {
+    color: white;
+    background-color: #4880FF;
+  }
 
 /*---------dropdown---------*/
 

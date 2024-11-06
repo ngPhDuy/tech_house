@@ -174,13 +174,13 @@
 }
 /*--------icons--------*/
 .funnel-icon {
-    content: url("../imgs/icons/Funnel.png");
+    content: url("../../imgs/icons/Funnel.png");
     width: 15px;
     height: 20px;
 }
 
 .star-icon {
-    content: url(../imgs/icons/star.png);
+    content: url(../../imgs/icons/star.png);
     width: 14px;
     height: 14px;
     margin-right: .25rem;

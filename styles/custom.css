@@ -128,6 +128,8 @@ header {
   display: block;
 }
 
+
+/*-----------Phuong customize css------------*/
 .ps-6 {
   padding-left: 6rem !important;
 }
@@ -138,4 +140,12 @@ header {
 
 .text-primary {
   color: #1fb5d4 !important;
+}
+
+.border-gray {
+  border-color: #f0f0f0 !important;
+}
+
+h1 {
+  margin-bottom: 0px;
 }

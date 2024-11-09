@@ -1,0 +1,41 @@
+:root {
+    --border-color-gray: #D9D9D9;
+}
+
+.info-wrapper {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+
+.info-box {
+    padding: 5px;
+}
+
+.info-type {
+    font-weight: bold;
+    /* border-bottom: 1px var(--border-color-gray) solid; */
+}
+
+.info-type::after {
+    content: ":";
+}
+
+.info-value {
+    font-size: 1.2rem;
+    /* border: 1px var(--border-color-gray) solid; */
+    /* border-radius: 5px;
+    padding: 5px; */
+}
+
+
+.info-box.type-image img {
+    height: 200px;
+}
+
+/* css override
+ boostrap */
+.row {
+    margin-bottom: 20px;
+}

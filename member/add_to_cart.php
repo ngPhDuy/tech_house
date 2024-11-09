@@ -36,5 +36,5 @@ try {
 $stmt->close();
 $conn->close();
 
-echo 'Thành công';
+echo 'Thêm vào giỏ hàng thành công';
 ?>

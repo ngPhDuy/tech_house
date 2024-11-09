@@ -39,29 +39,30 @@ $model = explode(' - ', $product['ten_sp'])[0];
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="../index.php" class="text-white">
+                <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="./product_list.php" class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
-                            '<a href="./member/profile.html" class="fw-bold text-white">
+                            '<a href="../member/user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
                                 '.$_SESSION['ho_ten'].'</a>';
                             echo '
                             <div class="dropdown-content">
-                                <div><a href="./member/profile.html">Thông tin cá nhân</a></div>
-                                <div><a href="./member/change_password.html">Đổi mật khẩu</a></div>
-                                <div><a href="./member/order_history.html">Lịch sử mua hàng</a></div>
-                                <div><a href="./member/logout.php">Đăng xuất</a></div>
+                                <div><a href="../member/user_info.php">Thông tin cá nhân</a></div>
+                                <div><a href="../member/change_password.html">Đổi mật khẩu</a></div>
+                                <div><a href="../member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="../member/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
@@ -73,7 +74,7 @@ $model = explode(' - ', $product['ten_sp'])[0];
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="#" class="fw-bold text-white">
+                        <a href="../member/cart.php" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -82,7 +83,7 @@ $model = explode(' - ', $product['ten_sp'])[0];
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="./product_list.php">
+                    <a href="../ndex.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
@@ -318,14 +319,15 @@ $model = explode(' - ', $product['ten_sp'])[0];
                             align-items-center justify-content-between
                             mx-auto">
                                 <button class="btn" id="decrement">-</button>
-                                <input type="text" class="text-center m-0" id="quantity" value="1" min="1" readonly>
+                                <span class="text-center m-0" id="quantity"
+                                style="vertical-align: middle; align-content: center;">1</span>
                                 <button class="btn" id="increment">+</button>
                             </div>
                             <button class="btn btn-primary col 
                             fw-bold text-uppercase" id="add-to-cart">
                             Thêm vào giỏ hàng</button>
                             <button class="buy-now-btn btn 
-                            col fw-bold text-uppercase">
+                            col fw-bold text-uppercase" id="buynow-btn">
                             Mua ngay</button>
                         </div>
                     </div>
@@ -480,7 +482,7 @@ $model = explode(' - ', $product['ten_sp'])[0];
                             $result = $stmt->get_result();
                             while ($product = $result->fetch_assoc()) {
                                 echo 
-                                '<a class="product d-flex justify-content-evenly align-items-center mx-2" 
+                                '<a class="product d-flex justify-content-evenly align-items-center mx-2 py-1" 
                                 href="./product_detail.php?product_id='.$product['ma_sp'].'">
                                     <img src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'" width="50%" height="50%">
                                     <div class="content d-flex flex-column gap-3 overflow-hidden ms-1">
@@ -547,6 +549,7 @@ $model = explode(' - ', $product['ten_sp'])[0];
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/search.js"></script>
 <script>
     const productInfoTabs = document.querySelectorAll('.product-info-tab');
     const descriptionContent = document.querySelector('.description-content');
@@ -578,13 +581,15 @@ $model = explode(' - ', $product['ten_sp'])[0];
 
     //quantity button
     $('#decrement').click(() => {
-        if ($('#quantity').val() > 1) {
-            $('#quantity').val(parseInt($('#quantity').val()) - 1);
+        let quantity = +$('#quantity').text();
+        if (quantity > 1) {
+            $('#quantity').text(quantity - 1);
         }
     });
 
     $('#increment').click(() => {
-        $('#quantity').val(parseInt($('#quantity').val()) + 1);
+        let quantity = +$('#quantity').text();
+        $('#quantity').text(quantity + 1);
     });
 
     //add to cart
@@ -596,7 +601,7 @@ $model = explode(' - ', $product['ten_sp'])[0];
         const color = $(".color-input:checked").val();
         const memory = $("#memory").val();
         const ram = $("#ram").val() ?? 'nan';
-        const quantity = $("#quantity").val();
+        const quantity = +$("#quantity").text();
         console.log(productName, productId, productType, color, memory, ram, quantity);
         $.ajax({
             url: "../member/add_to_cart.php",
@@ -606,11 +611,26 @@ $model = explode(' - ', $product['ten_sp'])[0];
                 quantity: quantity
             },
             success: (response) => {
-                if (response = 'Chưa đăng nhập') {
+                if (response == 'Chưa đăng nhập') {
                     window.location.href = './login.php';
+                } else if (response == 'Thêm vào giỏ hàng thành công') {
+                    $('#add-to-cart').animate({left: '+=20px'}, 100, () => {
+                        $('#add-to-cart').animate({left: '-=40px'}, 100, () => {
+                            $('#add-to-cart').animate({left: '+=20px'}, 100);
+                        });
+                    });
+                } else {
+                    alert('Thêm vào giỏ hàng thất bại');
                 }
             }
         });
+    })
+
+    $('#buynow-btn').click(() => {
+        let productId = <?php echo $product_id; ?>;
+        let quantity = $('#quantity').text();
+        console.log(quantity);
+        window.location.href = `../member/checkout.php?product_id=${productId}&quantity=${quantity}&from_product=1`;
     })
 
     //pagination

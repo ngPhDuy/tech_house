@@ -183,13 +183,15 @@ create table Gio_hang (
 create table Danh_gia (
     thoi_diem_danh_gia datetime not null,
     thanh_vien varchar(25),
+    ma_dh int not null,
     ma_sp int,
     diem_danh_gia int not null,
     noi_dung varchar(1000) not null,
     
-    primary key (thoi_diem_danh_gia, thanh_vien),
+    primary key (thanh_vien, ma_dh, ma_sp),
     foreign key (ma_sp) references San_pham(ma_sp),
-    foreign key (thanh_vien) references Thanh_vien(ten_dang_nhap)
+    foreign key (thanh_vien) references Thanh_vien(ten_dang_nhap),
+    foreign key (ma_dh) references Don_hang(ma_don_hang)
 );
 /*Procedure create accounts and products*/
 delimiter //
@@ -372,45 +374,6 @@ create procedure Them_op_lung (
     select * from San_pham where ma_sp = @ma_sp;
 end//
 
-create procedure Tim_sp_theo_mau_ma (
-    in p_ten_sp varchar(500)
-) begin
-    declare mau_ma_sp varchar(500);
-    set mau_ma_sp = substring_index(p_ten_sp, ' - ', 1);
-
-    select * from San_pham where ten_sp like concat(mau_ma_sp, '%');
-end//
-
-create procedure Tim_mobile_theo_mau_ma (
-    in p_ten_sp varchar(500)
-) begin
-    declare mau_ma_sp varchar(500);
-    set mau_ma_sp = substring_index(p_ten_sp, ' - ', 1);
-
-    select * from San_pham join Mobile on San_pham.ma_sp = Mobile.ma_sp 
-    where ten_sp like concat(mau_ma_sp, '%');
-end//
-
-create procedure Tim_tablet_theo_mau_ma (
-    in p_ten_sp varchar(500)
-) begin
-    declare mau_ma_sp varchar(500);
-    set mau_ma_sp = substring_index(p_ten_sp, ' - ', 1);
-
-    select * from San_pham join Tablet on San_pham.ma_sp = Tablet.ma_sp 
-    where ten_sp like concat(mau_ma_sp, '%');
-end//
-
-create procedure Tim_laptop_theo_mau_ma (
-    in p_ten_sp varchar(500)
-) begin
-    declare mau_ma_sp varchar(500);
-    set mau_ma_sp = substring_index(p_ten_sp, ' - ', 1);
-
-    select * from San_pham join Laptop on San_pham.ma_sp = Laptop.ma_sp 
-    where ten_sp like concat(mau_ma_sp, '%');
-end//
-
 create procedure Them_vao_gio_hang (
     in p_thanh_vien varchar(25),
     in p_ma_sp int,
@@ -421,6 +384,60 @@ create procedure Them_vao_gio_hang (
     else
         insert into Gio_hang values (p_thanh_vien, p_ma_sp, p_so_luong);
     end if;
+end//
+
+CREATE PROCEDURE Tao_don_hang_tu_gio_hang (
+    IN p_thanh_vien VARCHAR(25),
+    IN p_tong_gia INT
+)
+BEGIN
+    DECLARE c_so_luong INT;
+    DECLARE c_ma_sp INT;
+    DECLARE c_gia_thanh INT;
+    DECLARE c_sale_off FLOAT;
+    DECLARE c_don_gia INT;
+    DECLARE done INT DEFAULT FALSE;
+
+    DECLARE gio_hang_cursor CURSOR FOR 
+        SELECT ma_sp, so_luong 
+        FROM Gio_hang 
+        WHERE thanh_vien = p_thanh_vien;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    INSERT INTO Don_hang (thanh_vien, thoi_diem_dat_hang, tinh_trang, tong_gia) 
+    VALUES (p_thanh_vien, NOW(), 0, p_tong_gia);
+    
+    SET @ma_don_hang = LAST_INSERT_ID();
+
+    OPEN gio_hang_cursor;
+
+    gio_hang_loop: LOOP
+        FETCH gio_hang_cursor INTO c_ma_sp, c_so_luong;
+        IF done THEN
+            LEAVE gio_hang_loop;
+        END IF;
+        SET c_gia_thanh = (SELECT gia_thanh FROM San_pham WHERE ma_sp = c_ma_sp);
+        SET c_sale_off = (SELECT sale_off FROM San_pham WHERE ma_sp = c_ma_sp);
+        SET c_don_gia = c_gia_thanh * (1 - c_sale_off);
+        INSERT INTO Chi_tiet_don_hang (ma_don_hang, ma_sp, so_luong, don_gia) 
+        VALUES (@ma_don_hang, c_ma_sp, c_so_luong, c_don_gia);
+    END LOOP;
+
+    CLOSE gio_hang_cursor;
+
+    DELETE FROM Gio_hang WHERE thanh_vien = p_thanh_vien;
+END //
+
+create procedure Tao_don_hang_mot_sp(
+    in p_thanh_vien varchar(25),
+    in p_ma_sp int,
+    in p_so_luong int,
+    in p_tong_gia int
+) begin
+    insert into Don_hang (thanh_vien, thoi_diem_dat_hang, tinh_trang, tong_gia) values (p_thanh_vien, now(), 0, p_tong_gia);
+    set @ma_don_hang = (select ma_don_hang from Don_hang where thanh_vien = p_thanh_vien and thoi_diem_dat_hang = now());
+    insert into Chi_tiet_don_hang values (@ma_don_hang, p_ma_sp, p_so_luong, p_tong_gia);
 end//
 
 delimiter ;

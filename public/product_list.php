@@ -13,6 +13,14 @@ if (isset($_GET['product_type'])) {
     from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
     where p.phan_loai = '.$product_type.'
     group by p.ma_sp';
+} else if (isset($_GET['search_key'])) {
+    $search = $_GET['search_key'];
+    $search = str_replace(' ', '%%', $search);
+    $product_type = -1;
+    $sql = 'select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
+    from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
+    where lower(p.ten_sp) like "%'.$search.'%" or lower(p.thuong_hieu) like "%'.$search.'%" or lower(p.phan_loai) like "%'.$search.'%"
+    group by p.ma_sp';
 } else {
     $product_type = -1;
     $sql = 'select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
@@ -74,29 +82,30 @@ if ($result->num_rows > 0) {
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="../index.php" class="text-white">
+                <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="../public/product_list.php" class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
-                            '<a href="./member/profile.html" class="fw-bold text-white">
+                            '<a href="../member/user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
                                 '.$_SESSION['ho_ten'].'</a>';
                             echo '
                             <div class="dropdown-content">
-                                <div><a href="./member/profile.html">Thông tin cá nhân</a></div>
-                                <div><a href="./member/change_password.html">Đổi mật khẩu</a></div>
-                                <div><a href="./member/order_history.html">Lịch sử mua hàng</a></div>
-                                <div><a href="./member/logout.php">Đăng xuất</a></div>
+                                <div><a href="../member/user_info.php">Thông tin cá nhân</a></div>
+                                <div><a href="../member/change_password.html">Đổi mật khẩu</a></div>
+                                <div><a href="../member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="../member/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
@@ -108,7 +117,7 @@ if ($result->num_rows > 0) {
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="#" class="fw-bold text-white">
+                        <a href="../member/cart.php" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -117,32 +126,81 @@ if ($result->num_rows > 0) {
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="./product_list.php">
+                    <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
                 </div>
-                <div class="tab col">
+                <?php
+                if ($product_type == 1) {
+                    echo '<div class="tab tab-selected col">';
+                } else {
+                    echo '<div class="tab col">';
+                }
+                ?>
                     <a href="./product_list.php?product_type=1">
-                        <img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
+                        <?php
+                        if ($product_type == 1) {
+                            echo '<img src="../imgs/icons/phone_iphone_white.png" alt="phone" width="24" height="24">';
+                        } else {
+                            echo '<img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">';
+                        }
+                        ?>
                         Điện thoại
                     </a>
                 </div>  
-                <div class="tab col">
+                <?php
+                if ($product_type == 0) {
+                    echo '<div class="tab tab-selected col">';
+                } else {
+                    echo '<div class="tab col">';
+                }
+                ?>
                     <a href="./product_list.php?product_type=0">
-                        <img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
+                        <?php
+                        if ($product_type == 0) {
+                            echo '<img src="../imgs/icons/laptop_mac_white.png" alt="laptop" width="24" height="24">';
+                        } else {
+                            echo '<img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">';
+                        }
+                        ?>
                         Laptop
                     </a>
                 </div>
-                <div class="tab col">
+                <?php
+                if ($product_type == 2) {
+                    echo '<div class="tab tab-selected col">';
+                } else {
+                    echo '<div class="tab col">';
+                }
+                ?>
                     <a href="./product_list.php?product_type=2">
-                        <img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
+                        <?php
+                        if ($product_type == 2) {
+                            echo '<img src="../imgs/icons/tablet_android_white.png" alt="tablet" width="24" height="24">';
+                        } else {
+                            echo '<img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">';
+                        }
+                        ?>
                         Tablet
                     </a>
                 </div>
-                <div class="tab col">
+                <?php
+                if ($product_type > 2) {
+                    echo '<div class="tab tab-selected col">';
+                } else {
+                    echo '<div class="tab col">';
+                }
+                ?>
                     <a href="./product_list.php?product_type=3">
-                        <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">
+                        <!-- <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24"> -->
+                        <?php
+                        if ($product_type > 2) {
+                            echo '<img src="../imgs/icons/gamepad_white.png" alt="other" width="24" height="24">';
+                        } else {
+                            echo '<img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">';
+                        }
+                        ?>
                         Phụ kiện
                         <img src="../imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
                     </a>
@@ -193,7 +251,7 @@ if ($result->num_rows > 0) {
                             width="80%" height="50%">
                             <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
                                 <p class="m-0">'.$product['ten_sp'].'</p>
-                                <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])) .'đ</p>';
+                                <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])).'đ</p>';
                         if ($product['so_luong_danh_gia'] > 0) {
                             echo '<p class="m-0"><span class="star-icon"></span>'.round($product['diem_trung_binh'], 1).'</p>';
                         } else {
@@ -344,6 +402,7 @@ if ($result->num_rows > 0) {
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/search.js"></script>
 <script>
     let brandsFilter = [];
     let priceFilter;

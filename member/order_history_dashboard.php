@@ -6,20 +6,13 @@ if (!isset($_SESSION['ten_dang_nhap']) || $_SESSION['phan_loai_tk'] != 'tv') {
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET' || !isset($_GET['username'])) {
-    //error 404
-    header('Location: ../public/404.html');
-    exit();
-    
-}
-
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
 
 if ($conn->connect_error) {
     die('Connection failed: ' . $conn->connect_error);
 }
 
-$username = $_GET['username'];
+$username = $_SESSION['ten_dang_nhap'];
 $stmt = $conn->prepare('select d.*, count(c.ma_sp) as so_luong_sp 
 from don_hang d join chi_tiet_don_hang c on d.ma_don_hang = c.ma_don_hang 
 where thanh_vien = ? group by c.ma_don_hang;');
@@ -54,33 +47,34 @@ $stmt->close();
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="../index.php" class="text-white">
+                <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="../public/product_list.php" class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
-                            '<a href="#" class="fw-bold text-white">
+                            '<a href="./user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
                                 '.$_SESSION['ho_ten'].'</a>';
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="./user_info.php">Thông tin cá nhân</a></div>
                                 <div><a href="./change_password.html">Đổi mật khẩu</a></div>
-                                <div><a href="./order_history_dashboard.php?username='.$_SESSION['ten_dang_nhap'].'">Lịch sử mua hàng</a></div>
+                                <div><a href="./order_history_dashboard.php">Lịch sử mua hàng</a></div>
                                 <div><a href="./logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
-                            '<a href="./login.php" class="fw-bold text-white">
+                            '<a href="./public/login.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
                                 Đăng nhập
                             </a>';
@@ -88,7 +82,7 @@ $stmt->close();
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="#" class="fw-bold text-white">
+                        <a href="./cart.php" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -97,7 +91,7 @@ $stmt->close();
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="../public/product_list.php">
+                    <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
@@ -155,27 +149,30 @@ $stmt->close();
                         <div class="sidebar-sticky">
                             <ul class="nav border rounded-3 flex-column">
                                 <li class="nav-item">
-                                    <a href="./user_info.php">
-                                        <img src="../imgs/icons/setting.png" alt="setting" width="22" height="22">
-                                        Thông tin cá nhân
+                                    <a href="user_info.php">
+                                        <!-- <img src="../imgs/icons/setting_white.png" alt="setting" width="22" height="22"> -->
+                                        <span class="setting-icon"></span>
+                                        <span>Thông tin cá nhân</span>
                                     </a>
                                 </li>
                                 <li class="nav-item active">
-                                    <a href="order_history_dashboard.html">
-                                        <img src="../imgs/icons/order_history.png" alt="order_history" width="22" height="22">
-                                        Lịch sử mua hàng
+                                    <a href="./order_history_dashboard.php">
+                                        <img src="../imgs/icons/order_history_white.png" alt="order_history" width="22" height="22">
+                                        <span>Lịch sử mua hàng</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">
-                                        <img src="../imgs/icons/shopping_cart.png" alt="shopping_cart" width="22" height="22">
-                                        Giỏ hàng
+                                    <a href="./cart.php">
+                                        <!-- <img src="../imgs/icons/shopping_cart.png" alt="shopping_cart" width="22" height="22"> -->
+                                        <span class="cart-icon"></span>
+                                        <span>Giỏ hàng</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">
-                                        <img src="../imgs/icons/log-out.png" alt="log-out" width="22" height="22">
-                                        Đăng xuất
+                                    <a href="./logout.php">
+                                        <!-- <img src="../imgs/icons/log-out.png" alt="log-out" width="22" height="22"> -->
+                                        <span class="log-out-icon"></span>
+                                        <span>Đăng xuất</span>
                                     </a>
                                 </li>
                             </ul>

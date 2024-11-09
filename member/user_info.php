@@ -32,28 +32,29 @@ $stmt->close();
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="../index.php" class="text-white">
+                <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="../public/product_list.php" class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
-                            '<a href="#" class="fw-bold text-white">
+                            '<a href="./user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
                                 '.$_SESSION['ho_ten'].'</a>';
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="./user_info.php">Thông tin cá nhân</a></div>
                                 <div><a href="./change_password.html">Đổi mật khẩu</a></div>
-                                <div><a href="./order_history_dashboard.php?username='.$_SESSION['ten_dang_nhap'].'">Lịch sử mua hàng</a></div>
+                                <div><a href="./order_history_dashboard.php">Lịch sử mua hàng</a></div>
                                 <div><a href="./logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
@@ -66,7 +67,7 @@ $stmt->close();
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="#" class="fw-bold text-white">
+                        <a href="./cart.php" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -75,7 +76,7 @@ $stmt->close();
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="../public/product_list.php">
+                    <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
@@ -127,26 +128,29 @@ $stmt->close();
                             <ul class="nav border rounded-3 flex-column">
                                 <li class="nav-item active">
                                     <a href="user_info.php">
-                                        <img src="../imgs/icons/setting.png" alt="setting" width="22" height="22">
-                                        Thông tin cá nhân
+                                        <img src="../imgs/icons/setting_white.png" alt="setting" width="22" height="22">
+                                        <span>Thông tin cá nhân</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                        <?php echo '<a href="./order_history_dashboard.php?username='.$_SESSION['ten_dang_nhap'].'">'?>
-                                        <img src="../imgs/icons/order_history.png" alt="order_history" width="22" height="22">
-                                        Lịch sử mua hàng
+                                    <a href="./order_history_dashboard.php">
+                                        <span class="order-history-icon"></span>
+                                        <!-- <img src="../imgs/icons/order_history.png" alt="order_history" width="22" height="22"> -->
+                                        <span>Lịch sử mua hàng</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">
-                                        <img src="../imgs/icons/shopping_cart.png" alt="shopping_cart" width="22" height="22">
-                                        Giỏ hàng
+                                    <a href="./cart.php">
+                                        <!-- <img src="../imgs/icons/shopping_cart.png" alt="shopping_cart" width="22" height="22"> -->
+                                        <span class="cart-icon"></span>
+                                        <span>Giỏ hàng</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">
-                                        <img src="../imgs/icons/log-out.png" alt="log-out" width="22" height="22">
-                                        Đăng xuất
+                                    <a href="./logout.php">
+                                        <!-- <img src="../imgs/icons/log-out.png" alt="log-out" width="22" height="22"> -->
+                                        <span class="log-out-icon"></span>
+                                        <span>Đăng xuất</span>
                                     </a>
                                 </li>
                             </ul>
@@ -298,15 +302,11 @@ $stmt->close();
                 </div>
             </div>
         </div>
-        <div class="result-modal modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal" tabindex="-1" id="message-modal">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="resultModalLabel">Kết quả cập nhật</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="result"></p>
+                    <div class="modal-body text-center">
+                        <p class="m-0 fs-5 text-center p-3"></p>
                     </div>
                 </div>
             </div>
@@ -315,6 +315,7 @@ $stmt->close();
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/search.js"></script>
 <script>
     $(".edit-btn").click(function() {
         $("#editModal").modal("show");
@@ -357,17 +358,17 @@ $stmt->close();
             processData: false,
             success: function(data) {
                 if (data === "Cập nhật thành công") {
-                    $("#result").text(data);
-                    $("#result").css("color", "green");
-                    $("#resultModal").modal("show");
+                    $("#message-modal .modal-body p").text(data);
+                    $("#message-modal .modal-body p").css("color", "green");
+                    $("#message-modal").modal("show");
                     $("#editModal").modal("hide");
                     setTimeout(() => {
                         location.reload();
                     }, 2000);
                 } else {
-                    $("#result").text(data);
-                    $("#result").css("color", "red");
-                    $("#resultModal").modal("show");
+                    $("#message-modal .modal-body p").text(data);
+                    $("#message-modal .modal-body p").css("color", "red");
+                    $("#message-modal").modal("show");
                     $("#editModal").modal("hide");
                 }
             }

@@ -1,11 +1,19 @@
+:root{
+    --border-color-gray: #D5D5D5;
+}
+
 body {
     padding: 0;
     margin: 0;
     font-family: 'Nunito Sans';
 
     box-sizing: border-box;
+
+    background-color: #F5F6FA !important;
 }
 
+
+/* CSS for side bar */
 #sidebar {
     width: 200px;
     height: 100%;
@@ -16,7 +24,7 @@ body {
 
     background-color: white;
 
-    border-right: 1px black solid;
+    border-right: 1px var(--border-color-gray) solid;
 
     display: flex;
     flex-direction: column;
@@ -52,6 +60,8 @@ body {
     align-items: center;
 }
 
+
+
 .nav-active > div {
     background-color: #4880FF;
     color: white;
@@ -86,6 +96,7 @@ body {
     margin-left: 200px;
 }
 
+/* CSS for navigation (header) */
 #header {
     height: 70px;
 
@@ -96,21 +107,22 @@ body {
 
     background-color: white;
 
-    border-bottom: 1px black solid;
+    border-bottom: 1px var(--border-color-gray) solid;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
     padding: 0 2%;
+    z-index: 1;
 }
 
 
-#search_bar {
+/* #search_bar {
     width: 380px;
     height: 38px;
 
-    border: 1px #D5D5D5 solid;
+    border: 1px var(--border-color-gray) solid;
     border-radius: 19px;
 
     color: #D5D5D5;
@@ -137,7 +149,7 @@ body {
 
 #header_search_input:focus {
     outline: none;
-}
+} */
 
 #right_section {
     display: flex;
@@ -182,4 +194,59 @@ body {
 
 #profile_role{
     font-size: 14px;
+}
+
+.w-35 {
+    width: 35%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-15 {
+    width: 15%;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.status-complete {
+    background-color: rgba(0, 182, 155, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+
+    width: 100px;
+
+    color: #00B69B;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+
+}
+.status-cancel {
+    background-color: rgba(239, 56, 38, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+
+    width: 100px;
+
+    color: #EF3826;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+
 }

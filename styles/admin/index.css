@@ -1,0 +1,59 @@
+:root{
+    --border-color-gray: #D5D5D5;
+}
+
+/* CSS for Page Content Body */
+/* cards */
+.my-card {
+    width: 270px;
+    border: 1px var(--border-color-gray) solid;
+    border-radius: 15px;
+
+    padding: 10px;
+
+    background-color: white;
+}
+
+.my-card img {
+    width: 25%;
+    height: 25%;
+}
+
+.my-card .card-quantity {
+    font-weight: bold;
+    font-size: 1.7rem;
+}
+
+.my-card .card-name {
+    color: #202224;
+}
+
+.my-card .card-body {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+/* deal list */
+#deal-list {
+    width: 100%;
+    background-color: white;
+    border-radius: 15px;
+
+    padding: 10px 0;
+
+    border: 1px var(--border-color-gray) solid;
+}
+
+#deal-table thead th {
+    height: 50px;
+    vertical-align: middle;
+}
+
+
+#deal-table tbody tr {
+    height: 60px;
+    border-bottom: 1px var(--border-color-gray) solid;
+    vertical-align: middle;
+}

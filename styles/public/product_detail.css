@@ -247,7 +247,9 @@ a.product p:first-child {
 .specification-wrapper {
     border: 1px solid black;
     padding: .5rem;
+    padding-left: 1rem;
     border-radius: .5rem;
+    min-width: fit-content;
 }
 
 .pagination {
@@ -263,6 +265,11 @@ a.product p:first-child {
 .pagination button.active, .pagination button:hover {
     background-color: #1FB5D4;
     color: white;
+}
+
+#add-to-cart {
+    position: relative;
+    left: 0;
 }
 /*-------------------icons-------------------*/
 .medal-icon {

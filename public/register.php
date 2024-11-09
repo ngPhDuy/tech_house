@@ -53,29 +53,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="../index.php" class="text-white">
+                <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="./product_list.php" class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
-                            '<a href="./member/profile.html" class="fw-bold text-white">
+                            '<a href="../member/user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
                                 '.$_SESSION['ho_ten'].'</a>';
                             echo '
                             <div class="dropdown-content">
-                                <div><a href="./member/profile.html">Thông tin cá nhân</a></div>
-                                <div><a href="./member/change_password.html">Đổi mật khẩu</a></div>
-                                <div><a href="./member/order_history.html">Lịch sử mua hàng</a></div>
-                                <div><a href="./member/logout.php">Đăng xuất</a></div>
+                                <div><a href="../member/user_info.php">Thông tin cá nhân</a></div>
+                                <div><a href="../member/change_password.html">Đổi mật khẩu</a></div>
+                                <div><a href="../member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="../member/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
@@ -87,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="#" class="fw-bold text-white">
+                        <a href="../member/cart.php" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -96,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="./product_list.php">
+                    <a href="../ndex.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
@@ -235,6 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/search.js"></script>
 <script>
     $("form button").click((e) => {
         e.preventDefault();

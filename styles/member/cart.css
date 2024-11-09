@@ -1,0 +1,36 @@
+.quantity-wrapper {
+    border: 1px solid #cbc8c8;
+}
+
+.product-name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+tr {
+    vertical-align: middle;
+}
+
+.price-value {
+    font-weight: 500;
+}
+
+.custom-btn {
+    background-color: #ff6600;
+    color: #fff;
+    transition: all ease-in-out 0.3s;
+    width: 80%;
+}
+
+.custom-btn:hover {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.custom-btn:hover {
+    transform: scale(1.05);
+}

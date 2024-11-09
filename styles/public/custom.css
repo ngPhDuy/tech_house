@@ -43,15 +43,23 @@ a, a:hover {
 
 .w-60 {
     width: 60%;
-  }
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.w-30 {
+    width: 30%;
+}
   
-  .w-10 {
-    width: 10%;
-  }
-  
-  w-20 {
-    width: 20%;
-  }
+.w-10 {
+  width: 10%;
+}
+
+w-20 {
+  width: 20%;
+}
 /*---------header---------*/
 .search-bar {
     border-radius: 62px;
@@ -198,3 +206,22 @@ header {
 .login:hover .dropdown-content {
     display: block; 
 }
+
+
+/*-----------Phuong customize css------------*/
+.ps-6 {
+    padding-left: 6rem !important;
+}
+  
+.border-primary {
+  border-color: #1fb5d4 !important;
+}
+
+.text-primary {
+  color: #1fb5d4 !important;
+}
+
+.border-gray {
+  border-color: #f0f0f0 !important;
+}
+  

@@ -45,10 +45,13 @@
 .place-order-btn {
   background-color: #ff6600;
   color: #fff;
+  transition: all ease-in-out 0.3s;
 }
 
 .place-order-btn:hover {
-  background-color: #e65c00;
+  background-color: #ff6600;
+  color: #fff;
+  transform: scale(1.05);
 }
 
 .icon {

@@ -80,3 +80,51 @@ tr td a:hover {
   max-width: 300px;
   margin: 0 auto;
 }
+
+
+.nav-item a {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.setting-icon {
+  content: url("../../imgs/icons/setting.png");
+  width: 22px;
+  height: 22px;
+}
+
+.nav-item:hover .setting-icon {
+  content: url("../../imgs/icons/setting_white.png");
+}
+
+.order-history-icon {
+  content: url("../../imgs/icons/order_history.png");
+  width: 22px;
+  height: 22px;
+}
+
+.nav-item:hover .order-history-icon {
+  content: url("../../imgs/icons/order_history_white.png");
+}
+
+.cart-icon {
+  content: url("../../imgs/icons/shopping_cart.png");
+  width: 22px;
+  height: 22px;
+}
+
+.nav-item:hover .cart-icon {
+  content: url("../../imgs/icons/shopping_cart_white.png");
+}
+
+.log-out-icon {
+  content: url("../../imgs/icons/log-out.png");
+  width: 22px;
+  height: 22px;
+}
+
+.nav-item:hover .log-out-icon {
+  content: url("../../imgs/icons/log-out_white.png");
+}
+

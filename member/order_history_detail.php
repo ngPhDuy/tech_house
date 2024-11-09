@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET' || !isset($_GET['order_id'])) {
     //error 404
     header('Location: ../public/404.html');
     exit();
-    
 }
 
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
@@ -25,9 +24,15 @@ $stmt = "select * from don_hang where ma_don_hang = $order_id";
 $result = $conn->query($stmt);
 $order = $result->fetch_assoc();
 
-$stmt = "select * from chi_tiet_don_hang c join san_pham s on c.ma_sp = s.ma_sp where ma_don_hang = $order_id";
+$stmt = "select * from chi_tiet_don_hang c join san_pham s on c.ma_sp = s.ma_sp 
+where ma_don_hang = $order_id";
 $result = $conn->query($stmt);
 $order_details = $result->fetch_all(MYSQLI_ASSOC);
+
+$stmt = "select dg.ma_sp from danh_gia dg where dg.ma_dh = $order_id";
+$result = $conn->query($stmt);
+$ratings = $result->fetch_all(MYSQLI_ASSOC);
+$ratings = array_column($ratings, 'ma_sp');
 
 $conn->close();
 ?>
@@ -39,35 +44,36 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="../styles/public/custom.css" rel="stylesheet">
     <link href="../styles/member/order_history_detail.css" rel="stylesheet">
-    <title>Người dùng</title>
+    <title>Chi tiết đơn hàng</title>
 </head>
 <body>
     <div class="page-wrapper">
         <header>
             <div class="row bg-primary align-items-center">
-                <div class="logo col-lg-3 col-4 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="../index.php" class="text-white">
+                <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
+                    <a href="../public/product_list.php" class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
-                            '<a href="./member/profile.html" class="fw-bold text-white">
+                            '<a href="./user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
                                 '.$_SESSION['ho_ten'].'</a>';
                             echo '
                             <div class="dropdown-content">
-                                <div><a href="./member/profile.html">Thông tin cá nhân</a></div>
-                                <div><a href="./member/change_password.html">Đổi mật khẩu</a></div>
-                                <div><a href="./order_history_dashboard.php?username='.$_SESSION['ten_dang_nhap'].'">Lịch sử mua hàng</a></div>
-                                <div><a href="./member/logout.php">Đăng xuất</a></div>
+                                <div><a href="./user_info.php">Thông tin cá nhân</a></div>
+                                <div><a href="./change_password.html">Đổi mật khẩu</a></div>
+                                <div><a href="./order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="./logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
@@ -79,7 +85,7 @@ $conn->close();
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="#" class="fw-bold text-white">
+                        <a href="./cart.php" class="fw-bold text-white">
                             <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
                             Giỏ hàng
                         </a>
@@ -88,40 +94,40 @@ $conn->close();
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="./product_list.php">
+                    <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=1">
+                    <a href="../public/product_list.php?product_type=1">
                         <img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
                         Điện thoại
                     </a>
                 </div>  
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=0">
+                    <a href="../public/product_list.php?product_type=0">
                         <img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
                         Laptop
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=2">
+                    <a href="../public/product_list.php?product_type=2">
                         <img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
                         Tablet
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=3">
+                    <a href="../public/product_list.php?product_type=3">
                         <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">
                         Phụ kiện
                         <img src="../imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
                     </a>
                     <div class="dropdown-content">
-                        <div><a href="./product_list.php?product_type=3">Tai nghe</a></div>
-                        <div><a href="./product_list.php?product_type=4">Bàn phím</a></div>
-                        <div><a href="./product_list.php?product_type=5">Sạc dự phòng</a></div>
-                        <div><a href="./product_list.php?product_type=6">Ốp lưng</a></div>
+                        <div><a href="../public/product_list.php?product_type=3">Tai nghe</a></div>
+                        <div><a href="../public/product_list.php?product_type=4">Bàn phím</a></div>
+                        <div><a href="../public/product_list.php?product_type=5">Sạc dự phòng</a></div>
+                        <div><a href="../public/product_list.php?product_type=6">Ốp lưng</a></div>
                     </div>
                 </div>
                 <div class="col-4"></div>
@@ -141,27 +147,30 @@ $conn->close();
                         <div class="sidebar-sticky">
                             <ul class="nav border rounded-3 flex-column">
                                 <li class="nav-item">
-                                    <a href="./user_info.php">
-                                        <img src="../imgs/icons/setting.png" alt="setting" width="22" height="22">
-                                        Thông tin cá nhân
+                                    <a href="user_info.php">
+                                        <!-- <img src="../imgs/icons/setting_white.png" alt="setting" width="22" height="22"> -->
+                                        <span class="setting-icon"></span>
+                                        <span>Thông tin cá nhân</span>
                                     </a>
                                 </li>
                                 <li class="nav-item active">
-                                        <?php echo '<a href="./order_history_dashboard.php?username='.$_SESSION['ten_dang_nhap'].'">'?>
-                                        <img src="../imgs/icons/order_history.png" alt="order_history" width="22" height="22">
-                                        Lịch sử mua hàng
+                                    <a href="./order_history_dashboard.php">
+                                        <img src="../imgs/icons/order_history_white.png" alt="order_history" width="22" height="22">
+                                        <span>Lịch sử mua hàng</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">
-                                        <img src="../imgs/icons/shopping_cart.png" alt="shopping_cart" width="22" height="22">
-                                        Giỏ hàng
+                                    <a href="./cart.php">
+                                        <!-- <img src="../imgs/icons/shopping_cart.png" alt="shopping_cart" width="22" height="22"> -->
+                                        <span class="cart-icon"></span>
+                                        <span>Giỏ hàng</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">
-                                        <img src="../imgs/icons/log-out.png" alt="log-out" width="22" height="22">
-                                        Đăng xuất
+                                    <a href="./logout.php">
+                                        <!-- <img src="../imgs/icons/log-out.png" alt="log-out" width="22" height="22"> -->
+                                        <span class="log-out-icon"></span>
+                                        <span>Đăng xuất</span>
                                     </a>
                                 </li>
                             </ul>
@@ -294,7 +303,7 @@ $conn->close();
                                         foreach ($order_details as $order_detail) {
                                             echo '<tr>';
                                             echo '<td>';
-                                            echo '<a class="d-flex" href="#">';
+                                            echo '<a class="d-flex" href="../public/product_detail.php?product_id='.$order_detail['ma_sp'].'">';
                                             echo '<img src="'.$order_detail['hinh_anh'].'" class="product-image me-3 d-none d-sm-block" alt="Product Image" width="80" height="80">';
                                             echo '<div>';
                                             echo '<p class="mb-1 product-name">ĐIỆN THOẠI</p>';
@@ -306,7 +315,14 @@ $conn->close();
                                             echo '<td>'.$order_detail['so_luong'].'</td>';
                                             echo '<td>'.number_format($order_detail['don_gia'] * $order_detail['so_luong'], 0, '', '.').'</td>';
                                             if ($order['tinh_trang'] == 3) {
-                                                echo '<td><button class="btn btn-primary rate-btn">Đánh giá</button></td>';
+                                                if (in_array($order_detail['ma_sp'], $ratings)) {
+                                                    echo '<td></td>';
+                                                } else {
+                                                    echo '<td><button type="button" class="btn btn-primary rate-btn" 
+                                                    product-name="'.$order_detail['ten_sp'].'"
+                                                    product-id="'.$order_detail['ma_sp'].'"
+                                                    product-img="'.$order_detail['hinh_anh'].'">Đánh giá</button></td>';
+                                                }
                                             }
                                             echo '</tr>';
                                         }
@@ -316,7 +332,7 @@ $conn->close();
                                 <?php
                                 if ($order['tinh_trang'] == 0) {
                                     echo '<div class="d-flex justify-content-end mt-3">';
-                                    echo '<button class="btn btn-danger text-white fw-bold" id="cancel-btn">HỦY ĐƠN HÀNG</button>';
+                                    echo '<button data-id="'.$_GET['order_id'].'" class="btn btn-danger text-white fw-bold" id="cancel-btn">HỦY ĐƠN HÀNG</button>';
                                     echo '</div>';
                                 }
                                 ?>
@@ -382,37 +398,133 @@ $conn->close();
                     <div class="modal-body">
                         <form class="d-flex flex-column justify-content-center align-items-center">
                             <div class="mb-3 d-flex justify-content-center flex-column align-items-center">
-                                <p class="m-0 mb-3 text-center fw-bold"> Đánh giá cho Google Pixel 6 Pro</p>
+                                <p class="m-0 mb-3 text-center fw-bold" id="rate-title"></p>
                                 <img src="../imgs/products/Google_Pixel_6_Pro.png" alt="Product Image" 
                                 width="80" height="80" class="d-block mx-auto mb-3">
                                 <select id="rating" class="form-select">
-                                    <option>5 sao</option>
-                                    <option>4 sao</option>
-                                    <option>3 sao</option>
-                                    <option>2 sao</option>
-                                    <option>1 sao</option>
+                                    <option value="5">5 sao</option>
+                                    <option value="4">4 sao</option>
+                                    <option value="3">3 sao</option>
+                                    <option value="2">2 sao</option>
+                                    <option value="1">1 sao</option>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="feedback" class="form-label">Nội dung đánh giá</label>
                                 <textarea id="feedback" class="form-control feedback-box" placeholder="Write down your feedback about our product & services"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">GỬI ĐÁNH GIÁ</button>
+                            <button type="button" class="btn btn-primary" id="submit-rating-btn">GỬI ĐÁNH GIÁ</button>
                         </form>
                     </div>
                 </div>
             </div> 
         </div>
+        <div class="modal" id="cancel-modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Xác nhận hủy đơn hàng</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="m-0">Bạn có chắc chắn muốn hủy đơn hàng này?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-danger" id="confirm-cancel-btn">Hủy đơn hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="message-modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p class="m-0 fs-5 text-center p-3"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/search.js"></script>
 <script>
     const rateBtns = document.querySelectorAll('.rate-btn');
     
     rateBtns.forEach(rateBtn => {
         rateBtn.addEventListener('click', () => {
+            const productName = rateBtn.getAttribute('product-name');
+            const productId = rateBtn.getAttribute('product-id');
+            const productImg = rateBtn.getAttribute('product-img');
+
+            $('#rate-title').text(productName);
+            $('#rateModal img').attr('src', productImg);
+            $('#rateModal').attr('data-id', productId);
             $('#rateModal').modal('show');
+        });
+    });
+
+    $('#submit-rating-btn').click(() => {
+        const productId = $('#rateModal').attr('data-id');
+        const rating = $('#rating').val();
+        const feedback = $('#feedback').val();
+
+        $.ajax({
+            url: './rate_product.php',
+            type: 'POST',
+            data: {
+                product_id: productId,
+                rating: rating,
+                feedback: feedback,
+                order_id: <?php echo $_GET['order_id']; ?>,
+                username: '<?php echo $_SESSION['ten_dang_nhap']; ?>'
+            },
+            success: function(response) {
+                if (response == 'Đánh giá thành công') {
+                    $('#message-modal .modal-body p').text(response);
+                    $('#message-modal .modal-body p').css('color', 'green');
+                    $('#message-modal').modal('show');
+                    $('#rateModal').modal('hide');
+                    $(`button[product-id=${productId}]`).parent().html('');
+                } else {
+                    $('#message-modal .modal-body p').text(response);
+                    $('#message-modal .modal-body p').css('color', 'red');
+                    $('#message-modal').modal('show');
+                    $('#rateModal').modal('hide');
+                }
+            }
+        });
+    })
+
+    $('#cancel-btn').click(function() {
+        $('#cancel-modal').modal('show');
+    });
+
+    $("#confirm-cancel-btn").click(function() {
+        const orderId = $('#cancel-btn').attr('data-id');
+        $.ajax({
+            url: '../member/cancel_order.php',
+            type: 'POST',
+            data: {order_id: orderId},
+            success: function(response) {
+                if (response = "Hủy đơn hàng thành công") {
+                    $('#message-modal .modal-body p').text(response);
+                    $('#message-modal .modal-body p').css('color', 'green');
+                    $('#message-modal').modal('show');
+                    $('#cancel-modal').modal('hide');
+                    setTimeout(() => {
+                        //reload
+                        location.reload();
+                    }, 700);
+                } else {
+                    $('#message-modal .modal-body p').text(response);
+                    $('#message-modal .modal-body p').css('color', 'red');
+                    $('#message-modal').modal('show');
+                    $('#cancel-modal').modal('hide');
+                }
+            }
         });
     });
 </script>

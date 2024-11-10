@@ -1,3 +1,32 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['ten_dang_nhap'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['phan_loai_tk'] != 'nv') {
+    header('Location: ../index.php');
+    exit();
+}
+
+$conn = new mysqli('localhost', 'root', '', 'tech_house_db');
+if ($conn->connect_error) {
+    die('Kết nối thất bại: ' . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM tai_khoan join thanh_vien on tai_khoan.ten_dang_nhap = thanh_vien.ten_dang_nhap 
+WHERE tai_khoan.ten_dang_nhap = '" . $_GET['username'] . "'";
+$result = $conn->query($sql);
+$row = $result->fetch_assoc();
+
+$sql = "select * from don_hang where thanh_vien = '" . $_GET['username'] . "'";
+$result = $conn->query($sql);
+$orders = $result->fetch_all(MYSQLI_ASSOC);
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -25,28 +54,28 @@
         <div id="logo">
             Tech House
         </div>
-        <a href="#" class="nav-active">
+        <a href="./homepage.php">
             <div>
                 <span>
                     Trang chủ
                 </span>
             </div>
         </a>
-        <a href="./pages/products/products.html">
+        <a href="./products.php">
             <div>
                 <span>
                     Sản phẩm
                 </span>
             </div>
         </a>
-        <a href="./pages/orders/orders.html">
+        <a href="./orders.php">
             <div>
                 <span>
                     Đơn hàng
                 </span>
             </div>
         </a>
-        <a href="./pages/account/customers.html">
+        <a href="./customers.php" class="nav-active">
             <div>
                 <span>
                     Thành viên
@@ -127,7 +156,13 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Chỉnh sửa thông tin</a></li>
-                        <li><a class="dropdown-item" href="#">Khóa tài khoản</a></li>
+                        <?php
+                        if ($row['active_status'] == '1') {
+                            echo '<li><button class="dropdown-item text-danger" type="button">Khóa tài khoản</button></li>';
+                        } else {
+                            echo '<li><button class="dropdown-item text-success" type="button">Mở khóa tài khoản</button></li>';
+                        }
+                        ?>
                     </ul>
                 </div>
             </div>
@@ -232,37 +267,57 @@
                 </div>
             </div>
 
+            <?php
+            if (count($orders) == 0) {
+                echo '<div class="fs-4 mt-4 text-center"
+                style="font-style: italic">Chưa có đơn hàng nào được đặt</div>';
+            } else {
+            ?>
             <div id="addtitional-info" class="info-wrapper container mt-3">
                 <div class="fs-4 mb-2">Lịch sử đặt hàng</div>
                     <table class="table align-middle text-center">
                         <thead>
                             <tr>
                                 <th>Mã ĐH</th>
-                                <th>Địa chỉ</th>
                                 <th>Tạo lúc</th>
                                 <th>Tổng giá</th>
                                 <th>Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1234567890098</td>
-                                <td>Thủ Đức, Thủ Đức, Thủ Đức, HCM</td>
-                                <td>22/22/2222</td>
-                                <td>1234567890098</td>
-                                <td><div class="status-complete">Đã giao</div></td>
-                            </tr>
-                            <tr>
-                                <td>1234567890098</td>
-                                <td>Thủ Đức, Thủ Đức, Thủ Đức, HCM</td>
-                                <td>22/22/2222</td>
-                                <td>1234567890098</td>
-                                <td><div class="status-cancel">Đã hủy</div></td>
-                            </tr>
-
+                            <?php
+                            foreach ($orders as $order) {
+                                echo '<tr class="order" data-id="' . $order['ma_don_hang'] . '">';
+                                echo '<td>' . $order['ma_don_hang'] . '</td>';
+                                echo '<td>' . $order['thoi_diem_dat_hang'] . '</td>';
+                                echo '<td>' . number_format($order['tong_gia'], 0, '.', '.') . ' VND</td>';
+                                switch ($order['tinh_trang']) {
+                                    case '0':
+                                        echo '<td class="d-flex justify-content-center"><div class="status-pending">Đang chờ</div></td>';
+                                        break;
+                                    case '1':
+                                        echo '<td class="d-flex justify-content-center"><div class="status-confirmed">Đã duyệt</div></td>';
+                                        break;
+                                    case '2':
+                                        echo '<td class="d-flex justify-content-center"><div class="status-shipping">Đang giao hàng</div></td>';
+                                        break;
+                                    case '3':
+                                        echo '<td class="d-flex justify-content-center"><div class="status-complete">Đã giao</div></td>';
+                                        break;
+                                    case '4':
+                                        echo '<td class="d-flex justify-content-center"><div class="status-cancel">Đã hủy</div></td>';
+                                        break;
+                                }
+                                echo '</tr>';
+                            }
+                            ?>
                         </tbody>
                     </table>
+                </div>
             </div>
+            <?php
+            }
+            ?>
         </div>
 
 
@@ -273,6 +328,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-</body>
 
+</body>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    $("tr.order").each(function () {
+        $(this).click(function () {
+            window.location.href = "./order_detail.php?order_id=" + $(this).attr('data-id');
+        });
+    });
+</script>
 </html>

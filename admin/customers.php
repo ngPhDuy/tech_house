@@ -1,12 +1,35 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['ten_dang_nhap'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['phan_loai_tk'] != 'nv') {
+    header('Location: ../index.php');
+    exit();
+}
+
+$conn = new mysqli('localhost', 'root', '', 'tech_house_db');
+if ($conn->connect_error) {
+    die('Kết nối thất bại: ' . $conn->connect_error);
+}
+
+$sql = 'SELECT * FROM tai_khoan join thanh_vien on tai_khoan.ten_dang_nhap = thanh_vien.ten_dang_nhap';
+$result = $conn->query($sql);
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech House - Thêm nhân viên</title>
+    <title>Tech house</title>
 
-    <link rel="stylesheet" href="../styles/admin/customer_add.css">
+    <link rel="stylesheet" href="../styles/admin/customer.css">
     <link rel="stylesheet" href="../styles/admin/layout.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -17,33 +40,32 @@
 </head>
 
 <body>
-    <!-- side bar -->
     <div id="sidebar">
         <div id="logo">
             Tech House
         </div>
-        <a href="#" class="nav-active">
+        <a href="./homepage.php">
             <div>
                 <span>
                     Trang chủ
                 </span>
             </div>
         </a>
-        <a href="./pages/products/products.html">
+        <a href="./products.php">
             <div>
                 <span>
                     Sản phẩm
                 </span>
             </div>
         </a>
-        <a href="./pages/orders/orders.html">
+        <a href="./orders.php">
             <div>
                 <span>
                     Đơn hàng
                 </span>
             </div>
         </a>
-        <a href="./pages/account/customers.html">
+        <a href="./customers.php" class="nav-active">
             <div>
                 <span>
                     Thành viên
@@ -113,93 +135,63 @@
 
     </div>
 
-    <!-- body content -->
     <div id="body_section">
+
         <div id="main_wrapper" class="px-5">
-            <div class="h2 mb-3">Thêm nhân viên mới</div>
-
-            <form class="info d-flex flex-column gap-3" action="#" method="POST">
-                <!-- Basic Information -->
-                <div class="info-wrapper container">
-                    <div class="row">
-                        <div class="col-4 input-box">
-                            <label for="username" class="form-label">Tên tài khoản</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-                        <div class="col-4 input-box">
-                            <label for="fullname" class="form-label">Tên nhân viên</label>
-                            <input type="text" class="form-control" id="fullname" name="fullname" required>
-                        </div>
-                        <div class="col-4 input-box">
-                            <label for="idCard" class="form-label">Căn cước công dân</label>
-                            <input type="text" class="form-control" id="idCard" name="idCard" required>
+            <div class="h3 mb-3">Tất cả thành viên</div>
+            <div class="d-flex flex-column gap-3">
+                <div id="utilities" class="d-flex justify-content-center w-100">
+                    <div class="w-100 d-flex justify-content-center">
+                        <div class="searchbar">
+                            <input type="text" placeholder="Nhập tên khách hàng..." name="search">
+                            <button type="button"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-4 input-box">
-                            <label for="role" class="form-label">Vai trò</label>
-                            <input type="text" class="form-control" id="role" name="role" required>
-                        </div>
-
-                        <div class="col-4 input-box">
-                            <label for="birthDate" class="form-label">Ngày sinh</label>
-                            <input type="date" class="form-control" id="birthDate" name="birthDate" required>
-                        </div>
-
-                        <div class="col-4 input-box">
-                            <label class="form-label">Giới tính</label>
-                            <div class="d-flex gap-4">
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="male" name="gender" value="male"
-                                        required>
-                                    <label for="male" class="form-check-label">Nam</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="female" name="gender" value="female"
-                                        required>
-                                    <label for="female" class="form-check-label">Nữ</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" class="form-check-input" id="other" name="gender" value="other"
-                                        required>
-                                    <label for="other" class="form-check-label">Khác</label>
-                                </div>
-                            </div>
-                            
-                        </div>
-
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-4 input-box">
-                            <label for="phoneNumber" class="form-label">Số điện thoại</label>
-                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
-                        </div>
-                        <div class="col-4 input-box">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="col-4 input-box">
-                            <label for="address" class="form-label">Địa chỉ</label>
-                            <input type="text" class="form-control" id="address" name="address" required>
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- Submit Button -->
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-lg btn-primary">Lưu nhân viên</button>
-                </div>
-            </form>
+                <table id="table-list-product" class="table table-hover align-middle">
+                    <thead>
+                        <tr class="align-middle">
+                            <th class="w-20">Tài khoản</th>
+                            <th class="w-30">Tên khách hàng</th>
+                            <th class="w-35">Address</th>
+                            <th>Số điện thoại</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<tr class="customer" data-id="' . $row['ten_dang_nhap'] . '">';
+                                echo '<td>' . $row['ten_dang_nhap'] . '</td>';
+                                echo '<td>' . $row['ho_va_ten'] . '</td>';
+                                echo '<td>' . $row['dia_chi'] . '</td>';
+                                echo '<td>' . $row['sdt'] . '</td>';
+                                echo '</tr>';
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
+
+
+        <!-- Dont have footer! -->
+        <div id="footer"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 </body>
-
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    $("tr.customer").each(function () {
+        $(this).click(function () {
+            window.location.href = 'customer_info.php?username=' + $(this).attr('data-id');
+        });
+    });
+</script>
 </html>

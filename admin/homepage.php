@@ -1,3 +1,44 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['ten_dang_nhap'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['phan_loai_tk'] != 'nv') {
+    header('Location: ../index.php');
+    exit();
+}
+
+$conn = new mysqli('localhost', 'root', '', 'tech_house_db');
+if ($conn->connect_error) {
+    die('Kết nối thất bại: ' . $conn->connect_error);
+}
+
+$stmt = $conn->prepare('select count(*) as so_thanh_vien from thanh_vien');
+$stmt->execute();
+$result = $stmt->get_result();
+$cus_count = $result->fetch_assoc()['so_thanh_vien'];
+
+$stmt = $conn->prepare('select count(*) as so_don_hang from don_hang');
+$stmt->execute();
+$result = $stmt->get_result();
+$order_count = $result->fetch_assoc()['so_don_hang'];
+
+$stmt = $conn->prepare('select count(*) as so_don_hang from don_hang where tinh_trang = 0');
+$stmt->execute();
+$result = $stmt->get_result();
+$pending_count = $result->fetch_assoc()['so_don_hang'];
+
+$stmt = $conn->prepare('select * from don_hang join tai_khoan
+on don_hang.thanh_vien = tai_khoan.ten_dang_nhap order by thoi_diem_dat_hang desc limit 10');
+$stmt->execute();
+$result = $stmt->get_result();
+$recent_orders = $result->fetch_all(MYSQLI_ASSOC);
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -28,21 +69,21 @@
                 </span>
             </div>
         </a>
-        <a href="./pages/products/products.html">
+        <a href="./products.php">
             <div>
                 <span>
                     Sản phẩm
                 </span>
             </div>
         </a>
-        <a href="./pages/orders/orders.html">
+        <a href="./orders.php">
             <div>
                 <span>
                     Đơn hàng
                 </span>
             </div>
         </a>
-        <a href="./pages/account/customers.html">
+        <a href="./customers.php">
             <div>
                 <span>
                     Thành viên
@@ -121,7 +162,9 @@
                             <div class="card-body">
                                 <div class="card-content">
                                     <div class="card-name">Thành viên</div>
-                                    <div class="card-quantity">10,233</div>
+                                    <div class="card-quantity">
+                                        <?php echo $cus_count; ?>
+                                    </div>
                                 </div>
                                 <img src="../imgs/icons/user-icon.png" alt="user icon on card"
                                 width="60" height="60">
@@ -137,25 +180,11 @@
                             <div class="card-body">
                                 <div class="card-content">
                                     <div class="card-name">Số đơn hàng</div>
-                                    <div class="card-quantity">10,233</div>
+                                    <div class="card-quantity">
+                                        <?php echo $order_count; ?>
+                                    </div>
                                 </div>
                                 <img src="../imgs/icons/order-icon.png" alt="order icon on card"
-                                width="60" height="60">
-                            </div>
-                            <div class="card-note">
-                                <span class="text-danger"><i class="fa-solid fa-chart-line"></i> 8.5%</span> 
-                                Giảm so với năm trước
-                            </div>
-                        </div>
-    
-                        <!-- Total Sales Card -->
-                        <div class="my-card">
-                            <div class="card-body">
-                                <div class="card-content">
-                                    <div class="card-name">Doanh thu</div>
-                                    <div class="card-quantity">10,233</div>
-                                </div>
-                                <img src="../imgs/icons/sales-icon.png" alt="sales icon on card"
                                 width="60" height="60">
                             </div>
                             <div class="card-note">
@@ -169,7 +198,9 @@
                             <div class="card-body">
                                 <div class="card-content">
                                     <div class="card-name">Đợi duyệt</div>
-                                    <div class="card-quantity">10,233</div>
+                                    <div class="card-quantity">
+                                        <?php echo $pending_count; ?>
+                                    </div>
                                 </div>
                                 <img src="../imgs/icons/pending-icon.png" alt="pending icon on card"
                                 width="60" height="60">
@@ -197,27 +228,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Nguyễn Văn A</td>
-                                    <td>2021-10-10 10:10:10</td>
-                                    <td>123 Đường ABC</td>
-                                    <td>Đã giao</td>
-                                </tr>
-                                <tr>
-                                    <td>Product name</td>
-                                    <td>Product Location</td>
-                                    <td>Date - Time</td>
-                                    <td>Price</td>
-                                    <td>Status</td>
-                                </tr>
-                                <tr>
-                                    <td>Product name</td>
-                                    <td>Product Location</td>
-                                    <td>Date - Time</td>
-                                    <td>Price</td>
-                                    <td>Status</td>
-                                </tr>
+                                <?php
+                                foreach ($recent_orders as $order) {
+                                    echo "<tr class='order' data-id='{$order['ma_don_hang']}'>";
+                                    echo '<td>' . $order['ma_don_hang'] . '</td>';
+                                    echo '<td>' . $order['ho_va_ten'] . '</td>';
+                                    echo '<td>' . $order['thoi_diem_dat_hang'] . '</td>';
+                                    echo '<td>' . $order['dia_chi'] . '</td>';
+                                    echo '<td>';
+                                    if ($order['tinh_trang'] == 0) {
+                                        echo 'Đợi duyệt';
+                                    } else if ($order['tinh_trang'] == 1) {
+                                        echo 'Đã xác nhận';
+                                    } else if ($order['tinh_trang'] == 2) {
+                                        echo 'Đang giao';
+                                    } else if ($order['tinh_trang'] == 3) {
+                                        echo 'Đã giao';
+                                    } else {
+                                        echo 'Đã hủy';
+                                    }
+                                    echo '</tr>';
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -230,4 +262,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 crossorigin="anonymous"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    $('tr.order').each(function() {
+        $(this).click(function() {
+            window.location.href = `./order_detail.php?order_id=${$(this).attr('data-id')}`;
+        });
+    })
+</script>
 </html>

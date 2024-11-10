@@ -229,7 +229,7 @@ body {
     padding: 5px;
     border-radius: 5px;
 
-    width: 100px;
+    width: 70%;
 
     color: #00B69B;
     text-align: center;
@@ -242,11 +242,50 @@ body {
     padding: 5px;
     border-radius: 5px;
 
-    width: 100px;
+    width: 70%;
 
     color: #EF3826;
     text-align: center;
     font-weight: bold;
     font-size: 0.8rem;
 
+}
+
+.status-confirmed {
+    background-color: rgba(13, 202, 240, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+
+    width: 70%;
+
+    color: #0dcaf0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.status-shipping {
+    background-color: rgba(253, 126, 20, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+
+    width: 70%;
+
+    color: #fd7e14;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.status-pending {
+    background-color: rgba(173, 181, 189, 0.2);
+    padding: 5px;
+    border-radius: 5px;
+
+    width: 70%;
+
+    color: #adb5bd;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
 }

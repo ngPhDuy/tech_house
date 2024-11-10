@@ -57,3 +57,7 @@
     border-bottom: 1px var(--border-color-gray) solid;
     vertical-align: middle;
 }
+
+tr {
+    cursor: pointer;
+}

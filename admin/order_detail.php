@@ -1,3 +1,44 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['ten_dang_nhap'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['phan_loai_tk'] != 'nv') {
+    header('Location: ../index.php');
+    exit();
+}
+
+$conn = new mysqli('localhost', 'root', '', 'tech_house_db');
+if ($conn->connect_error) {
+    die('Kết nối thất bại: ' . $conn->connect_error);
+}
+
+$order_id = $_GET['order_id'];
+$stmt = $conn->prepare('select * from don_hang dh
+join tai_khoan tk on dh.thanh_vien = tk.ten_dang_nhap
+where dh.ma_don_hang = ?');
+$stmt->bind_param('s', $order_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$order = $result->fetch_assoc();
+
+if ($order == null) {
+    header('Location: orders.php');
+    exit();
+}
+
+$stmt = $conn->prepare('select * from chi_tiet_don_hang ctdh 
+join san_pham sp on ctdh.ma_sp = sp.ma_sp where ctdh.ma_don_hang = ?');
+$stmt->bind_param('s', $order_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$products = $result->fetch_all(MYSQLI_ASSOC);
+
+$stmt->close();
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -25,28 +66,28 @@
         <div id="logo">
             Tech House
         </div>
-        <a href="#" class="nav-active">
+        <a href="./homepage.php">
             <div>
                 <span>
                     Trang chủ
                 </span>
             </div>
         </a>
-        <a href="./pages/products/products.html">
+        <a href="./products.php">
             <div>
                 <span>
                     Sản phẩm
                 </span>
             </div>
         </a>
-        <a href="./pages/orders/orders.html">
+        <a href="./orders.php"  class="nav-active">
             <div>
                 <span>
                     Đơn hàng
                 </span>
             </div>
         </a>
-        <a href="./pages/account/customers.html">
+        <a href="./customers.php">
             <div>
                 <span>
                     Thành viên
@@ -116,15 +157,7 @@
 
     </div>
 
-    <!-- end -->
-    <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
-
-    <!-- body content -->
-    <!-- add code here -->
     <div id="body_section">
-        <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
-        <!-- TODO -->
-        <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
 
         <div id="main_wrapper" class="px-5">
             <div class="h3 mb-3">Thông tin đơn hàng</div>
@@ -138,11 +171,22 @@
                                 Thao tác
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Duyệt đơn hàng</a></li>
+                                <?php
+                                if ($order['tinh_trang'] == 0) {
+                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Duyệt đơn hàng</a></li>';
+                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Hủy đơn hàng</a></li>';
+                                } else if ($order['tinh_trang'] == 4) {
+                                } else {
+                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Đang đóng gói</a></li>';
+                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Đang vận chuyển</a></li>';
+                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Đã giao thành công</a></li>';
+                                }
+                                ?>
+                                <!-- <li><a class="dropdown-item" href="#">Duyệt đơn hàng</a></li>
                                 <li><a class="dropdown-item" href="#">Đang đóng gói</a></li>
                                 <li><a class="dropdown-item" href="#">Đang vận chuyển</a></li>
                                 <li><a class="dropdown-item" href="#">Đã giao thành công</a></li>
-                                <li><a class="dropdown-item" href="#">Hủy đơn hàng</a></li>
+                                <li><a class="dropdown-item" href="#">Hủy đơn hàng</a></li> -->
                             </ul>
                         </div>
                     </div>
@@ -152,7 +196,7 @@
                                 Mã đơn hàng
                             </div>
                             <div class="info-value">
-                                XX1YYZZ
+                                <?php echo $order['ma_don_hang']; ?>
                             </div>
                         </div>
 
@@ -161,7 +205,7 @@
                                 Tên khách hàng
                             </div>
                             <div class="info-value">
-                                Bùi Tiến Dũng
+                                <?php echo $order['ho_va_ten']; ?>
                             </div>
                         </div>
 
@@ -174,7 +218,9 @@
                                 Tổng giá
                             </div>
                             <div class="info-value">
-                                100010001000
+                                <?php
+                                echo number_format($order['tong_gia'], 0, '.', '.').' VND'; 
+                                ?>
                             </div>
                         </div>
 
@@ -183,7 +229,19 @@
                                 Tình trạng
                             </div>
                             <div class="info-value">
-                                Accepted
+                                <?php
+                                if ($order['tinh_trang'] == 0) {
+                                    echo 'Đợi duyệt';
+                                } else if ($order['tinh_trang'] == 1) {
+                                    echo 'Đã xác nhận';
+                                } else if ($order['tinh_trang'] == 2) {
+                                    echo 'Đang giao';
+                                } else if ($order['tinh_trang'] == 3) {
+                                    echo 'Đã giao';
+                                } else {
+                                    echo 'Đã hủy';
+                                }
+                                ?>
                             </div>
                         </div>
 
@@ -193,7 +251,7 @@
                                 Thời điểm đặt
                             </div>
                             <div class="info-value">
-                                22/22/2024
+                                <?php echo $order['thoi_diem_dat_hang']; ?>
                             </div>
                         </div>
 
@@ -206,7 +264,20 @@
                                 Nhân viên duyệt
                             </div>
                             <div class="info-value">
-                                Bùi Tiến Dũng
+                                <?php
+                                if ($order['tinh_trang'] == '0') {
+                                    echo 'Chưa có';
+                                    $duyet = null;
+                                } else {
+                                    $stmt = $conn->prepare('select * from duyet_don_hang where ma_don_hang = ?');
+                                    $stmt->bind_param('s', $order_id);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    $duyet = $result->fetch_assoc();
+                                    echo $duyet['nhan_vien'];
+                                    $stmt->close();
+                                }
+                                ?>
                             </div>
                         </div>
 
@@ -215,7 +286,13 @@
                                 Ngày duyệt
                             </div>
                             <div class="info-value">
-                                22/2/2023
+                                <?php
+                                if ($duyet == null) {
+                                    echo 'Chưa có';
+                                } else {
+                                    echo $duyet['thoi_diem_duyet'];
+                                }
+                                ?>
                             </div>
                         </div>
 
@@ -224,7 +301,13 @@
                                 Thời điểm nhận
                             </div>
                             <div class="info-value">
-                                22/22/2024
+                                <?php
+                                if ($order['thoi_diem_nhan_hang'] == null) {
+                                    echo 'Chưa nhận hàng';
+                                } else {
+                                    echo $order['thoi_diem_nhan_hang'];
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -244,34 +327,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><img src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/42/329135/iphone-16-xanh-luu-ly-1-638639088268837180-750x500.jpg"
-                                        alt="image"></td>
-                                    <td>
-                                        Iphone 16 pro max plust xyzabc
-                                    </td>
-                                    <td>3</td>
-                                    <td>1234567890098</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/42/329135/iphone-16-xanh-luu-ly-1-638639088268837180-750x500.jpg"
-                                        alt="image"></td>
-                                    <td>
-                                        Iphone 16 pro max plust xyzabc
-                                    </td>
-                                    <td>3</td>
-                                    <td>1234567890098</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/42/329135/iphone-16-xanh-luu-ly-1-638639088268837180-750x500.jpg"
-                                        alt="image"></td>
-                                    <td>
-                                        Iphone 16 pro max plust xyzabc
-                                    </td>
-                                    <td>3</td>
-                                    <td>1234567890098</td>
-                                </tr>
-
+                                <?php
+                                foreach ($products as $product) {
+                                    echo '<tr>';
+                                    echo '<td><img src="' . $product['hinh_anh'] . '" alt="image"></td>';
+                                    echo '<td>' . $product['ten_sp'] . '</td>';
+                                    echo '<td>' . $product['so_luong'] . '</td>';
+                                    echo '<td>' . $product['don_gia'] . '</td>';
+                                    echo '</tr>';
+                                }
+                                ?>
                             </tbody>
                         </table>
                 </div>
@@ -290,3 +355,6 @@
 </body>
 
 </html>
+<?php
+$conn->close();
+?>

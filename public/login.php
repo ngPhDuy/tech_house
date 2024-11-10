@@ -1,8 +1,11 @@
 <?php
 session_start();
 
-if (isset($_SESSION['ten_dang_nhap'])) {
+if (isset($_SESSION['ten_dang_nhap']) && $_SESSION['phan_loai_tk'] == 'tv') {
     header("Location: ../index.php");
+    return;
+} else if (isset($_SESSION['ten_dang_nhap']) && $_SESSION['phan_loai_tk'] == 'nv') {
+    header("Location: ../admin/homepage.php");
     return;
 }
 
@@ -16,36 +19,66 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM tai_khoan tk JOIN thanh_vien tv 
-    ON tk.ten_dang_nhap = tv.ten_dang_nhap WHERE tk.ten_dang_nhap = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    //check firsrt character of username equal $
+    if (substr($username, 0, 1) == '$') {
+        $stmt = $conn->prepare("SELECT * FROM tai_khoan 
+        WHERE ten_dang_nhap = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $verify = password_verify($password, $row['mat_khau']);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $verify = password_verify($password, $row['mat_khau']);
 
-        if (!$verify) {
-            echo "Đăng nhập thất bại";
-            $conn->close();
-            exit();
+            if (!$verify) {
+                echo "Đăng nhập thất bại";
+                $conn->close();
+                exit();
+            }
+
+            $_SESSION['ten_dang_nhap'] = $row['ten_dang_nhap'];
+            $tempArr = explode(" ", $row['ho_va_ten']);
+            $_SESSION['ho_ten'] = $tempArr[count($tempArr) - 2] . " " . $tempArr[count($tempArr) - 1];
+            $_SESSION['phan_loai_tk'] = $row['phan_loai_tk'];
+
+            echo "../admin/homepage.php";
+        } else {
+            echo "Tài khoản không tồn tại";
         }
 
-        if ($row['active_status'] == false) {
-            echo "Tài khoản đã bị khóa";
-            $conn->close();
-            exit();
-        }
-
-        $_SESSION['ten_dang_nhap'] = $row['ten_dang_nhap'];
-        $tempArr = explode(" ", $row['ho_va_ten']);
-        $_SESSION['ho_ten'] = $tempArr[count($tempArr) - 2] . " " . $tempArr[count($tempArr) - 1];
-        $_SESSION['phan_loai_tk'] = $row['phan_loai_tk'];
-
-        echo "../index.php";
     } else {
-        echo "Tài khoản không tồn tại";
+        $stmt = $conn->prepare("SELECT * FROM tai_khoan tk JOIN thanh_vien tv 
+        ON tk.ten_dang_nhap = tv.ten_dang_nhap WHERE tk.ten_dang_nhap = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result(); 
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $verify = password_verify($password, $row['mat_khau']);
+
+            if (!$verify) {
+                echo "Đăng nhập thất bại";
+                $conn->close();
+                exit();
+            }
+
+            if ($row['active_status'] == false) {
+                echo "Tài khoản đã bị khóa";
+                $conn->close();
+                exit();
+            }
+
+            $_SESSION['ten_dang_nhap'] = $row['ten_dang_nhap'];
+            $tempArr = explode(" ", $row['ho_va_ten']);
+            $_SESSION['ho_ten'] = $tempArr[count($tempArr) - 2] . " " . $tempArr[count($tempArr) - 1];
+            $_SESSION['phan_loai_tk'] = $row['phan_loai_tk'];
+
+            echo "../index.php";
+        } else {
+            echo "Tài khoản không tồn tại";
+        }
     }
 
     $conn->close();

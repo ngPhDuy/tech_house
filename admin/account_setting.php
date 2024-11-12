@@ -16,8 +16,9 @@ if ($conn->connect_error) {
     die('Kết nối thất bại: ' . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM tai_khoan join thanh_vien on tai_khoan.ten_dang_nhap = thanh_vien.ten_dang_nhap 
-WHERE tai_khoan.ten_dang_nhap = '" . $_GET['username'] . "'";
+$sql = "SELECT * FROM Tai_khoan join Nhan_vien on Tai_khoan.ten_dang_nhap = Nhan_vien.ten_dang_nhap 
+WHERE Tai_khoan.ten_dang_nhap = '" . $_SESSION['ten_dang_nhap'] . "'";
+
 $result = $conn->query($sql);
 $row = $result->fetch_assoc();
 
@@ -27,6 +28,8 @@ $orders = $result->fetch_all(MYSQLI_ASSOC);
 
 $conn->close();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -75,14 +78,14 @@ $conn->close();
                 </span>
             </div>
         </a>
-        <a href="./customers.php" class="nav-active">
+        <a href="./customers.php">
             <div>
                 <span>
                     Thành viên
                 </span>
             </div>
         </a>
-        <a href="./account_setting.php">
+        <a href="./account_setting.php" class="nav-active">
             <div>
                 <span>
                     Tài khoản
@@ -99,8 +102,8 @@ $conn->close();
             <div id="notification_utility" class="dropdown">
                 <button class="btn dropdown-bs-toggle p-1" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <img id="notification_icon" src="../imgs/icons/notification-icon.png" 
-                    width="30" height="30" alt="Notification utility">
+                    <img id="notification_icon" src="../imgs/icons/notification-icon.png"
+                        width="30" height="30" alt="Notification utility">
                 </button>
 
                 <ul class="dropdown-menu">
@@ -125,7 +128,7 @@ $conn->close();
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item text-primary" href="./account_setting.php">Thông tin tài khoản</a></li>
+                        <li class="d-none"><a class="dropdown-item text-primary" href="./account_setting.php">Thông tin tài khoản</a></li>
                         <li><a class="dropdown-item text-danger" href="../public/logout.php">Đăng xuất</a></li>
                     </ul>
                 </div>
@@ -144,14 +147,8 @@ $conn->close();
                         Thao tác
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Chỉnh sửa thông tin</a></li>
-                        <?php
-                        if ($row['active_status'] == '1') {
-                            echo '<li><button class="dropdown-item text-danger" type="button">Khóa tài khoản</button></li>';
-                        } else {
-                            echo '<li><button class="dropdown-item text-success" type="button">Mở khóa tài khoản</button></li>';
-                        }
-                        ?>
+                        <li><a class="dropdown-item text-primary" href="./admin_account_edit.php">Chỉnh sửa thông tin</a></li>
+                        <li><a class="dropdown-item text-danger" href="../public/logout.php">Đăng xuất</a></li>
                     </ul>
                 </div>
             </div>
@@ -165,153 +162,127 @@ $conn->close();
                 </div>
                 <div class="d-flex flex-column col justify-content-evenly">
                     <div class="d-flex">
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
                                 Tên đăng nhập
                             </div>
                             <div class="info-value">
-                                ABCDXYZ
+                                <?php echo $row['ten_dang_nhap'] ?? "..."; ?>
                             </div>
                         </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
                                 Họ và tên
                             </div>
                             <div class="info-value">
-                                Bùi Tiến Dũng
+                                <?php echo $row['ho_va_ten'] ?? "..."; ?>
                             </div>
                         </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
-                                Trạng thái tài khoản
+                                Căn cước công dân
                             </div>
-                            <div class="info-value">
-                                Active
+                            <div id="active-box" class="info-value">
+                                <?php echo $row['cccd'] ?? "..."; ?>
                             </div>
                         </div>
                     </div>
 
                     <div class="d-flex">
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
-                                Số điện thoại
+                                Giới tính
                             </div>
                             <div class="info-value">
-                                09854321
+                                <?php echo $row['gioi_tinh'] ?? "..."; ?>
                             </div>
                         </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
-                                Email
+                                Ngày sinh
                             </div>
                             <div class="info-value">
-                                Dung@gamil.com
+                                <?php
+                                if ($row['ngay_sinh']){
+                                    echo date_format(date_create((string)$row['ngay_sinh']), "d/m/Y");
+
+                                }else{
+                                    echo "...";
+                                }
+                                
+                                ?>
                             </div>
                         </div>
 
-
-
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
                                 Địa chỉ
                             </div>
                             <div class="info-value">
-                                Thủ Đức, Thủ Đức, Thủ Đức, HCM
+                                <?php echo $row['dia_chi'] ?? "..."; ?>
                             </div>
                         </div>
                     </div>
 
                     <div class="d-flex">
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
-                                Phân loại
+                                Số điện thoại
                             </div>
                             <div class="info-value">
-                                Nhân viên hạng 1
+                                <?php echo $row['sdt'] ?? "..."; ?>
                             </div>
                         </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box col-4 my-3">
                             <div class="info-type">
-                                Thời điểm mở tài khoản
+                                Email
                             </div>
                             <div class="info-value">
-                                22/22/2222
-                            </div>
-                        </div>
-
-                        <div class="info-box col-4">
-                            <div class="info-type">
-                                Thời điểm huỷ tài khoản
-                            </div>
-                            <div class="info-value">
-                                22/22/2222
+                                <?php echo $row['email'] ?? "..."; ?>
                             </div>
                         </div>
                     </div>
 
-                </div>
-            </div>
+                    <div class="d-flex">
+                        <div class="info-box col-4 my-3">
+                            <div class="info-type">
+                                Phân loại
+                            </div>
+                            <div class="info-value">
+                                <?php echo $row['phan_loai_tk'] == "nv" ? "Nhân viên" : ($row['phan_loai_tk'] ?? "..."); ?>
+                            </div>
+                        </div>
 
-            <?php
-            if (count($orders) == 0) {
-                echo '<div class="fs-4 mt-4 text-center"
-                style="font-style: italic">Chưa có đơn hàng nào được đặt</div>';
-            } else {
-            ?>
-            <div id="addtitional-info" class="info-wrapper container mt-3">
-                <div class="fs-4 mb-2">Lịch sử đặt hàng</div>
-                    <table class="table align-middle text-center">
-                        <thead>
-                            <tr>
-                                <th>Mã ĐH</th>
-                                <th>Tạo lúc</th>
-                                <th>Tổng giá</th>
-                                <th>Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            foreach ($orders as $order) {
-                                echo '<tr class="order" data-id="' . $order['ma_don_hang'] . '">';
-                                echo '<td>' . $order['ma_don_hang'] . '</td>';
-                                echo '<td>' . $order['thoi_diem_dat_hang'] . '</td>';
-                                echo '<td>' . number_format($order['tong_gia'], 0, '.', '.') . ' VND</td>';
-                                switch ($order['tinh_trang']) {
-                                    case '0':
-                                        echo '<td class="d-flex justify-content-center"><div class="status-pending">Đang chờ</div></td>';
-                                        break;
-                                    case '1':
-                                        echo '<td class="d-flex justify-content-center"><div class="status-confirmed">Đã duyệt</div></td>';
-                                        break;
-                                    case '2':
-                                        echo '<td class="d-flex justify-content-center"><div class="status-shipping">Đang giao hàng</div></td>';
-                                        break;
-                                    case '3':
-                                        echo '<td class="d-flex justify-content-center"><div class="status-complete">Đã giao</div></td>';
-                                        break;
-                                    case '4':
-                                        echo '<td class="d-flex justify-content-center"><div class="status-cancel">Đã hủy</div></td>';
-                                        break;
+                        <div class="info-box col-4 my-3">
+                            <div class="info-type">
+                                Thời điểm mở tài khoản
+                            </div>
+                            <div class="info-value">
+                                <?php
+                                if ($row['thoi_diem_mo_tk']){
+                                    echo date_format(date_create((string)$row['thoi_diem_mo_tk']), "d/m/Y");
+
+                                }else{
+                                    echo "...";
                                 }
-                                echo '</tr>';
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                
+                                ?>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-            <?php
-            }
-            ?>
-        </div>
+
+    </div>
 
 
-        <!-- Dont have footer! -->
-        <div id="footer" class="mb-5"></div>
+    <!-- Dont have footer! -->
+    <div id="footer" class="mb-5"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -320,11 +291,4 @@ $conn->close();
 
 </body>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-<script>
-    $("tr.order").each(function () {
-        $(this).click(function () {
-            window.location.href = "./order_detail.php?order_id=" + $(this).attr('data-id');
-        });
-    });
-</script>
 </html>

@@ -90,6 +90,13 @@ $conn->close();
                 </span>
             </div>
         </a>
+        <a href="./account_setting.php">
+            <div>
+                <span>
+                    Tài khoản
+                </span>
+            </div>
+        </a>
 
     </div>
     <div id="header">
@@ -99,8 +106,8 @@ $conn->close();
             <div id="notification_utility" class="dropdown">
                 <button class="btn dropdown-bs-toggle p-1" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <img id="notification_icon" src="../imgs/icons/notification-icon.png" 
-                    width="30" height="30" alt="Notification utility">
+                    <img id="notification_icon" src="../imgs/icons/notification-icon.png"
+                        width="30" height="30" alt="Notification utility">
                 </button>
 
                 <ul class="dropdown-menu">
@@ -110,41 +117,23 @@ $conn->close();
                 </ul>
             </div>
 
-            <div id="profile">
-                <div id="profile_account">
-                    <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                    <div id="profile_text">
-                        <div id="profile_name">Dung Bui</div>
-                        <div id="profile_role">Admin</div>
-                    </div>
-                </div>
-
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
-                    <a class="btn dropdown-bs-toggle p-0 rounded-circle" href="#" role="button"
+                    <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg width="30" height="30" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M10 19.1C15.0258 19.1 19.1 15.0258 19.1 10C19.1 4.97421 15.0258 0.9 10 0.9C4.97421 0.9 0.9 4.97421 0.9 10C0.9 15.0258 4.97421 19.1 10 19.1Z"
-                                stroke="#5C5C5C" stroke-width="0.2" />
-                            <path
-                                d="M10 10.7929L7.73162 8.14645C7.56425 7.95118 7.29289 7.95118 7.12553 8.14645C6.95816 8.34171 6.95816 8.65829 7.12553 8.85355L9.69695 11.8536C9.86432 12.0488 10.1357 12.0488 10.303 11.8536L12.8745 8.85355C13.0418 8.65829 13.0418 8.34171 12.8745 8.14645C12.7071 7.95118 12.4358 7.95118 12.2684 8.14645L10 10.7929Z"
-                                fill="#565656" />
-                            <mask id="mask0_62_4256" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="7" y="8"
-                                width="6" height="4">
-                                <path
-                                    d="M10 10.7929L7.73162 8.14645C7.56425 7.95118 7.29289 7.95118 7.12553 8.14645C6.95816 8.34171 6.95816 8.65829 7.12553 8.85355L9.69695 11.8536C9.86432 12.0488 10.1357 12.0488 10.303 11.8536L12.8745 8.85355C13.0418 8.65829 13.0418 8.34171 12.8745 8.14645C12.7071 7.95118 12.4358 7.95118 12.2684 8.14645L10 10.7929Z"
-                                    fill="white" />
-                            </mask>
-                            <g mask="url(#mask0_62_4256)">
-                            </g>
-                        </svg>
+                        <div id="profile_account">
+                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
+                            <div id="profile_text">
+                                <div id="profile_name">Dung Bui</div>
+                                <div id="profile_role">Admin</div>
+                            </div>
+                        </div>
 
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><a class="dropdown-item text-primary" href="./account_setting.php">Thông tin tài khoản</a></li>
+                        <li><a class="dropdown-item text-danger" href="../public/logout.php">Đăng xuất</a></li>
                     </ul>
                 </div>
             </div>
@@ -167,14 +156,14 @@ $conn->close();
                                     </div>
                                 </div>
                                 <img src="../imgs/icons/user-icon.png" alt="user icon on card"
-                                width="60" height="60">
+                                    width="60" height="60">
                             </div>
                             <div class="card-note">
-                                <span class="text-success"><i class="fa-solid fa-chart-line"></i> 8.5%</span> 
+                                <span class="text-success"><i class="fa-solid fa-chart-line"></i> 8.5%</span>
                                 Tăng so với năm trước
                             </div>
                         </div>
-    
+
                         <!-- Total Order Card -->
                         <div class="my-card">
                             <div class="card-body">
@@ -185,14 +174,14 @@ $conn->close();
                                     </div>
                                 </div>
                                 <img src="../imgs/icons/order-icon.png" alt="order icon on card"
-                                width="60" height="60">
+                                    width="60" height="60">
                             </div>
                             <div class="card-note">
-                                <span class="text-danger"><i class="fa-solid fa-chart-line"></i> 8.5%</span> 
+                                <span class="text-danger"><i class="fa-solid fa-chart-line"></i> 8.5%</span>
                                 Giảm so với năm trước
                             </div>
                         </div>
-    
+
                         <!-- Total Pending Card -->
                         <div class="my-card">
                             <div class="card-body">
@@ -203,14 +192,14 @@ $conn->close();
                                     </div>
                                 </div>
                                 <img src="../imgs/icons/pending-icon.png" alt="pending icon on card"
-                                width="60" height="60">
+                                    width="60" height="60">
                             </div>
                             <div class="card-note">
                                 <span class="text-success"><i class="fa-solid fa-chart-line"></i> 8.5%</span>
                                 Tăng so với năm trước
                             </div>
                         </div>
-    
+
                     </div>
                 </div>
 
@@ -260,8 +249,8 @@ $conn->close();
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-crossorigin="anonymous"></script>
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
     $('tr.order').each(function() {
@@ -270,4 +259,5 @@ crossorigin="anonymous"></script>
         });
     })
 </script>
+
 </html>

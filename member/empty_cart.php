@@ -43,7 +43,7 @@ session_start();
                                 <div><a href="./user_info.php">Thông tin cá nhân</a></div>
                                 <div><a href="./change_password.html">Đổi mật khẩu</a></div>
                                 <div><a href="./order_history_dashboard.php">Lịch sử mua hàng</a></div>
-                                <div><a href="./logout.php">Đăng xuất</a></div>
+                                <div><a href="../public/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 

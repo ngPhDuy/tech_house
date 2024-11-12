@@ -62,7 +62,7 @@ $model = explode(' - ', $product['ten_sp'])[0];
                                 <div><a href="../member/user_info.php">Thông tin cá nhân</a></div>
                                 <div><a href="../member/change_password.html">Đổi mật khẩu</a></div>
                                 <div><a href="../member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
-                                <div><a href="../member/logout.php">Đăng xuất</a></div>
+                                <div><a href="./logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 

@@ -43,3 +43,7 @@
 tr, td {
     text-align: center;
 }
+
+tbody tr {
+    cursor: pointer;
+}

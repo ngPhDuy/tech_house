@@ -43,6 +43,12 @@ $conn->close();
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+
+    <style>
+        .info-value {
+            font-size: 1rem;
+        }
+    </style>
 </head>
 
 <body>
@@ -140,28 +146,29 @@ $conn->close();
             <div class="d-flex justify-content-start align-items-center gap-3 mb-3">
                 <div class="fs-3">Thông tin khách hàng</div>
                 <div class="dropdown">
-                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                        Thao tác
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Chỉnh sửa thông tin</a></li>
-                        <?php
-                        if ($row['active_status'] == '1') {
-                            echo '<li><button class="dropdown-item text-danger" type="button">Khóa tài khoản</button></li>';
-                        } else {
-                            echo '<li><button class="dropdown-item text-success" type="button">Mở khóa tài khoản</button></li>';
-                        }
-                        ?>
-                    </ul>
+                <?php
+                if ($row['active_status'] == '1') {
+                    echo '<button class="btn btn-danger" type="button"
+                    id="disable-account">Khóa tài khoản</button>';
+                } else {
+                    echo '<button class="btn btn-success" type="button"
+                    id="able-account">Mở khóa tài khoản</button>';
+                }
+                ?>
                 </div>
             </div>
 
             <div class="product-info d-flex gap-3 info-wrapper align-items-center gap-3">
                 <div class="d-flex flex-column justify-content-center align-items-center gap-2 col-3">
-                    <img src="../imgs/avatars/default.png" alt="avatar" class="user-avatar" width="150" height="150">
-                    <div class="user-name fs-3">
-                        Bùi Tiến Dũng
-                    </div>
+                    <?php 
+                    if ($row['avatar'] != NULL) {
+                        echo '<img src="../imgs/avatars/' . $row['avatar'] . '" 
+                        alt="avatar" class="user-avatar border rounded-circle" width="150" height="150">';
+                    } else {
+                        echo '<img src="../imgs/avatars/default.png" 
+                    alt="avatar" class="user-avatar border rounded-circle" width="150" height="150">';
+                    }
+                    ?>
                 </div>
                 <div class="d-flex flex-column col justify-content-evenly">
                     <div class="d-flex">
@@ -170,7 +177,7 @@ $conn->close();
                                 Tên đăng nhập
                             </div>
                             <div class="info-value">
-                                ABCDXYZ
+                                <?php echo $row['ten_dang_nhap']; ?>
                             </div>
                         </div>
 
@@ -179,7 +186,7 @@ $conn->close();
                                 Họ và tên
                             </div>
                             <div class="info-value">
-                                Bùi Tiến Dũng
+                                <?php echo $row['ho_va_ten']; ?>
                             </div>
                         </div>
 
@@ -188,7 +195,11 @@ $conn->close();
                                 Trạng thái tài khoản
                             </div>
                             <div class="info-value">
-                                Active
+                                <?php if ($row['active_status'] == '1') {
+                                    echo '<p class="text-success m-0">Đang hoạt động</p>';
+                                } else {
+                                    echo '<p class="text-danger m-0">Đã khóa</p>';
+                                } ?>
                             </div>
                         </div>
                     </div>
@@ -199,7 +210,11 @@ $conn->close();
                                 Số điện thoại
                             </div>
                             <div class="info-value">
-                                09854321
+                                <?php if ($row['sdt'] == '') {
+                                    echo 'Chưa cập nhật';
+                                } else {
+                                    echo $row['sdt'];
+                                } ?>
                             </div>
                         </div>
 
@@ -208,7 +223,11 @@ $conn->close();
                                 Email
                             </div>
                             <div class="info-value">
-                                Dung@gamil.com
+                                <?php if ($row['email'] == '') {
+                                    echo 'Chưa cập nhật';
+                                } else {
+                                    echo $row['email'];
+                                } ?>
                             </div>
                         </div>
 
@@ -219,27 +238,23 @@ $conn->close();
                                 Địa chỉ
                             </div>
                             <div class="info-value">
-                                Thủ Đức, Thủ Đức, Thủ Đức, HCM
+                                <?php if ($row['dia_chi'] == '') {
+                                    echo 'Chưa cập nhật';
+                                } else {
+                                    echo $row['dia_chi'];
+                                } ?>
                             </div>
                         </div>
                     </div>
 
                     <div class="d-flex">
-                        <div class="info-box col-4">
-                            <div class="info-type">
-                                Phân loại
-                            </div>
-                            <div class="info-value">
-                                Nhân viên hạng 1
-                            </div>
-                        </div>
 
                         <div class="info-box col-4">
                             <div class="info-type">
                                 Thời điểm mở tài khoản
                             </div>
                             <div class="info-value">
-                                22/22/2222
+                                <?php echo $row['thoi_diem_mo_tk']; ?>
                             </div>
                         </div>
 
@@ -248,7 +263,11 @@ $conn->close();
                                 Thời điểm huỷ tài khoản
                             </div>
                             <div class="info-value">
-                                22/22/2222
+                                <?php if ($row['thoi_diem_huy_tk'] == NULL) {
+                                    echo 'Chưa khóa';
+                                } else {
+                                    echo $row['thoi_diem_huy_tk'];
+                                } ?>
                             </div>
                         </div>
                     </div>
@@ -304,6 +323,15 @@ $conn->close();
                     </table>
                 </div>
             </div>
+            <div class="pagination mt-3 d-flex justify-content-center d-none">
+                <div class="page-numbers d-flex justify-content-center gap-2">
+                    <a href="#" class="page-number">01</a>
+                    <a href="#" class="page-number">02</a>
+                    <a href="#" class="page-number">03</a>
+                    <a href="#" class="page-number">04</a>
+                    <a href="#" class="page-number">05</a>
+                </div>
+            </div>
             <?php
             }
             ?>
@@ -321,9 +349,107 @@ $conn->close();
 </body>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
+    let paginationLength = 5;
+    let ordersPerPage = 5;
+    let currentPage = 1;
+    let orders = document.querySelectorAll('.order');
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = document.querySelector('.page-numbers');
+
+    function displayOrders() {
+        console.log(currentPage);
+        orders.forEach((product, index) => {
+            const start = (currentPage - 1) * ordersPerPage;
+            const end = currentPage * ordersPerPage;
+            if (index >= start && index < end) {
+                product.classList.remove('d-none');
+            } else {
+                product.classList.add('d-none');
+            }
+        });
+    }
+
+    function updatePagination() {
+        const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+        if (totalPages == 1) {
+            pagination.classList.add('d-none');
+            return;
+        }
+
+        pageNumbers.innerHTML = '';
+
+        const halfWindow = Math.floor(paginationLength / 2);
+        let startPage = Math.max(1, currentPage - halfWindow);
+        let endPage = Math.min(totalPages, currentPage + halfWindow);
+
+        if (currentPage - halfWindow < 1) {
+            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
+        }
+    
+        if (currentPage + halfWindow > totalPages) {
+            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageNumber = document.createElement('div');
+            pageNumber.classList.add('page-number');
+            pageNumber.textContent = i;
+            if (i === currentPage) {
+                pageNumber.classList.add('active');
+            }
+
+            pageNumber.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentPage = i;
+                displayOrders();
+                updatePagination();
+            });
+
+            pageNumbers.appendChild(pageNumber);
+        }
+
+        pagination.classList.remove('d-none');
+    }
+
+    displayOrders();
+    updatePagination();
+
     $("tr.order").each(function () {
         $(this).click(function () {
             window.location.href = "./order_detail.php?order_id=" + $(this).attr('data-id');
+        });
+    });
+
+    $("#disable-account").click(function () {
+        $.ajax({
+            url: '../admin/change_status.php',
+            type: 'POST',
+            data: {
+                username: '<?php echo $_GET['username']; ?>',
+                active: '0'
+            },
+            success: function (response) {
+                if (response == 'Thành công') {
+                    location.reload();
+                }
+            }
+        });
+    });
+
+    $('#able-account').click(function () {
+        $.ajax({
+            url: '../admin/change_status.php',
+            type: 'POST',
+            data: {
+                username: '<?php echo $_GET['username']; ?>',
+                active: '1'
+            },
+            success: function (response) {
+                if (response == 'Thành công') {
+                    location.reload();
+                }
+            }
         });
     });
 </script>

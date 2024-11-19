@@ -9,26 +9,18 @@ if (!isset($_SESSION['ten_dang_nhap'])) {
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
 
 $username = $_SESSION['ten_dang_nhap'];
-$stmt = $conn->prepare('select * from gio_hang join san_pham
-on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
+$stmt = $conn->prepare('select * from Danh_sach_yeu_thich
+join San_pham on Danh_sach_yeu_thich.ma_sp = San_pham.ma_sp
+where thanh_vien = ?');
 $stmt->bind_param('s', $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $stmt->close();
 
-if ($result->num_rows == 0) {
-  header('Location: ./empty_cart.php');
-  $conn->close();
-  exit();
-}
-
-$cart_items = array();
+$love_items = [];
 while ($row = $result->fetch_assoc()) {
-  $cart_items[] = $row;
-  $cart_items[count($cart_items) - 1]['gia_thuc_te'] = $row['gia_thanh'] * (1 - $row['sale_off']);
-  $cart_items[count($cart_items) - 1]['tong_gia'] = $row['so_luong'] * $cart_items[count($cart_items) - 1]['gia_thuc_te'];
+  $love_items[] = $row;
 }
-$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +35,12 @@ $conn->close();
     />
     <link href="../styles/public/custom.css" rel="stylesheet" />
     <link href="../styles/member/cart.css" rel="stylesheet" />
-    <title>Giỏ hàng của bạn</title>
+    <title>Danh sách yêu thích</title>
+    <style>
+      th, td {
+        padding: 0.5rem;
+      }
+    </style>
   </head>
   <body>
     <div class="page-wrapper">
@@ -147,154 +144,61 @@ $conn->close();
         </header>
 
       <main class="pt-3 pb-0 d-flex bg-white justify-content-center min-vh-100 container">
-          <div class="row p-2">
-            <div class="col-12 col-lg-9 d-flex flex-column p-0">
-              <h5 class="fs-3">Giỏ hàng</h5>
+          <div class="row p-2 w-100">
+            <div class="col-12 d-flex flex-column p-0">
+              <h5 class="fs-3">Danh sách yêu thích</h5>
+              <?php
+              if (count($love_items) == 0) {
+                echo '<p class="text-center m-0 mt-5 fs-5 fw-lighter">Không có sản phẩm nào trong danh sách yêu thích</p>';
+              } else {
+              ?>
               <table class="table table-striped">
                 <thead>
-                  <th class="w-10"></th>
-                    <th clas="w-40">Sản phẩm</th>
-                    <th class="">Đơn giá (VND)</th>
-                    <th class="w-20">Số lượng</th>
-                    <th class="">Tổng cộng (VND)</th>
+                    <th class="w-40">Sản phẩm</th>
+                    <th class="w-20">Thương hiệu</th>
+                    <th class="w-20">Đơn giá (VND)</th>
+                    <th class=""></th>
                 </thead>
                 <tbody>
                   <?php
-                  foreach ($cart_items as $item) {
+                  foreach($love_items as $item) {
                     echo '
                     <tr data-id="'.$item['ma_sp'].'">
-                        <td>
-                            <button type="button" class="p-0 border border-0 delete-btn"
-                            data-id="'.$item['ma_sp'].'"><img src="../imgs/icons/XCircle.png" alt="delete" width="24" height="24"></button>
-                        </td>
-                        <td>
-                            <div class="d-flex m-0 p-0">
-                                <img src="'.$item['hinh_anh'].'" alt="'.$item['ten_sp'].'" height="32" width="32" style="margin-right: 4px">
-                                <span class="product-name">'.$item['ten_sp'].'</span>
-                            </div>
-                        </td>
-                        <td class="price" data-id="'.$item['ma_sp'].'">'.number_format($item['gia_thuc_te'], 0, '.', '.').'</td>
-                        <td>
-                            <div class="quantity-wrapper col d-flex 
-                            align-items-center justify-content-between
-                            mx-auto">
-                                <button class="btn decrement-btn" data-id="'.$item['ma_sp'].'">-</button>
-                                <span class="quantity-value" data-id="'.$item['ma_sp'].'">'.$item['so_luong'].'</span>
-                                <button class="btn increment-btn" data-id="'.$item['ma_sp'].'">+</button>
-                            </div>
-                        </td>
-                        <td class="total-price" data-id="'.$item['ma_sp'].'">'.number_format($item['tong_gia'], 0, '.', '.').'</td>
+                      <td>
+                        <a href="../public/product_detail.php?product_id='.$item['ma_sp'].'">
+                        <img src="'.$item['hinh_anh'].'" alt="'.$item['ten_sp'].'" width="40" height="40">
+                        <span>'.$item['ten_sp'].'</span>
+                        </a>
+                      </td>
+                      <td>'.$item['thuong_hieu'].'</td>
+                      <td>'.number_format($item['gia_thanh'] * (1 - $item['sale_off']), 0, '.', '.').'</td>
+                      <td>
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
+                        fill="red"
+                        stroke="red"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="heart-icon"
+                        style="cursor: pointer;"
+                        id="favorite-icon"
+                        data-id="'.$item['ma_sp'].'"
+                        >
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                      </td>
                     </tr>';
                   }
                   ?>
                 </tbody>
               </table>
-            </div>
-            <div class="col-12 col-lg-3 d-flex flex-column">
-              <div
-                class="row border border-2 border-gray ms-2 mb-3"
-              >
-                <div class="mb-2 mt-2">
-                  <h1 class="fs-4">Chi tiết</h1>
-                </div>
-                <div class="border-bottom border-2 border-gray d-flex flex-column gap-1">
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div>Giá sản phẩm</div>
-                      <div class="price-value" id="order-price">
-                        <?php
-                        $total_price = 0;
-                        foreach ($cart_items as $item) {
-                          $total_price += $item['tong_gia'];
-                        }
-                        echo number_format($total_price, 0, '.', '.');
-                        ?> VND
-                      </div>
-                    </div>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div>Vận chuyển</div>
-                      <div class="price-value">Miễn phí</div>
-                    </div>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <div>Giảm giá</div>
-                      <div class="price-value">
-                        <?php
-                        $discount = 0;
-                        foreach ($cart_items as $item) {
-                          $discount += $item['gia_thanh'] * $item['sale_off'] * $item['so_luong'];
-                        }
-                        echo number_format($discount, 0, '.', '.');
-                        ?> VND
-                      </div>
-                    </div>
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-2"
-                    >
-                      <div>Thuế</div>
-                      <div class="price-value" id="tax">
-                        <?php
-                        $tax = 0.01 * $total_price;
-                        echo number_format($tax, 0, '.', '.');
-                        ?> VND
-                      </div>
-                    </div>
-                    <div
-                    class="d-flex justify-content-between align-items-center mt-2 mb-2"
-                    >
-                      <div>Tổng giá</div>
-                      <div class="fw-bold text-primary" id="order-total-price">
-                        <?php
-                        $total_price += $tax;
-                        echo number_format($total_price, 0, '.', '.');
-                        ?> VND
-                      </div>
-                    </div>
-                </div>
-                <div
-                  class="d-flex align-items-center justify-content-center m-2 p-2"
-                >
-                <a class="custom-btn btn" href="./checkout.php?from_cart=1">Thanh toán
-                    <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    style="margin-left: 4px"
-                    >
-                      <path
-                      fill="white"
-                      d="M4 12h12.25L11 6.75l.66-.75l6.5 6.5l-6.5 6.5l-.66-.75L16.25 13H4z"
-                      />
-                    </svg>
-                </a>
-                </div>
-              </div>
-              <div class="row border border-2 border-gray ms-2">
-                <div class="mb-2 mt-2">
-                  <h1 class="fs-4">Mã giảm giá</h1>
-                </div>
-                <div class="d-grid gap-3">
-                  <div
-                    class="mt-3 d-flex align-items-center border border-2 border-gray"
-                  >
-                    <input
-                      type="text"
-                      placeholder="Email address"
-                      class="w-100 border border-0"
-                    />
-                  </div>
-                  <div>
-                    <div class="d-flex align-items-center mb-3 justify-content-center">
-                        <button class="custom-btn btn">Áp dụng</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <?php
+              }
+              ?>
             </div>
           </div>
       </main>
@@ -495,5 +399,35 @@ $conn->close();
         }
       });
     });
+
+    $('.heart-icon').each(function() {
+      $(this).click(function() {
+        const productId = $(this).attr('data-id');
+        let add = $(this).attr('fill') == 'white';
+        console.log(productId);
+        $.ajax({
+          url: '../member/toggle_favorite.php',
+          type: 'POST',
+          data: {
+            product_id: productId,
+            add: add
+          },
+          success: function(response) {
+            let thisIcon = $(`svg[data-id="${productId}"]`);
+            console.log(response);
+            if (response == "Xóa sản phẩm khỏi yêu thích thành công") {
+              thisIcon.attr('fill', 'white');
+              thisIcon.attr('stroke', 'gray');
+            } else if (response == "Thêm sản phẩm vào yêu thích thành công") {
+              thisIcon.attr('fill', 'red');
+              thisIcon.attr('stroke', 'red');
+            }
+          }
+        });
+      });
+    });
   </script>
 </html>
+<?php 
+$conn->close();
+?>

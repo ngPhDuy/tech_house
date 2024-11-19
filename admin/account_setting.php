@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['ten_dang_nhap'])) {
-    header('Location: login.php');
+    header('Location: ../public/login.php');
     exit();
 }
 
@@ -141,7 +141,7 @@ $conn->close();
 
         <div id="main_wrapper" class="px-5">
             <div class="d-flex justify-content-start align-items-center gap-3 mb-3">
-                <div class="fs-3">Thông tin khách hàng</div>
+                <div class="fs-3">Thông tin tài khoản</div>
                 <div class="dropdown">
                     <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
                         Thao tác
@@ -155,10 +155,16 @@ $conn->close();
 
             <div class="product-info d-flex gap-3 info-wrapper align-items-center gap-3">
                 <div class="d-flex flex-column justify-content-center align-items-center gap-2 col-3">
-                    <img src="../imgs/avatars/default.png" alt="avatar" class="user-avatar" width="150" height="150">
-                    <div class="user-name fs-3">
-                        Bùi Tiến Dũng
-                    </div>
+                <?php 
+                    if ($row['avatar'] != NULL) {
+                        echo '<img src="../imgs/avatars/' . $row['avatar'] . '" 
+                        alt="avatar" class="user-avatar border rounded-circle" width="150" height="150">';
+                    } else {
+                        echo '<img src="../imgs/avatars/default.png" 
+                    alt="avatar" class="user-avatar border rounded-circle" width="150" height="150">';
+                    }
+                    ?>
+                    <button class="btn btn-primary mt-3" id="avatar-change-btn">Thay đổi ảnh đại diện</button>
                 </div>
                 <div class="d-flex flex-column col justify-content-evenly">
                     <div class="d-flex">
@@ -280,15 +286,58 @@ $conn->close();
 
     </div>
 
-
     <!-- Dont have footer! -->
     <div id="footer" class="mb-5"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    <div class="modal fade" id="avatar-change-modal" tabindex="-1" aria-labelledby="avatar-change-modal-label"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="avatar-change-modal-label">Thay đổi ảnh đại diện</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="avatar" class="form-label">Chọn ảnh đại diện mới</label>
+                            <input class="form-control" type="file" name="avatar" id="avatar" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="submit-btn">Thay đổi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-</body>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script>
+    $('#avatar-change-btn').click(() => {
+        $('#avatar-change-modal').modal('show');
+    });
+
+    $('#submit-btn').click(() => {
+        let formEle = document.querySelector('#avatar-change-modal form');
+        let formData = new FormData(formEle);
+        let imgExtention = $('#avatar').val().split('.').pop();
+
+        $.ajax({
+            url: './upload_avatar.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: (data) => {
+                if (data === 'Cập nhật thành công') {
+                    let img = $('.product-info img');
+                    img.attr('src', '../imgs/avatars/' + '<?php echo $_SESSION['ten_dang_nhap'] ?>' + '.' + imgExtention);
+                    $('#avatar-change-modal').modal('hide');
+                }
+            }
+        });
+    });
+</script>
 </html>

@@ -16,6 +16,12 @@ if ($conn->connect_error) {
     die('Kết nối thất bại: ' . $conn->connect_error);
 }
 
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
 $stmt = $conn->prepare('select count(*) as so_thanh_vien from thanh_vien');
 $stmt->execute();
 $result = $stmt->get_result();
@@ -122,9 +128,19 @@ $conn->close();
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -226,16 +242,17 @@ $conn->close();
                                     echo '<td>' . $order['dia_chi'] . '</td>';
                                     echo '<td>';
                                     if ($order['tinh_trang'] == 0) {
-                                        echo 'Đợi duyệt';
+                                        echo '<div class="status-pending">Đợi duyệt</div>';
                                     } else if ($order['tinh_trang'] == 1) {
-                                        echo 'Đã xác nhận';
+                                        echo '<div class="status-confirmed">Đã duyệt</div>';
                                     } else if ($order['tinh_trang'] == 2) {
-                                        echo 'Đang giao';
+                                        echo '<div class="status-shipping">Đang giao</div>';
                                     } else if ($order['tinh_trang'] == 3) {
-                                        echo 'Đã giao';
+                                        echo '<div class="status-complete">Đã giao</div>';
                                     } else {
-                                        echo 'Đã hủy';
+                                        echo '<div class="status-cancel">Đã hủy</div>';
                                     }
+                                    echo '</td>';
                                     echo '</tr>';
                                 }
                                 ?>

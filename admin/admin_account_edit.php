@@ -84,6 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     header('Location: ./account_setting.php');
+
+    exit();
 }
 
 ?>
@@ -207,9 +209,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="product-info d-flex gap-3 info-wrapper align-items-center gap-3">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2 col-3">
                         <img src="../imgs/avatars/default.png" alt="avatar" class="user-avatar" width="150" height="150">
-                        <div class="user-name fs-3">
-                            UserName
-                        </div>
                     </div>
 
                     <div class="d-flex flex-column col justify-content-evenly">

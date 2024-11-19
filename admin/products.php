@@ -139,8 +139,8 @@ if ($result->num_rows > 0) {
 
         <div id="main_wrapper" class="px-5">
             <div class="d-flex flex-column gap-3">
-                <div id="utilities" class="d-flex justify-content-between">
-                    <div class="filter-button btn border border-secondary d-flex gap-2">
+                <div id="utilities" class="d-flex justify-content-between align-items-center">
+                    <div class="filter-button btn border border-secondary d-flex gap-2" id="filter-button">
                         <svg width="24" height="24" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M2.06216 4.48145H24.8793C25.0854 4.48149 25.2871 4.5262 25.4597 4.61012C25.6323 4.69404 25.7684 4.81356 25.8514 4.9541C25.9345 5.09464 25.9609 5.25014 25.9274 5.40166C25.8939 5.55319 25.8021 5.69419 25.6629 5.80749L16.9372 12.9622C16.7556 13.107 16.6557 13.2984 16.6583 13.4966V19.0976C16.6599 19.2292 16.6169 19.3589 16.5333 19.4748C16.4498 19.5907 16.3283 19.689 16.1801 19.7606L11.9301 21.8684C11.7707 21.9467 11.5859 21.9915 11.3953 21.9981C11.2046 22.0047 11.015 21.973 10.8465 21.9061C10.678 21.8393 10.5367 21.7399 10.4376 21.6183C10.3385 21.4967 10.2852 21.3575 10.2833 21.2153V13.4966C10.2858 13.2984 10.186 13.107 10.0044 12.9622L1.27857 5.80749C1.13946 5.69419 1.04757 5.55319 1.0141 5.40166C0.980636 5.25014 1.00704 5.09464 1.09009 4.9541C1.17313 4.81356 1.30925 4.69404 1.48184 4.61012C1.65444 4.5262 1.85607 4.48149 2.06216 4.48145V4.48145Z"
@@ -150,9 +150,9 @@ if ($result->num_rows > 0) {
                     </div>
                     
                     <div class="w-75 d-flex justify-content-between">
-                        <div class="searchbar">
+                        <div class="searchbar" id="searchbar">
                             <input type="text" placeholder="Nhập tên sản phẩm..." name="search">
-                            <button type="button"><i class="fa fa-search"></i></button>
+                            <button type="button" id="search-button"><i class="fa fa-search"></i></button>
                         </div>
     
                         <a href="./product_add.php" role="button"
@@ -174,10 +174,12 @@ if ($result->num_rows > 0) {
                             <th class="w-20">Thao tác</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="product-list">
                         <?php
                         foreach ($products as $product) {
-                            echo '<tr class="product" product-id="' . $product['ma_sp'].'" category="'.$product['phan_loai'].'">';
+                            echo '<tr class="product" product-id="' . $product['ma_sp'].'" 
+                            category="'.$product['phan_loai'].'" name="'.$product['ten_sp'].'"
+                            brand="'.strtolower($product['thuong_hieu']).'" price="'.$product['gia_thanh'].'" >';
                             echo "<td>";
                             echo "<img width='60' src='" . $product['hinh_anh'] . "' alt='product'>";
                             echo "</td>";
@@ -261,6 +263,16 @@ if ($result->num_rows > 0) {
                 </table>
             </div>
 
+            <div class="pagination mt-3 d-flex justify-content-center d-none">
+                <div class="page-numbers d-flex justify-content-center gap-2">
+                    <a href="#" class="page-number">01</a>
+                    <a href="#" class="page-number">02</a>
+                    <a href="#" class="page-number">03</a>
+                    <a href="#" class="page-number">04</a>
+                    <a href="#" class="page-number">05</a>
+                </div>
+            </div>
+
         </div>
 
 
@@ -286,12 +298,195 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 
+    <div class="filter-modal-wrapper d-none">
+        <div class="filter-modal">
+            <div class="filter-modal-content d-flex gap-3 flex-wrap justify-content-start">
+                <div class="brand-filter col-5">
+                    <p class="m-0 fw-bold text-uppercase mb-3">Hãng sản xuất</p>
+                    <div class="brands">
+                        <div class="brand">
+                            <input class="d-block" type="checkbox" name="brand" id="apple">
+                            <label class="d-block" for="apple">Apple</label>
+                        </div>
+                        <div class="brand">
+                            <input type="checkbox" name="brand" id="samsung">
+                            <label for="samsung">Samsung</label>
+                        </div>
+                        <div class="brand">
+                            <input type="checkbox" name="brand" id="google">
+                            <label for="google">Google</label>
+                        </div>
+                        <div class="brand">
+                            <input type="checkbox" name="brand" id="hp">
+                            <label for="hp">HP</label>
+                        </div>
+                        <div class="brand">
+                            <input type="checkbox" name="brand" id="dell">
+                            <label for="dell">Dell</label>
+                        </div> 
+                        <div class="brand">
+                            <input type="checkbox" name="brand" id="lg">
+                            <label for="lg">LG</label>
+                        </div>
+                        <div class="brand">
+                            <input type="checkbox" name="brand" id="sony">
+                            <label for="sony">Sony</label>
+                        </div>
+                        <div class="brand">
+                            <input type="checkbox" name="brand" id="huawei">
+                            <label for="huawai">Huawei</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="price-filter col-5">
+                    <p class="m-0 fw-bold text-uppercase mb-3">Mức giá</p>
+                    <div class="prices">
+                        <div class="price">
+                            <input type="radio" name="price" id="all price">
+                            <label for="all price">Tất cả</label>
+                        </div>
+                        <div class="price">
+                            <input type="radio" name="price" id="0-10">
+                            <label for="0-10">0 - 10tr</label>
+                        </div>
+                        <div class="price">
+                            <input type="radio" name="price" id="10-20">
+                            <label for="10-20">10- 20tr</label>
+                        </div>
+                        <div class="price">
+                            <input type="radio" name="price" id="20-30">
+                            <label for="20-30">20 - 30tr</label>
+                        </div>
+                        <div class="price">
+                            <input type="radio" name="price" id="30-40">
+                            <label for="30-40">30 - 40tr</label>
+                        </div>
+                        <div class="price">
+                            <input type="radio" name="price" id="40-50">
+                            <label for="40-50">40 - 50tr</label>
+                        </div>
+                        <div class="price">
+                            <input type="radio" name="price" id="50+">
+                            <label for="50+">Trên 50tr</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="category-filter col-5">
+                    <p class="m-0 fw-bold text-uppercase mb-3">Phân loại</p>
+                    <div class="categories">
+                        <div class="category">
+                            <input class="d-block" type="checkbox" name="category" id="0">
+                            <label for="0">Laptop</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="1">
+                            <label for="1">Mobile</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="2">
+                            <label for="2">Tablet</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="3">
+                            <label for="3">Tai nghe</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="4">
+                            <label for="4">Bàn phím</label>
+                        </div> 
+                        <div class="category">
+                            <input type="checkbox" name="category" id="5">
+                            <label for="5">Sạc dự phòng</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="6">
+                            <label for="6">Ốp lưng</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="filter-modal-footer d-flex justify-content-center mx-auto mt-3">
+                <button class="btn btn-primary">Áp dụng</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
+    const paginationLength = 5;
+    const productsPerPage = 10;
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = document.querySelector('.page-numbers');
+    let products = Array.from($('.product'));
+    let oldProducts = products;
+    let currentPage = 1;
+    let brandsFilter = [];
+    let priceFilter;
+    let categoriesFilter = [];
+    const filterModal = document.querySelector('.filter-modal');
+
+    function displayProducts() {
+        console.log(currentPage);
+        products.forEach((product, index) => {
+            const start = (currentPage - 1) * productsPerPage;
+            const end = currentPage * productsPerPage;
+            if (index >= start && index < end) {
+                product.classList.remove('d-none');
+            } else {
+                product.classList.add('d-none');
+            }
+        });
+    }
+    function updatePagination() {
+        const totalPages = Math.ceil(products.length / productsPerPage);
+
+        if (totalPages == 1) {
+            pagination.classList.add('d-none');
+            return;
+        }
+
+        pageNumbers.innerHTML = '';
+
+        const halfWindow = Math.floor(paginationLength / 2);
+        let startPage = Math.max(1, currentPage - halfWindow);
+        let endPage = Math.min(totalPages, currentPage + halfWindow);
+
+        if (currentPage - halfWindow < 1) {
+            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
+        }
+    
+        if (currentPage + halfWindow > totalPages) {
+            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageNumber = document.createElement('div');
+            pageNumber.classList.add('page-number');
+            pageNumber.textContent = i;
+            if (i === currentPage) {
+                pageNumber.classList.add('active');
+            }
+
+            pageNumber.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentPage = i;
+                displayProducts();
+                updatePagination();
+            });
+
+            pageNumbers.appendChild(pageNumber);
+        }
+
+        pagination.classList.remove('d-none');
+    }
+
+    displayProducts();
+    updatePagination();
+
     $(".delete-product-button").click(function () {
         let productId = $(this).attr('data-id');
         $("#delete-modal").modal('show');
@@ -318,6 +513,108 @@ if ($result->num_rows > 0) {
                 }
             }
         });
+    });
+
+    $('#filter-button').click((e) => {
+        console.log('click');
+        e.preventDefault();
+        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
+        filterModalWrapper.classList.remove('d-none');
+    });
+
+    $('.filter-modal-footer button').click((e) => {
+        e.preventDefault();
+        $('.filter-modal-wrapper').addClass('d-none');
+
+        brandsFilter = [];
+        $('.brand input:checked').each((index, brand) => {
+            brandsFilter.push($(brand).attr('id'));
+        });
+
+        priceFilter = $('.price input:checked').attr('id');
+
+        categoriesFilter = [];
+        $('.category input:checked').each((index, category) => {
+            categoriesFilter.push($(category).attr('id'));
+        });
+
+        console.log(brandsFilter, priceFilter, categoriesFilter);
+
+        products = Array.from(oldProducts);
+        if (brandsFilter.length > 0) {
+            products = products.filter(product => {
+                return brandsFilter.includes($(product).attr('brand'));
+            });
+        } 
+
+        if (priceFilter) {
+            products = products.filter(product => {
+                const price = +$(product).attr('price');
+                switch (priceFilter) {
+                    case '0-10':
+                        return price >= 0 && price <= 10000000;
+                    case '10-20':
+                        return price >= 10000000 && price <= 20000000;
+                    case '20-30':
+                        return price >= 20000000 && price <= 30000000;
+                    case '30-40':
+                        return price >= 30000000 && price <= 40000000;
+                    case '40-50':
+                        return price >= 40000000 && price <= 50000000;
+                    case '50+':
+                        return price >= 50000000;
+                    default:
+                        return true;
+                }
+            });
+        }
+
+        if (categoriesFilter.length > 0) {
+            products = products.filter(product => {
+                return categoriesFilter.includes($(product).attr('category'));
+            });
+        }
+
+        $('#product-list').empty();
+
+        products.forEach(product => {
+            $('#product-list').append(product);
+        });
+
+        currentPage = 1;
+        displayProducts();
+        updatePagination();
+    });
+
+    $('.filter-modal-wrapper').click((e) => {
+        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
+        if (e.target === filterModalWrapper) {
+            filterModalWrapper.classList.add('d-none');
+        }
+    });
+
+    $('#search-button').click((e) => {
+        e.preventDefault();
+        let searchValue = $('#searchbar input').val().toLowerCase().trim();
+
+        console.log(searchValue);
+
+        products = Array.from(oldProducts);
+
+        products = products.filter(product => {
+            return $(product).attr('name').toLowerCase().includes(searchValue) ||
+                $(product).attr('brand').toLowerCase().includes(searchValue);
+        });
+
+        $('#product-list').empty();
+
+        products.forEach(product => {
+            $('#product-list').append(product);
+        });
+
+        currentPage = 1;
+        displayProducts();
+        updatePagination();
     });
 </script>
 </html>

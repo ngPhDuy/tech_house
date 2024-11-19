@@ -41,5 +41,6 @@ $tempArr = explode(" ", $ho_va_ten);
 $_SESSION['ho_ten'] = $tempArr[count($tempArr) - 2] . " " . $tempArr[count($tempArr) - 1];
 
 echo "Cập nhật thành công";
+$conn->close();
 exit();
 ?>

@@ -163,12 +163,11 @@ $stmt->close();
                                 <?php
                                 if ($order['tinh_trang'] == 0) {
                                     echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Duyệt đơn hàng</a></li>';
-                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Hủy đơn hàng</a></li>';
+                                    echo '<li><a class="dropdown-item" href="change_status_order.php?order_id=' . $order_id . '&order_status=4">Hủy đơn hàng</a></li>';
                                 } else if ($order['tinh_trang'] == 4) {
                                 } else {
-                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Đang đóng gói</a></li>';
-                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Đang vận chuyển</a></li>';
-                                    echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Đã giao thành công</a></li>';
+                                    echo '<li><a class="dropdown-item" href="change_status_order.php?order_id=' . $order_id . '&order_status=2">Đang vận chuyển</a></li>';
+                                    echo '<li><a class="dropdown-item" href="change_status_order.php?order_id=' . $order_id . '&order_status=3">Đã giao thành công</a></li>';
                                 }
                                 ?>
                                 <!-- <li><a class="dropdown-item" href="#">Duyệt đơn hàng</a></li>
@@ -219,17 +218,17 @@ $stmt->close();
                             </div>
                             <div class="info-value">
                                 <?php
-                                if ($order['tinh_trang'] == 0) {
-                                    echo 'Đợi duyệt';
-                                } else if ($order['tinh_trang'] == 1) {
-                                    echo 'Đã xác nhận';
-                                } else if ($order['tinh_trang'] == 2) {
-                                    echo 'Đang giao';
-                                } else if ($order['tinh_trang'] == 3) {
-                                    echo 'Đã giao';
-                                } else {
-                                    echo 'Đã hủy';
-                                }
+                                    if ($order['tinh_trang'] == 0) {
+                                        echo '<div class="status-pending">Đợi duyệt</div>';
+                                    } else if ($order['tinh_trang'] == 1) {
+                                        echo '<div class="status-confirmed">Đã duyệt</div>';
+                                    } else if ($order['tinh_trang'] == 2) {
+                                        echo '<div class="status-shipping">Đang giao</div>';
+                                    } else if ($order['tinh_trang'] == 3) {
+                                        echo '<div class="status-complete">Đã giao</div>';
+                                    } else {
+                                        echo '<div class="status-cancel">Đã hủy</div>';
+                                    }
                                 ?>
                             </div>
                         </div>
@@ -258,12 +257,13 @@ $stmt->close();
                                     echo 'Chưa có';
                                     $duyet = null;
                                 } else {
-                                    $stmt = $conn->prepare('select * from duyet_don_hang where ma_don_hang = ?');
+                                    $stmt = $conn->prepare('select * from duyet_don_hang join tai_khoan on duyet_don_hang.nhan_vien = tai_khoan.ten_dang_nhap
+                                    where ma_don_hang = ?');
                                     $stmt->bind_param('s', $order_id);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
                                     $duyet = $result->fetch_assoc();
-                                    echo $duyet['nhan_vien'];
+                                    echo $duyet['ho_va_ten'];
                                     $stmt->close();
                                 }
                                 ?>
@@ -319,7 +319,11 @@ $stmt->close();
                                 <?php
                                 foreach ($products as $product) {
                                     echo '<tr>';
-                                    echo '<td><img src="' . $product['hinh_anh'] . '" alt="image"></td>';
+                                    echo '<td>
+                                    <a href="./product_detail.php?product_id=' . $product['ma_sp'] . '&category=' . $product['phan_loai'] . '">
+                                        <img src="' . $product['hinh_anh'] . '" alt="image">
+                                    </a>
+                                    </td>';
                                     echo '<td>' . $product['ten_sp'] . '</td>';
                                     echo '<td>' . $product['so_luong'] . '</td>';
                                     echo '<td>' . $product['don_gia'] . '</td>';

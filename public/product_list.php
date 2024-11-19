@@ -29,14 +29,12 @@ if (isset($_GET['product_type'])) {
 }
 
 $result = $conn->query($sql);
+$products = [];
 
 if ($result->num_rows > 0) {
-    $products = [];
     while ($row = $result->fetch_assoc()) {
         $products[] = $row;
     }
-} else {
-    echo "0 results";
 }
 ?>
 <!DOCTYPE html>
@@ -117,9 +115,23 @@ if ($result->num_rows > 0) {
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="../member/cart.php" class="fw-bold text-white">
-                            <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
-                            Giỏ hàng
+                        <a href="../member/love_list.php" class="fw-bold text-white">
+                          <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="30"
+                          height="30"
+                          stroke="white"
+                          fill="none"
+                          stroke-width="1"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="heart-icon me-1"
+                          style="cursor: pointer;"
+                          >
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                            Yêu thích
                         </a>
                     </div>
                 </div>
@@ -238,6 +250,13 @@ if ($result->num_rows > 0) {
                         <?php echo count($products); ?>
                     </span> kết quả</p>
                 </div>
+                <?php
+                if (count($products) == 0) {
+                    echo '<div class="no-result d-flex justify-content-center align-items-center">
+                        <p class="m-0 fs-5 fw-lighter">Không tìm thấy sản phẩm nào</p>
+                    </div>';
+                } else {
+                ?>
                 <div class="product-list">
                     <?php
                     foreach ($products as $product) {
@@ -260,6 +279,7 @@ if ($result->num_rows > 0) {
                         echo'</div>
                         </a>';
                     }
+                }
                     ?>
                 </div>
                 <div class="pagination mt-3 d-none">

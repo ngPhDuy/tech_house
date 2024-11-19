@@ -393,8 +393,8 @@ function getCategoryName($category)
                                 value="<?php echo $product_baseInfo['gia_thanh']; ?>" required>
                         </div>
                         <div class="col-3 input-box">
-                            <label for="discount" class="form-label">Giảm giá (%)</label>
-                            <input type="number" class="form-control" id="discount" name="discount"
+                            <label for="discount" class="form-label">Giảm giá</label>
+                            <input class="form-control" id="discount" name="discount"
                                 value="<?php echo $product_baseInfo['sale_off']; ?>" required>
                         </div>
                     </div>
@@ -477,9 +477,11 @@ function getCategoryName($category)
                 if (res.success) {
                     $('#message-modal .modal-body p').text(res.success); // Hiển thị thông báo thành công
                     $('#message-modal').modal('show'); // Mở modal
+                    $('#message-modal').css('color', 'green');
                 } else if (res.error) {
                     $('#message-modal .modal-body p').text(res.error); // Hiển thị thông báo lỗi
                     $('#message-modal').modal('show'); // Mở modal
+                    $('#message-modal').css('color', 'red');
                 }
             },
             error: function() {

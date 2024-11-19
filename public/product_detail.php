@@ -24,6 +24,10 @@ if ($result->num_rows == 0) {
 
 $product = $result->fetch_assoc();
 $model = explode(' - ', $product['ten_sp'])[0];
+
+$sql = "select * from Danh_sach_yeu_thich where thanh_vien = '".$_SESSION['ten_dang_nhap']."' and ma_sp = $product_id";
+$result = $conn->query($sql);
+$isFavorite = $result->num_rows > 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,16 +78,30 @@ $model = explode(' - ', $product['ten_sp'])[0];
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="../member/cart.php" class="fw-bold text-white">
-                            <img src="../imgs/icons/cart.png" alt="user" width="32" height="32">
-                            Giỏ hàng
+                        <a href="../member/love_list.php" class="fw-bold text-white">
+                          <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="30"
+                          height="30"
+                          stroke="white"
+                          fill="none"
+                          stroke-width="1"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="heart-icon me-1"
+                          style="cursor: pointer;"
+                          >
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                            Yêu thích
                         </a>
                     </div>
                 </div>
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="../ndex.php">
+                    <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
@@ -182,7 +200,28 @@ $model = explode(' - ', $product['ten_sp'])[0];
                             }
                             ?>
                             <p class="product-name m-0 fs-5" id="product-name">
-                                <?php echo $product['ten_sp']; ?>
+                                <?php echo $product['ten_sp'];?>
+                                <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                width="20"
+                                height="20"
+                                <?php
+                                if ($isFavorite) {
+                                    echo 'fill="red" stroke="red"';
+                                } else {
+                                    echo 'fill="white" stroke="gray"';
+                                }
+                                ?>
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="heart-icon m-2"
+                                style="cursor: pointer;"
+                                id="favorite-icon"
+                                >
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
                             </p>
                         </div>
                         <div class="fact d-flex justify-content-between">
@@ -696,6 +735,28 @@ $model = explode(' - ', $product['ten_sp'])[0];
 
     displayRates();
     updatePagination();
+
+    $('#favorite-icon').click(() => {
+        let fillAttr = $('#favorite-icon').attr('fill');
+        let add = fillAttr == 'white';
+        $.ajax({
+            url: '../member/toggle_favorite.php',
+            type: 'POST',
+            data: {
+                product_id: <?php echo $product_id; ?>,
+                add: add
+            },
+            success: (response) => {
+                if (response == "Thêm sản phẩm vào yêu thích thành công") {
+                    $('#favorite-icon').attr('fill', 'red');
+                    $('#favorite-icon').attr('stroke', 'red');
+                } else if (response == "Xóa sản phẩm khỏi yêu thích thành công") {
+                    $('#favorite-icon').attr('fill', 'white');
+                    $('#favorite-icon').attr('stroke', 'gray');
+                }
+            }
+        });
+    })
 </script>
 </html>
 <?php

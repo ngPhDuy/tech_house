@@ -136,7 +136,7 @@ $conn->close();
             <div class="h3 mb-3">Đơn hàng</div>
             <div class="d-flex flex-column gap-3">
                 <div id="utilities" class="d-flex justify-content-between">
-                    <div class="filter-button btn border border-secondary d-flex gap-2">
+                    <div class="filter-button btn border border-secondary d-flex gap-2" id="filter-button">
                         <svg width="24" height="24" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M2.06216 4.48145H24.8793C25.0854 4.48149 25.2871 4.5262 25.4597 4.61012C25.6323 4.69404 25.7684 4.81356 25.8514 4.9541C25.9345 5.09464 25.9609 5.25014 25.9274 5.40166C25.8939 5.55319 25.8021 5.69419 25.6629 5.80749L16.9372 12.9622C16.7556 13.107 16.6557 13.2984 16.6583 13.4966V19.0976C16.6599 19.2292 16.6169 19.3589 16.5333 19.4748C16.4498 19.5907 16.3283 19.689 16.1801 19.7606L11.9301 21.8684C11.7707 21.9467 11.5859 21.9915 11.3953 21.9981C11.2046 22.0047 11.015 21.973 10.8465 21.9061C10.678 21.8393 10.5367 21.7399 10.4376 21.6183C10.3385 21.4967 10.2852 21.3575 10.2833 21.2153V13.4966C10.2858 13.2984 10.186 13.107 10.0044 12.9622L1.27857 5.80749C1.13946 5.69419 1.04757 5.55319 1.0141 5.40166C0.980636 5.25014 1.00704 5.09464 1.09009 4.9541C1.17313 4.81356 1.30925 4.69404 1.48184 4.61012C1.65444 4.5262 1.85607 4.48149 2.06216 4.48145V4.48145Z"
@@ -146,9 +146,9 @@ $conn->close();
                     </div>
 
                     <div class="w-75 d-flex justify-content-between">
-                        <div class="searchbar">
-                            <input type="text" placeholder="Nhập mã đơn hàng..." name="search">
-                            <button type="button"><i class="fa fa-search"></i></button>
+                        <div class="searchbar" id="searchbar">
+                            <input type="text" placeholder="Nhập tên khách hàng, địa chỉ" name="search">
+                            <button type="button"><i class="fa fa-search" id="search-button"></i></button>
                         </div>
                     </div>
                 </div>
@@ -166,16 +166,19 @@ $conn->close();
                             <th>Trạng thái</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="orders-list">
                         <?php
                         foreach ($orders as $order) {
                         ?>
-                        <tr class="order" data-id="<?php echo $order['ma_don_hang']; ?>">
+                        <tr class="order" data-id="<?php echo $order['ma_don_hang']; ?>"
+                        category="<?php echo $order['tinh_trang']; ?>"
+                        address="<?php echo $order['dia_chi']; ?>"
+                        name="<?php echo $order['ho_va_ten']; ?>">
                             <td><?php echo $order['ma_don_hang']; ?></td>
                             <td><?php echo $order['ho_va_ten']; ?></td>
                             <td><?php echo $order['dia_chi']; ?></td>
                             <td><?php echo $order['thoi_diem_dat_hang']; ?></td>
-                            <td><?php echo $order['tong_gia']; ?></td>
+                            <td><?php echo number_format($order['tong_gia'], 0, '.', '.'); ?></td>
                             <td>
                             <?php
                                 if ($order['tinh_trang'] == 0) {
@@ -197,6 +200,15 @@ $conn->close();
                         ?>
                     </tbody>
                 </table>
+                <div class="pagination mt-3 d-none">
+                    <div class="page-numbers d-flex justify-content-center gap-2">
+                        <a href="#" class="page-number">01</a>
+                        <a href="#" class="page-number">02</a>
+                        <a href="#" class="page-number">03</a>
+                        <a href="#" class="page-number">04</a>
+                        <a href="#" class="page-number">05</a>
+                    </div>
+                </div>
                 <?php
                 } else {
                 ?>
@@ -213,16 +225,188 @@ $conn->close();
         <div id="footer"></div>
     </div>
 
+        <div class="filter-modal-wrapper d-none">
+        <div class="filter-modal">
+            <div class="filter-modal-content d-flex gap-3 justify-content-center">
+                <div class="category-filter col-10 px-3">
+                    <p class="m-0 fw-bold text-uppercase mb-3">Phân loại</p>
+                    <div class="categories">
+                        <div class="category">
+                            <input class="d-block" type="checkbox" name="category" id="0">
+                            <label for="0">Chờ duyệt</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="1">
+                            <label for="1">Đã xác nhận</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="2">
+                            <label for="2">Đang giao hàng</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="3">
+                            <label for="3">Đã giao hàng</label>
+                        </div>
+                        <div class="category">
+                            <input type="checkbox" name="category" id="4">
+                            <label for="4">Đã hủy</label>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="filter-modal-footer d-flex justify-content-center mx-auto mt-3">
+                <button class="btn btn-primary">Áp dụng</button>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
-    $("tr").each(function () {
-        $(this).click(function () {
-            window.location.href = `./order_detail.php?order_id=${$(this).attr('data-id')}`;
+    const paginationLength = 5;
+    const ordersPerPage = 10;
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = document.querySelector('.page-numbers');
+    let orders = Array.from($('.order'));
+    let oldOrders = orders;
+    let currentPage = 1;
+    const filterModal = document.querySelector('.filter-modal');
+    let categoriesFilter = [];
+
+    function displayOrders() {
+        console.log(currentPage);
+        orders.forEach((product, index) => {
+            const start = (currentPage - 1) * ordersPerPage;
+            const end = currentPage * ordersPerPage;
+            if (index >= start && index < end) {
+                product.classList.remove('d-none');
+            } else {
+                product.classList.add('d-none');
+            }
         });
+    }
+
+    function updatePagination() {
+        const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+        if (totalPages == 1) {
+            pagination.classList.add('d-none');
+            return;
+        }
+
+        pageNumbers.innerHTML = '';
+
+        const halfWindow = Math.floor(paginationLength / 2);
+        let startPage = Math.max(1, currentPage - halfWindow);
+        let endPage = Math.min(totalPages, currentPage + halfWindow);
+
+        if (currentPage - halfWindow < 1) {
+            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
+        }
+    
+        if (currentPage + halfWindow > totalPages) {
+            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageNumber = document.createElement('div');
+            pageNumber.classList.add('page-number');
+            pageNumber.textContent = i;
+            if (i === currentPage) {
+                pageNumber.classList.add('active');
+            }
+
+            pageNumber.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentPage = i;
+                displayOrders();
+                updatePagination();
+            });
+
+            pageNumbers.appendChild(pageNumber);
+        }
+
+        pagination.classList.remove('d-none');
+    }
+
+    displayOrders();
+    updatePagination();
+
+    // $("tr").each(function () {
+    //     $(this).click(function () {
+    //         window.location.href = `./order_detail.php?order_id=${$(this).attr('data-id')}`;
+    //     });
+    // });
+
+    $(document).on('click', '.order', function () {
+        window.location.href = `./order_detail.php?order_id=${$(this).attr('data-id')}`;
+    });
+
+    $('#filter-button').click((e) => {
+        console.log('click');
+        e.preventDefault();
+        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
+        filterModalWrapper.classList.remove('d-none');
+    });
+
+    $('.filter-modal-footer button').click((e) => {
+        e.preventDefault();
+        $('.filter-modal-wrapper').addClass('d-none');
+
+        categoriesFilter = [];
+        $('.category input:checked').each((index, category) => {
+            categoriesFilter.push($(category).attr('id'));
+        });
+
+        orders = Array.from(oldOrders);
+
+        if (categoriesFilter.length > 0) {
+            orders = orders.filter(order => {
+                return categoriesFilter.includes($(order).attr('category'));
+            });
+        }
+
+        $('#orders-list').empty();
+
+        orders.forEach(order => {
+            $('#orders-list').append(order);
+        });
+
+        currentPage = 1;
+        displayOrders();
+        updatePagination();
+    });
+
+    $('.filter-modal-wrapper').click((e) => {
+        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
+        if (e.target === filterModalWrapper) {
+            filterModalWrapper.classList.add('d-none');
+        }
+    });
+
+    $('#search-button').click((e) => {
+        e.preventDefault();
+        let searchValue = $('#searchbar input').val().toLowerCase().trim();
+
+        console.log(searchValue);
+
+        orders = Array.from(oldOrders);
+        orders = orders.filter(order => {
+            return $(order).attr('address').toLowerCase().includes(searchValue) ||
+                $(order).attr('name').toLowerCase().includes(searchValue);
+        });
+
+        $('#orders-list').empty();
+
+        orders.forEach(order => {
+            $('#orders-list').append(order);
+        });
+
+        currentPage = 1;
+        displayOrders();
+        updatePagination();
     });
 </script>
 </html>

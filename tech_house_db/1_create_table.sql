@@ -132,6 +132,15 @@ create table Op_lung (
     foreign key (ma_sp) references San_pham(ma_sp)
 );
 
+create table Danh_sach_yeu_thich(
+    thanh_vien varchar(25),
+    ma_sp int,
+    
+    primary key (thanh_vien, ma_sp),
+    foreign key (thanh_vien) references Thanh_vien(ten_dang_nhap),
+    foreign key (ma_sp) references San_pham(ma_sp)
+)
+
 create table Don_hang (
     ma_don_hang int primary key auto_increment,
     thanh_vien varchar(25) not null,

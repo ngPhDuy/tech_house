@@ -131,9 +131,9 @@ $conn->close();
             <div class="d-flex flex-column gap-3">
                 <div id="utilities" class="d-flex justify-content-center w-100">
                     <div class="w-100 d-flex justify-content-center">
-                        <div class="searchbar">
+                        <div class="searchbar" id="searchbar">
                             <input type="text" placeholder="Nhập tên khách hàng..." name="search">
-                            <button type="button"><i class="fa fa-search"></i></button>
+                            <button type="button"><i class="fa fa-search" id="search-button"></i></button>
                         </div>
                     </div>
                 </div>
@@ -143,15 +143,17 @@ $conn->close();
                         <tr class="align-middle">
                             <th class="w-20">Tài khoản</th>
                             <th class="w-30">Tên khách hàng</th>
-                            <th class="w-35">Address</th>
+                            <th class="w-35">Địa chỉ</th>
                             <th>Số điện thoại</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="customers-list">
                         <?php
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
-                                echo '<tr class="customer" data-id="' . $row['ten_dang_nhap'] . '">';
+                                echo '<tr class="customer" data-id="' . $row['ten_dang_nhap'] . '"
+                                name="' . $row['ho_va_ten'] . '" address="' . $row['dia_chi'] . '"
+                                phone="' . $row['sdt'] . '">';
                                 echo '<td>' . $row['ten_dang_nhap'] . '</td>';
                                 echo '<td>' . $row['ho_va_ten'] . '</td>';
                                 echo '<td>' . $row['dia_chi'] . '</td>';
@@ -162,6 +164,15 @@ $conn->close();
                         ?>
                     </tbody>
                 </table>
+                <div class="pagination mt-3 d-none">
+                    <div class="page-numbers d-flex justify-content-center gap-2">
+                        <a href="#" class="page-number">01</a>
+                        <a href="#" class="page-number">02</a>
+                        <a href="#" class="page-number">03</a>
+                        <a href="#" class="page-number">04</a>
+                        <a href="#" class="page-number">05</a>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -177,10 +188,106 @@ $conn->close();
 </body>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script>
-    $("tr.customer").each(function () {
-        $(this).click(function () {
-            window.location.href = 'customer_info.php?username=' + $(this).attr('data-id');
+    const paginationLength = 5;
+    const customersPerPage = 10;
+    let customers = Array.from($('.customer'));
+    let oldCustomers = customers;
+    const pagination = document.querySelector('.pagination');
+    const pageNumbers = document.querySelector('.page-numbers');
+    let currentPage = 1;
+
+    function displayCustomers() {
+        console.log(currentPage);
+        customers.forEach((product, index) => {
+            const start = (currentPage - 1) * customersPerPage;
+            const end = currentPage * customersPerPage;
+            if (index >= start && index < end) {
+                product.classList.remove('d-none');
+            } else {
+                product.classList.add('d-none');
+            }
         });
+    }
+    function updatePagination() {
+        const totalPages = Math.ceil(customers.length / customersPerPage);
+
+        if (totalPages == 1) {
+            pagination.classList.add('d-none');
+            return;
+        }
+
+        pageNumbers.innerHTML = '';
+
+        const halfWindow = Math.floor(paginationLength / 2);
+        let startPage = Math.max(1, currentPage - halfWindow);
+        let endPage = Math.min(totalPages, currentPage + halfWindow);
+
+        if (currentPage - halfWindow < 1) {
+            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
+        }
+    
+        if (currentPage + halfWindow > totalPages) {
+            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageNumber = document.createElement('div');
+            pageNumber.classList.add('page-number');
+            pageNumber.textContent = i;
+            if (i === currentPage) {
+                pageNumber.classList.add('active');
+            }
+
+            pageNumber.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentPage = i;
+                displayCustomers();
+                updatePagination();
+            });
+
+            pageNumbers.appendChild(pageNumber);
+        }
+
+        pagination.classList.remove('d-none');
+    }
+
+    displayCustomers();
+    updatePagination();
+    
+    // $("tr.customer").each(function () {
+    //     $(this).click(function () {
+    //         window.location.href = 'customer_info.php?username=' + $(this).attr('data-id');
+    //     });
+    // });
+
+    $(document).on('click', 'tr.customer', function () {
+        window.location.href = 'customer_info.php?username=' + $(this).attr('data-id');
+    });
+
+    $('#search-button').click((e) => {
+        e.preventDefault();
+        let searchValue = $('#searchbar input').val().toLowerCase().trim();
+
+        console.log(searchValue);
+
+        customers = Array.from(oldCustomers);
+
+        customers = customers.filter(customer => {
+            return $(customer).attr('name').toLowerCase().includes(searchValue) ||
+                $(customer).attr('address').toLowerCase().includes(searchValue) ||
+                $(customer).attr('data-id').toLowerCase().includes(searchValue) ||
+                $(customer).attr('phone').toLowerCase().includes(searchValue);
+        });
+
+        $('#customers-list').empty();
+
+        customers.forEach(customer => {
+            $('#customers-list').append(customer);
+        });
+
+        currentPage = 1;
+        displayCustomers();
+        updatePagination();
     });
 </script>
 </html>

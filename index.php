@@ -27,9 +27,12 @@ if ($conn->connect_error) {
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="./imgs/icons/search.png" alt="search" width="24" height="24">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm.."
                     link-to="./public/product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="./imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -56,7 +59,7 @@ if ($conn->connect_error) {
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="../member/love_list.php" class="fw-bold text-white">
+                        <a href="./member/love_list.php" class="fw-bold text-white">
                           <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -147,7 +150,7 @@ if ($conn->connect_error) {
                                     <img class="product-img d-block mx-auto" src="'.$row['hinh_anh'].'" alt="'.$row['ten_sp'].'" width="50px" height="50px">
                                     <div class="product-info">
                                         <p>'.$row['ten_sp'].'</p>
-                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>';
+                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, '.', '.').'đ</p>';
                                 if ($row['so_luong_danh_gia'] == 0) {
                                     echo '<p class="no-rate">Chưa có đánh giá</p>';
                                 } else {
@@ -180,7 +183,7 @@ if ($conn->connect_error) {
                                     <img class="product-img d-block mx-auto" src="'.$row['hinh_anh'].'" alt="'.$row['ten_sp'].'" width="50px" height="50px">
                                     <div class="product-info">
                                         <p>'.$row['ten_sp'].'</p>
-                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>';
+                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, '.', '.').'đ</p>';
                                 if ($row['so_luong_danh_gia'] == 0) {
                                     echo '<p class="no-rate">Chưa có đánh giá</p>';
                                 } else {
@@ -213,7 +216,7 @@ if ($conn->connect_error) {
                                     <img class="product-img d-block mx-auto" src="'.$row['hinh_anh'].'" alt="'.$row['ten_sp'].'" width="50px" height="50px">
                                     <div class="product-info">
                                         <p>'.$row['ten_sp'].'</p>
-                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, ",", ".").' đ</p>';
+                                        <p>'.number_format($row['gia_thanh'] * (1 - $row['sale_off']), 0, '.', '.').'đ</p>';
                                 if ($row['so_luong_danh_gia'] == 0) {
                                     echo '<p class="no-rate">Chưa có đánh giá</p>';
                                 } else {
@@ -277,5 +280,6 @@ if ($conn->connect_error) {
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="./scripts/search.js"></script>
 </html>

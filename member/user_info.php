@@ -38,9 +38,12 @@ $stmt->close();
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
                     placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">

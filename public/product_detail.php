@@ -25,9 +25,11 @@ if ($result->num_rows == 0) {
 $product = $result->fetch_assoc();
 $model = explode(' - ', $product['ten_sp'])[0];
 
-$sql = "select * from Danh_sach_yeu_thich where thanh_vien = '".$_SESSION['ten_dang_nhap']."' and ma_sp = $product_id";
-$result = $conn->query($sql);
-$isFavorite = $result->num_rows > 0;
+if (isset($_SESSION['ten_dang_nhap'])) {
+    $sql = "select * from Danh_sach_yeu_thich where thanh_vien = '".$_SESSION['ten_dang_nhap']."' and ma_sp = $product_id";
+    $result = $conn->query($sql);
+    $isFavorite = $result->num_rows > 0;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,9 +51,12 @@ $isFavorite = $result->num_rows > 0;
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
                     placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -200,7 +205,9 @@ $isFavorite = $result->num_rows > 0;
                             }
                             ?>
                             <p class="product-name m-0 fs-5" id="product-name">
-                                <?php echo $product['ten_sp'];?>
+                                <?php echo $product['ten_sp'];
+                                if (isset($_SESSION['ten_dang_nhap'])) {
+                                ?>
                                 <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
@@ -222,6 +229,9 @@ $isFavorite = $result->num_rows > 0;
                                 >
                                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                 </svg>
+                                <?php
+                                }
+                                ?>
                             </p>
                         </div>
                         <div class="fact d-flex justify-content-between">
@@ -240,13 +250,13 @@ $isFavorite = $result->num_rows > 0;
                             <?php 
                             if ($product['sale_off'] > 0) {
                                 echo 
-                                '<p class="new-price m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])).'đ</p>
-                                <p class="old-price m-0">'.number_format($product['gia_thanh']).'đ</p>
+                                '<p class="new-price m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off']), 0, '.', '.').'đ</p>
+                                <p class="old-price m-0">'.number_format($product['gia_thanh'], 0, '.', '.').'đ</p>
                                 <div class="discount d-flex align-items-center">
                                     '.$product['sale_off'] * 100 .'% OFF
                                 </div>';
                             } else {
-                                echo '<p class="new-price m-0">'.number_format($product['gia_thanh']).'đ</p>';
+                                echo '<p class="new-price m-0">'.number_format($product['gia_thanh'], 0, '.', '.').'đ</p>';
                             }
                             ?>
                         </div>
@@ -392,82 +402,70 @@ $isFavorite = $result->num_rows > 0;
                                     <?php
                                     if ($product['phan_loai'] == 1) {
                                         $stmt = $conn->prepare("select * from mobile where ma_sp = ?");
-                                        $stmt->bind_param("i", $product_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        $spec = $result->fetch_assoc();
-                                        $stmt->close();
-                                        $conn->next_result();
+                                        
                                     } else if ($product['phan_loai'] == 2) {
                                         $stmt = $conn->prepare("select * from tablet where ma_sp = ?");
-                                        $stmt->bind_param("i", $product_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        $spec = $result->fetch_assoc();
-                                        $stmt->close();
-                                        $conn->next_result();
+                                    } else if ($product['phan_loai'] == 0) {
+                                        $stmt = $conn->prepare("select * from laptop where ma_sp = ?");
+                                    } else if ($product['phan_loai'] == 3) {
+                                        $stmt = $conn->prepare("select * from tai_nghe_bluetooth where ma_sp = ?");
+                                    } else if ($product['phan_loai'] == 4) {
+                                        $stmt = $conn->prepare("select * from ban_phim where ma_sp = ?");
+                                    } else if ($product['phan_loai'] == 5) {
+                                        $stmt = $conn->prepare("select * from sac_du_phong where ma_sp = ?");
+                                    } else {
+                                        $stmt = $conn->prepare("select * from op_lung where ma_sp = ?");
                                     }
+                                    $stmt->bind_param("i", $product_id);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    $spec = $result->fetch_assoc();
+                                    $stmt->close();
+                                    $conn->next_result();
+
+                                    switch($product['phan_loai']):
+                                        case 0:
+                                            echo '<tr><td>Chip</td> <td>'.$spec['bo_xu_ly'].'</td></tr>';
+                                            echo '<tr><td>Kích thước màn hình</td> <td>'.$spec['kich_thuoc_man_hinh'].'</td></tr>';
+                                            echo '<tr><td>Công nghệ màn hình</td> <td>'.$spec['cong_nghe_man_hinh'].'</td></tr>';
+                                            echo '<tr><td>Pin</td> <td>'.$spec['dung_luong_pin'].'</td></tr>';
+                                            echo '<tr><td>Hệ điều hành</td> <td>'.$spec['he_dieu_hanh'].'</td></tr>';
+                                            echo '<tr><td>Ram</td> <td>'.$spec['ram'].'</td></tr>';
+                                            echo '<tr><td>Bộ nhớ</td> <td>'.$spec['bo_nho'].'</td></tr>';
+                                            break;
+                                        case 1:
+                                        case 2:
+                                            echo '<tr><td>Chip</td> <td>'.$spec['bo_xu_ly'].'</td></tr>';
+                                            echo '<tr><td>Kích thước màn hình</td> <td>'.$spec['kich_thuoc_man_hinh'].'</td></tr>';
+                                            echo '<tr><td>Công nghệ màn hình</td> <td>'.$spec['cong_nghe_man_hinh'].'</td></tr>';
+                                            echo '<tr><td>Pin</td> <td>'.$spec['dung_luong_pin'].'</td></tr>';
+                                            echo '<tr><td>Hệ điều hành</td> <td>'.$spec['he_dieu_hanh'].'</td></tr>';
+                                            break;
+                                        case 3:
+                                            echo '<tr><td>Phạm vi</td> <td>'.$spec['pham_vi_ket_noi'].'</td></tr>';
+                                            echo '<tr><td>Pin</td> <td>'.$spec['thoi_luong_pin'].'</td></tr>';
+                                            echo '<tr><td>Chống nước</td> <td>'.$spec['chong_nuoc'].'</td></tr>';
+                                            echo '<tr><td>Công nghệ âm thanh</td> <td>'.$spec['cong_nghe_am_thanh'].'</td></tr>';
+                                            break;
+                                        case 4:
+                                            echo '<tr><td>Key cap</td> <td>'.$spec['key_cap'].'</td></tr>';
+                                            echo '<tr><td>Số phím</td> <td>'.$spec['so_phim'].'</td></tr>';
+                                            echo '<tr><td>Kết nối</td> <td>'.$spec['cong_ket_noi'].'</td></tr>';
+                                            break;
+                                        case 5:
+                                            echo '<tr><td>Pin</td> <td>'.$spec['dung_luong_pin'].'</td></tr>';
+                                            echo '<tr><td>Công suất</td> <td>'.$spec['cong_suat'].'</td></tr>';
+                                            echo '<tr><td>Kết nối</td> <td>'.$spec['cong_ket_noi'].'</td></tr>';
+                                            echo '<tr><td>Chất liệu</td> <td>'.$spec['chat_lieu'].'</td></tr>';
+                                            break;
+                                        case 6:
+                                            echo '<tr><td>Chất liệu</td> <td>'.$spec['chat_lieu'].'</td></tr>';
+                                            echo '<tr><td>Độ dày</td> <td>'.$spec['do_day'].'</td></tr>';
+                                            break;
+                                        default:
+                                            break;
+                                    endswitch;
                                     ?>
-                                    <tr>
-                                        <td>Chip</td>
-                                        <td>
-                                            <?php
-                                            if ($product['phan_loai'] == 1) {
-                                                echo $spec['bo_xu_ly'];
-                                            } else {
-                                                echo 'NAN';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Kích thước màn hình</td>
-                                        <td>
-                                            <?php
-                                            if ($product['phan_loai'] == 1) {
-                                                echo $spec['kich_thuoc_man_hinh'];
-                                            } else {
-                                                echo 'NAN';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Công nghệ màn hình</td>
-                                        <td>
-                                            <?php
-                                            if ($product['phan_loai'] == 1) {
-                                                echo $spec['cong_nghe_man_hinh'];
-                                            } else {
-                                                echo 'NAN';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Pin</td>
-                                        <td>
-                                            <?php
-                                            if ($product['phan_loai'] == 1) {
-                                                echo $spec['dung_luong_pin'];
-                                            } else {
-                                                echo 'NAN';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Hệ điều hành</td>
-                                        <td>
-                                            <?php
-                                            if ($product['phan_loai'] == 1) {
-                                                echo $spec['he_dieu_hanh'];
-                                            } else {
-                                                echo 'NAN';
-                                            }
-                                            ?>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -521,12 +519,12 @@ $isFavorite = $result->num_rows > 0;
                             $result = $stmt->get_result();
                             while ($product = $result->fetch_assoc()) {
                                 echo 
-                                '<a class="product d-flex justify-content-evenly align-items-center mx-2 py-1" 
+                                '<a class="product d-flex justify-content-evenly align-items-center mx-2 py-1 px-2" 
                                 href="./product_detail.php?product_id='.$product['ma_sp'].'">
                                     <img src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'" width="50%" height="50%">
                                     <div class="content d-flex flex-column gap-3 overflow-hidden ms-1">
                                         <p class="m-0">'.$product['ten_sp'].'</p>
-                                        <p class="price m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])).'đ</p>
+                                        <p class="price m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off']), 0, '.', '.').'đ</p>
                                     </div>
                                 </a>';
                             }
@@ -590,33 +588,32 @@ $isFavorite = $result->num_rows > 0;
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../scripts/search.js"></script>
 <script>
-    const productInfoTabs = document.querySelectorAll('.product-info-tab');
-    const descriptionContent = document.querySelector('.description-content');
-    const specificationContent = document.querySelector('.specification-content');
-    const rateContent = document.querySelector('.rate-content');
+    const productInfoTabs = $('.product-info-tab');
+    const descriptionContent = $('.description-content');
+    const specificationContent = $('.specification-content');
+    const rateContent = $('.rate-content');
 
-    productInfoTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            productInfoTabs.forEach(tab => {
-                tab.classList.remove('selected');
-            });
-            tab.classList.add('selected');
-            console.log(tab.textContent);
-            if (tab.textContent === 'Mô tả sản phẩm') {
-                descriptionContent.classList.remove('d-none');
-                specificationContent.classList.add('d-none');
-                rateContent.classList.add('d-none');
-            } else if (tab.textContent === 'Thông số kỹ thuật') {
-                descriptionContent.classList.add('d-none');
-                specificationContent.classList.remove('d-none');
-                rateContent.classList.add('d-none');
+    productInfoTabs.each(function() {
+        $(this).on('click', function() {
+            productInfoTabs.removeClass('selected');
+
+            $(this).addClass('selected');
+
+            if ($(this).text() === 'Mô tả sản phẩm') {
+                descriptionContent.removeClass('d-none');
+                specificationContent.addClass('d-none');
+                rateContent.addClass('d-none');
+            } else if ($(this).text() === 'Thông số kỹ thuật') {
+                descriptionContent.addClass('d-none');
+                specificationContent.removeClass('d-none');
+                rateContent.addClass('d-none');
             } else {
-                descriptionContent.classList.add('d-none');
-                specificationContent.classList.add('d-none');
-                rateContent.classList.remove('d-none');
+                descriptionContent.addClass('d-none');
+                specificationContent.addClass('d-none');
+                rateContent.removeClass('d-none');
             }
-        });
-    });
+        })
+    })
 
     //quantity button
     $('#decrement').click(() => {
@@ -673,32 +670,32 @@ $isFavorite = $result->num_rows > 0;
     })
 
     //pagination
-    const ratePerPage = 3;
+    const ratePerPage = 5;
     const paginationLength = 3;
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelectorAll('.page-number');
-    const rates = document.querySelectorAll('.rates-wrapper .rate');
+    const pagination = $('.pagination');
+    const pageNumbers = $('.page-number');
+    const rates = $('.rates-wrapper .rate');
     let currentPage = 1;
 
     function displayRates() {
-        rates.forEach((rate, index) => {
+        rates.each(function(index, rate) {
             if (index >= (currentPage - 1) * ratePerPage && index < currentPage * ratePerPage) {
-                rate.classList.remove('d-none');
+                $(rate).removeClass('d-none');
             } else {
-                rate.classList.add('d-none');
+                $(rate).addClass('d-none');
             }
-        });
+        })
     }
 
     function updatePagination() {
         const totalPages = Math.ceil(rates.length / ratePerPage);
         
         if (totalPages == 1) {
-            pagination.classList.add('d-none');
+            pagination.addClass('d-none');
             return;
         }
 
-        pagination.innerHTML = '';
+        pagination.empty();
 
         const halfWindow = Math.floor(paginationLength / 2);
         let startPage = Math.max(1, currentPage - halfWindow);
@@ -713,24 +710,23 @@ $isFavorite = $result->num_rows > 0;
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            const page = document.createElement('button');
-            page.classList.add('btn', 'page-number');
-            page.textContent = i;
+            const page = $('<button type="button"></button>').text(i).addClass('btn page-number');
 
             if (i == currentPage) {
-                page.classList.add('active');
+                page.addClass('active');
             }
 
-            page.addEventListener('click', (e) => {
+            page.on('click', (e) => {
                 e.preventDefault();
                 currentPage = i;
                 displayRates();
                 updatePagination();
             });
-            pagination.appendChild(page);
+
+            pagination.append(page);
         }
 
-        pagination.classList.remove('d-none');
+        pagination.removeClass('d-none');
     }
 
     displayRates();

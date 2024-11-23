@@ -52,8 +52,12 @@ while ($row = $result->fetch_assoc()) {
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -289,117 +293,8 @@ while ($row = $result->fetch_assoc()) {
     crossorigin="anonymous"
   ></script>
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="../scripts/search.js"></script>
   <script>
-    const decrementBtns = document.querySelectorAll('.decrement-btn');
-    const incrementBtns = document.querySelectorAll('.increment-btn');
-
-    function callToUpdateQuantityApi(productId, newQuantity) {
-      console.log("Product ID: " + productId + ", New quantity: " + newQuantity);
-      $.ajax({
-        url: './update_quantity.php',
-        type: 'POST',
-        data: {
-          productId: productId,
-          newQuantity: newQuantity
-        },
-        success: function(response) {
-          if (response == "Cập nhật số lượng thất bại") {
-            alert("Cập nhật số lượng thất bại");
-          } else {
-          let singlePrice = $('.price[data-id="' + productId + '"]').text().replace(/\./g, '');
-          let totalPrice = newQuantity * +singlePrice;
-          $('.total-price[data-id="' + productId + '"]').text(totalPrice.toLocaleString('vi-VN'));
-          let orderPrice = 0;
-          $('.total-price').each(function() {
-            orderPrice += +$(this).text().replace(/\./g, '');
-          });
-          $('#order-price').text(orderPrice.toLocaleString('vi-VN') + ' VND');
-          $('#tax').text((0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
-          $('#order-total-price').text((orderPrice + 0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
-          }
-        }
-      });
-    }
-
-    function updateQuantity(productId) {
-      let timeout;
-      return function(newQuantity) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => callToUpdateQuantityApi.call(this, productId, newQuantity), 400);
-      }
-    }
-
-    const updateQuantityFuncs = [];
-
-    for (let i = 0; i < decrementBtns.length; i++) {
-      let thisProductId = decrementBtns[i].getAttribute('data-id');
-      updateQuantityFuncs.push(updateQuantity(thisProductId));
-      const btn = decrementBtns[i];
-      btn.addEventListener('click', function() {
-        const productId = this.getAttribute('data-id');
-        const quantityValue = document.querySelector(`.quantity-value[data-id="${productId}"]`);
-        let newQuantity = +quantityValue.textContent - 1;
-        if (newQuantity < 1) {
-          newQuantity = 1;
-        }
-        quantityValue.textContent = newQuantity;
-        updateQuantityFuncs[i](newQuantity);
-      });
-    }
-
-    for (let i =0; i < incrementBtns.length; i++) {
-      updateQuantityFuncs.push(updateQuantity(incrementBtns[i].getAttribute('data-id')));
-      const btn = incrementBtns[i];
-      btn.addEventListener('click', function() {
-        const productId = this.getAttribute('data-id');
-        const quantityValue = document.querySelector(`.quantity-value[data-id="${productId}"]`);
-        let newQuantity = +quantityValue.textContent + 1;
-        quantityValue.textContent = newQuantity;
-        updateQuantityFuncs[i](newQuantity);
-      });
-    }
-
-    $('.delete-btn').each(function() {
-      $(this).click(function() {
-        const productId = $(this).attr('data-id');
-        $('#delete-modal').modal('show');
-        $('#delete-modal').attr('data-id', productId);
-      })
-    });
-
-    $('#confirm-delete-btn').click(function() {
-      const productId = $('#delete-modal').attr('data-id');
-      $.ajax({
-        url: './remove_item_from_cart.php',
-        type: 'POST',
-        data: {
-          product_id: productId
-        },
-        success: function(response) {
-          if (response == "Xóa sản phẩm khỏi giỏ hàng thành công") {
-            $(`tr[data-id="${productId}"]`).remove();
-
-            if ($('.total-price').length == 0) {
-              window.location.href = './empty_cart.php';
-            }
-
-            let orderPrice = 0;
-
-            $('.total-price').each(function() {
-              orderPrice += +$(this).text().replace(/\./g, '');
-            });
-            $('#order-price').text(orderPrice.toLocaleString('vi-VN') + ' VND');
-            $('#tax').text((0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
-            $('#order-total-price').text((orderPrice + 0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
-
-            $('#delete-modal').modal('hide');
-          } else {
-            alert("Xóa sản phẩm khỏi giỏ hàng thất bại");
-          }
-        }
-      });
-    });
-
     $('.heart-icon').each(function() {
       $(this).click(function() {
         const productId = $(this).attr('data-id');

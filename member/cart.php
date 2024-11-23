@@ -55,8 +55,12 @@ $conn->close();
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" placeholder="Tìm kiếm sản phẩm..">
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
+                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -69,8 +73,8 @@ $conn->close();
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="./user_info.php">Thông tin cá nhân</a></div>
-                                <div><a href="./change_password.html">Đổi mật khẩu</a></div>
                                 <div><a href="./order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="./cart.php">Giỏ hàng</a></div>
                                 <div><a href="../public/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
@@ -162,7 +166,8 @@ $conn->close();
                   <?php
                   foreach ($cart_items as $item) {
                     echo '
-                    <tr data-id="'.$item['ma_sp'].'">
+                    <tr data-id="'.$item['ma_sp'].'" sale-off= "'.$item['sale_off'].'"
+                    price="'.$item['gia_thanh'].'">
                         <td>
                             <button type="button" class="p-0 border border-0 delete-btn"
                             data-id="'.$item['ma_sp'].'"><img src="../imgs/icons/XCircle.png" alt="delete" width="24" height="24"></button>
@@ -178,9 +183,9 @@ $conn->close();
                             <div class="quantity-wrapper col d-flex 
                             align-items-center justify-content-between
                             mx-auto">
-                                <button class="btn decrement-btn" data-id="'.$item['ma_sp'].'">-</button>
+                                <button type="button" class="btn decrement-btn" data-id="'.$item['ma_sp'].'">-</button>
                                 <span class="quantity-value" data-id="'.$item['ma_sp'].'">'.$item['so_luong'].'</span>
-                                <button class="btn increment-btn" data-id="'.$item['ma_sp'].'">+</button>
+                                <button type="button" class="btn increment-btn" data-id="'.$item['ma_sp'].'">+</button>
                             </div>
                         </td>
                         <td class="total-price" data-id="'.$item['ma_sp'].'">'.number_format($item['tong_gia'], 0, '.', '.').'</td>
@@ -222,7 +227,7 @@ $conn->close();
                       class="d-flex justify-content-between align-items-center"
                     >
                       <div>Giảm giá</div>
-                      <div class="price-value">
+                      <div class="price-value" id="discount">
                         <?php
                         $discount = 0;
                         foreach ($cart_items as $item) {
@@ -290,7 +295,7 @@ $conn->close();
                   </div>
                   <div>
                     <div class="d-flex align-items-center mb-3 justify-content-center">
-                        <button class="custom-btn btn">Áp dụng</button>
+                        <button type="button" class="custom-btn btn">Áp dụng</button>
                     </div>
                   </div>
                 </div>
@@ -385,9 +390,10 @@ $conn->close();
     crossorigin="anonymous"
   ></script>
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="../scripts/search.js"></script>
   <script>
-    const decrementBtns = document.querySelectorAll('.decrement-btn');
-    const incrementBtns = document.querySelectorAll('.increment-btn');
+    const decrementBtns = $('.decrement-btn');
+    const incrementBtns = $('.increment-btn');
 
     function callToUpdateQuantityApi(productId, newQuantity) {
       console.log("Product ID: " + productId + ", New quantity: " + newQuantity);
@@ -412,6 +418,14 @@ $conn->close();
           $('#order-price').text(orderPrice.toLocaleString('vi-VN') + ' VND');
           $('#tax').text((0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
           $('#order-total-price').text((orderPrice + 0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
+          let discount = 0;
+          $('tbody tr').each(function() {
+            let saleOff = $(this).attr('sale-off');
+            let price = $(this).attr('price');
+            let quantity = +$('.quantity-value[data-id="' + $(this).attr('data-id') + '"]').text();
+            discount += saleOff * price * quantity;
+          });
+          $('#discount').text(discount.toLocaleString('vi-VN') + ' VND');
           }
         }
       });
@@ -428,29 +442,32 @@ $conn->close();
     const updateQuantityFuncs = [];
 
     for (let i = 0; i < decrementBtns.length; i++) {
-      let thisProductId = decrementBtns[i].getAttribute('data-id');
+      const btn = $(decrementBtns[i]);
+      let thisProductId = btn[0].getAttribute('data-id');
       updateQuantityFuncs.push(updateQuantity(thisProductId));
-      const btn = decrementBtns[i];
-      btn.addEventListener('click', function() {
-        const productId = this.getAttribute('data-id');
-        const quantityValue = document.querySelector(`.quantity-value[data-id="${productId}"]`);
-        let newQuantity = +quantityValue.textContent - 1;
+      
+      btn.on('click', function() {
+        const productId = $(this).attr('data-id');
+        const quantityValue = $(`.quantity-value[data-id="${productId}"]`);
+        let newQuantity = +quantityValue.text() - 1;
         if (newQuantity < 1) {
           newQuantity = 1;
         }
-        quantityValue.textContent = newQuantity;
+        quantityValue.text(newQuantity);
         updateQuantityFuncs[i](newQuantity);
       });
     }
 
-    for (let i =0; i < incrementBtns.length; i++) {
-      updateQuantityFuncs.push(updateQuantity(incrementBtns[i].getAttribute('data-id')));
-      const btn = incrementBtns[i];
-      btn.addEventListener('click', function() {
-        const productId = this.getAttribute('data-id');
-        const quantityValue = document.querySelector(`.quantity-value[data-id="${productId}"]`);
-        let newQuantity = +quantityValue.textContent + 1;
-        quantityValue.textContent = newQuantity;
+    for (let i = 0; i < incrementBtns.length; i++) {
+      const btn = $(incrementBtns[i]);
+      let thisProductId = btn[0].getAttribute('data-id');
+      updateQuantityFuncs.push(updateQuantity(thisProductId));
+
+      btn.on('click', function() {
+        const productId = $(this).attr('data-id');
+        const quantityValue = $(`.quantity-value[data-id="${productId}"]`);
+        let newQuantity = +quantityValue.text() + 1;
+        quantityValue.text(newQuantity);
         updateQuantityFuncs[i](newQuantity);
       });
     }

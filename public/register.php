@@ -59,9 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
                     placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -239,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="modal-header justify-content-center">
                         <h5 class="modal-title"></h5>
                     </div>
-                    <div class="modal-body text-center text-dark">
+                    <div class="modal-body text-center">
                         <p></p>
                     </div>
                 </div>
@@ -293,13 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 },
                 success: function(response) {
                     if (response === "Đăng ký thành công") {
-                        $('#message-modal .modal-title').text('Thành công');
-                        $('#message-modal .modal-body p').text('Đăng ký thành công');
-                        $('#message-modal').css('color', 'green');
-                        $('#message-modal').modal('show');
-                        setTimeout(() => {
-                            window.location.href = './login.php';
-                        }, 1000);
+                        window.location.href = './login.php';
                     } else {
                         console.log(response);
                         $('#message-modal .modal-title').text('Đăng ký thất bại');

@@ -105,9 +105,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
                     placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -157,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="../ndex.php">
+                    <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
@@ -331,14 +334,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         $("#message-modal").css("color", "red");
                         $("#message-modal").modal("show");
                     } else {
-                        $("#message-modal .modal-title").text("Đăng nhập thành công");
-                        $("#message-modal .modal-body p").text("Đang chuyển hướng...");
-                        $("#message-modal").css("color", "green");
-                        $("#message-modal").modal("show");
                         console.log(data);
-                        setTimeout(function() {
-                            window.location.href = data;
-                        }, 1000);
+                        window.location.href = data;
                     }
                 }
             });

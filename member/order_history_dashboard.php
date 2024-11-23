@@ -53,9 +53,12 @@ $stmt->close();
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" 
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
                     placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -153,7 +156,7 @@ $stmt->close();
                         ?>
                     </h3>
                     <div class="search-order ms-auto">
-                        <input type="text" class="search-order-input" placeholder="Tìm kiếm đơn hàng..." id="search-order-btn">
+                        <input type="text" class="search-order-input" placeholder="Tìm theo tình trạng, thời gian..." id="search-order-btn">
                     </div>
                 </div>
             </div>
@@ -322,27 +325,27 @@ $stmt->close();
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/search.js"></script>
 <script>
     const ordersPerPage = 5;
     const paginationLength = 5;
-    let orders = document.querySelectorAll('.order');
+    let orders = $('.order');
     const oldOrders = [...orders];
 
     ///pagination
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelector('.page-numbers');
+    const pagination = $('.pagination');
+    const pageNumbers = $('.page-numbers');
     const numberOfPages = Math.ceil(orders.length / ordersPerPage);
     let currentPage = 1;
     
     function displayOrders() {
-        let orders = document.querySelectorAll('.order');
-        orders.forEach((order, index) => {
+        $('.order').each((index, order) => {
             const start = (currentPage - 1) * ordersPerPage;
             const end = start + ordersPerPage;
             if (index >= start && index < end) {
-                order.style.display = '';
+                $(order).show();
             } else {
-                order.style.display = 'none';
+                $(order).hide();
             }
         });
     }
@@ -351,11 +354,11 @@ $stmt->close();
         const totalPages = Math.ceil(orders.length / ordersPerPage);
 
         if (totalPages == 1) {
-            pagination.classList.add('d-none');
+            pagination.addClass('d-none');
             return;
         }
 
-        pageNumbers.innerHTML = '';
+        pageNumbers.empty();
 
         const halfWindow = Math.floor(paginationLength / 2);
         let startPage = Math.max(1, currentPage - halfWindow);
@@ -370,28 +373,25 @@ $stmt->close();
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            const pageNumber = document.createElement('a');
-            pageNumber.href = '#';
-            pageNumber.classList.add('page-number');
-            pageNumber.textContent = i;
+            const pageNumber = $('<button type="button"></button>').text(i).addClass('page-number');
+
             if (i === currentPage) {
-                pageNumber.classList.add('active');
+                pageNumber.addClass('active');
             }
 
-            pageNumber.addEventListener('click', (e) => {
+            pageNumber.on('click', (e) => {
                 e.preventDefault();
                 currentPage = i;
                 displayOrders();
                 displayPagination();
             });
 
-            pageNumbers.appendChild(pageNumber);
+            pageNumbers.append(pageNumber);
         }
 
-        pagination.classList.remove('d-none');
+        pagination.removeClass('d-none');
     }
 
-    
     ///search
     $("#search-order-btn").on('input', function() {
         const searchValue = $(this).val().toLowerCase();
@@ -400,7 +400,9 @@ $stmt->close();
         if (searchValue === '') {
             orders = [...oldOrders];
             currentPage = 1;
+            
             $('tbody').empty();
+
             orders.forEach(order => {
                 $('tbody').append(order);
             });
@@ -412,9 +414,9 @@ $stmt->close();
         
         orders = [];
         oldOrders.forEach(order => {
-            const orderId = order.getAttribute('order-id');
-            const orderTime = order.getAttribute('order-time');
-            const orderStatus = order.getAttribute('order-status');
+            const orderId = $(order).attr('order-id');
+            const orderTime = $(order).attr('order-time');
+            const orderStatus = $(order).attr('order-status').toLowerCase();
 
             if (orderId.includes(searchValue) || orderTime.includes(searchValue) || orderStatus.includes(searchValue)) {
                 orders = [...orders, order];
@@ -423,6 +425,7 @@ $stmt->close();
 
         currentPage = 1;
         $('tbody').empty();
+
         orders.forEach(order => {
             $('tbody').append(order);
         });

@@ -78,9 +78,12 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
-                    <input type="text" class="search-input bg-secondary border-0" 
+                    <input type="text" id="search-input" class="search-input bg-secondary border-0" 
                     placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -416,6 +419,7 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/search.js"></script>
 <script>
     $("document").ready(function() {
         $("#card-form").hide();
@@ -484,9 +488,7 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
     }
     ?>
 
-    const formInputs = document.querySelectorAll("form input");
-
-    formInputs.forEach(input => {
+    $("form input").each(function(index, input) {
         input.addEventListener("input", function() {
             let firstName = $("input[name='firstName']").val();
             let lastName = $("input[name='lastName']").val();

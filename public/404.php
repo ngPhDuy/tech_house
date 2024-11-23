@@ -1,3 +1,13 @@
+<?php
+$baseUrl = 'http://'.$_SERVER['HTTP_HOST'];
+// $baseUrl = $baseUrl.'/tech_house';
+$baseUrl = $baseUrl;
+$thisFolder = $baseUrl.'/public';
+
+// echo '<br>baseUrl: '.$baseUrl;
+// echo '<br>thisFolder: '.$thisFolder;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,8 +19,7 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-    <link href="../styles/public/custom.css" rel="stylesheet" />
-    <link href="../styles/public/login.css" rel="stylesheet" />
+    <link href="<?php echo $baseUrl; ?>/styles/public/custom.css" rel="stylesheet" />
     <title>Not found</title>
   </head>
   <body>
@@ -18,41 +27,45 @@
         <header>
             <div class="row bg-primary align-items-center">
                 <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="./product_list.php" class="text-white text-center">
+                    <a href="<?php echo $thisFolder; ?>/product_list.php" 
+                    class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
-                    placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
+                    placeholder="Tìm kiếm sản phẩm.." link-to="<?php echo $thisFolder; ?>/product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="<?php echo $baseUrl; ?>/imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
-                            '<a href="../member/user_info.php" class="fw-bold text-white">
-                                <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
+                            '<a href="'.$baseUrl.'/member/user_info.php" class="fw-bold text-white">
+                                <img src="'.$baseUrl.'/imgs/icons/user.png" alt="user" width="32" height="32">
                                 '.$_SESSION['ho_ten'].'</a>';
                             echo '
                             <div class="dropdown-content">
-                                <div><a href="../member/user_info.php">Thông tin cá nhân</a></div>
-                                <div><a href="../member/change_password.html">Đổi mật khẩu</a></div>
-                                <div><a href="../member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
-                                <div><a href="./logout.php">Đăng xuất</a></div>
+                                <div><a href="'.$baseUrl.'/member/user_info.php">Thông tin cá nhân</a></div>
+                                <div><a href="'.$baseUrl.'/member/change_password.html">Đổi mật khẩu</a></div>
+                                <div><a href="'.$baseUrl.'/member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="'.$thisFolder.'/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
-                            '<a href="./login.php" class="fw-bold text-white">
-                                <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
+                            '<a href="'.$thisFolder.'/login.php" class="fw-bold text-white">
+                                <img src="'.$baseUrl.'/imgs/icons/user.png" alt="user" width="32" height="32">
                                 Đăng nhập
                             </a>';
                         }
                         ?>
                     </div>
                     <div class="cart w-50">
-                        <a href="../member/love_list.php" class="fw-bold text-white">
+                        <a href="<?php echo $baseUrl; ?>/member/love_list.php" class="fw-bold text-white">
                           <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
@@ -75,40 +88,40 @@
             </div>
             <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
                 <div class="tab col">
-                    <a href="../ndex.php">
-                        <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
+                    <a href="<?php echo $baseUrl; ?>/index.php">
+                        <img src="<?php echo $baseUrl; ?>/imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=1">
-                        <img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
+                    <a href="<?php echo $thisFolder; ?>/product_list.php?product_type=1">
+                        <img src="<?php echo $baseUrl; ?>/imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
                         Điện thoại
                     </a>
                 </div>  
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=0">
-                        <img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
+                    <a href="<?php echo $thisFolder; ?>/product_list.php?product_type=0">
+                        <img src="<?php echo $baseUrl; ?>/imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
                         Laptop
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=2">
-                        <img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
+                    <a href="<?php echo $thisFolder; ?>/product_list.php?product_type=2">
+                        <img src="<?php echo $baseUrl; ?>/imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
                         Tablet
                     </a>
                 </div>
                 <div class="tab col">
-                    <a href="./product_list.php?product_type=3">
-                        <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">
+                    <a href="<?php echo $thisFolder; ?>/product_list.php?product_type=3">
+                        <img src="<?php echo $baseUrl; ?>/imgs/icons/gamepad.png" alt="other" width="24" height="24">
                         Phụ kiện
-                        <img src="../imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
+                        <img src="<?php echo $baseUrl; ?>/imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
                     </a>
                     <div class="dropdown-content">
-                        <div><a href="./product_list.php?product_type=3">Tai nghe</a></div>
-                        <div><a href="./product_list.php?product_type=4">Bàn phím</a></div>
-                        <div><a href="./product_list.php?product_type=5">Sạc dự phòng</a></div>
-                        <div><a href="./product_list.php?product_type=6">Ốp lưng</a></div>
+                        <div><a href="<?php echo $thisFolder; ?>/product_list.php?product_type=3">Tai nghe</a></div>
+                        <div><a href="<?php echo $thisFolder; ?>/product_list.php?product_type=4">Bàn phím</a></div>
+                        <div><a href="<?php echo $thisFolder; ?>/product_list.php?product_type=5">Sạc dự phòng</a></div>
+                        <div><a href="<?php echo $thisFolder; ?>/product_list.php?product_type=6">Ốp lưng</a></div>
                     </div>
                 </div>
                 <div class="col-4"></div>
@@ -119,7 +132,7 @@
         <div class="container bg-white pt-4">
           <div class="justify-content-center align-items-center d-flex">
             <img
-              src="../imgs/icons/not_found.png"
+              src="<?php echo $baseUrl; ?>/imgs/icons/not_found.png"
               alt="Không tìm thấy trang"
               width="395"
               height="397"
@@ -134,7 +147,7 @@
           <div
             class="justify-content-center align-items-center d-flex pb-4 pt-4 text-primary"
           >
-            <a class="btn btn-primary p-2 text-uppercase fs-5" href="../index.php" style="width: fit-content">
+            <a class="btn btn-primary p-2 text-uppercase fs-5" href="<?php echo $baseUrl; ?>/index.php" style="width: fit-content">
                 <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -159,7 +172,7 @@
             <h5>Tổng đài hỗ trợ</h5>
             <div class="phone-wrapper">
               <img
-                src="../imgs/icons/call_icon.png"
+                src="<?php echo $baseUrl; ?>/imgs/icons/call_icon.png"
                 alt="phone"
                 width="24"
                 height="24"
@@ -169,7 +182,7 @@
             <p>1922-6067 (8:00 - 21:30)</p>
             <div class="phone-wrapper">
               <img
-                src="../imgs/icons/call_icon.png"
+                src="<?php echo $baseUrl; ?>/imgs/icons/call_icon.png"
                 alt="phone"
                 width="24"
                 height="24"
@@ -179,7 +192,7 @@
             <p>1922-6068 (8:00 - 21:30)</p>
             <div class="phone-wrapper">
               <img
-                src="../imgs/icons/call_icon.png"
+                src="<?php echo $baseUrl; ?>/imgs/icons/call_icon.png"
                 alt="phone"
                 width="24"
                 height="24"
@@ -221,5 +234,6 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"
   ></script>
-  <script src="../scripts/search.js"></script>
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="<?php echo $baseUrl; ?>/scripts/search.js"></script>
 </html>

@@ -15,7 +15,7 @@ if (isset($_GET['product_type'])) {
     group by p.ma_sp';
 } else if (isset($_GET['search_key'])) {
     $search = $_GET['search_key'];
-    $search = str_replace(' ', '%%', $search);
+    $search = str_replace('+', ' ', $search);
     $product_type = -1;
     $sql = 'select p.*, count(d.ma_sp) as so_luong_danh_gia, avg(d.diem_danh_gia) as diem_trung_binh
     from san_pham p left join danh_gia d on p.ma_sp = d.ma_sp
@@ -86,9 +86,12 @@ if ($result->num_rows > 0) {
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
-                    <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
                     placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
+                    <button type="button" class="search-btn border border-0 p-0 m-0"
+                    id="search-btn">
+                        <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
+                    </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
                     <div class="login w-50">
@@ -270,7 +273,7 @@ if ($result->num_rows > 0) {
                             width="80%" height="50%">
                             <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
                                 <p class="m-0">'.$product['ten_sp'].'</p>
-                                <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off'])).'đ</p>';
+                                <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off']), 0, '.', '.').'đ</p>';
                         if ($product['so_luong_danh_gia'] > 0) {
                             echo '<p class="m-0"><span class="star-icon"></span>'.round($product['diem_trung_binh'], 1).'</p>';
                         } else {
@@ -376,7 +379,7 @@ if ($result->num_rows > 0) {
                         </div>
                         <div class="brand">
                             <input type="checkbox" name="brand" id="huawei">
-                            <label for="huawai">Huawei</label>
+                            <label for="huawei">Huawei</label>
                         </div>
                     </div>
                 </div>
@@ -426,14 +429,12 @@ if ($result->num_rows > 0) {
 <script>
     let brandsFilter = [];
     let priceFilter;
-    const filterModal = document.querySelector('.filter-modal');
-
     const paginationLength = 3; 
     const productsPerPage = 15;
-    let products = document.querySelectorAll('.product');
+    let products = Array.from($('.product'));
     let oldProducts = products;
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelector('.page-numbers');
+    const pagination = $('.pagination');
+    const pageNumbers = $('.page-numbers');
     let currentPage = 1;
 
     $('.filter-wrapper').click((e) => {
@@ -489,29 +490,30 @@ if ($result->num_rows > 0) {
             $('.product-list').append(product);
         });
 
+        $('.result-count span').text(products.length);
+
         currentPage = 1;
         displayProducts();
         updatePagination();
     });
 
-    $('.filter-modal-wrapper').click((e) => {
-        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
-        if (e.target === filterModalWrapper) {
-            filterModalWrapper.classList.add('d-none');
+    $('.filter-modal-wrapper').click((e) => {;
+        if (e.target === $('.filter-modal-wrapper')[0]) {
+            $('.filter-modal-wrapper').addClass('d-none');
         }
     });
 
     //Pagination
 
     function displayProducts() {
-        console.log(currentPage);
+        console.log(products);
         products.forEach((product, index) => {
             const start = (currentPage - 1) * productsPerPage;
             const end = currentPage * productsPerPage;
             if (index >= start && index < end) {
-                product.classList.remove('d-none');
+                $(product).removeClass('d-none');
             } else {
-                product.classList.add('d-none');
+                $(product).addClass('d-none');
             }
         });
     }
@@ -520,11 +522,11 @@ if ($result->num_rows > 0) {
         const totalPages = Math.ceil(products.length / productsPerPage);
 
         if (totalPages == 1) {
-            pagination.classList.add('d-none');
+            pagination.addClass('d-none');
             return;
         }
 
-        pageNumbers.innerHTML = '';
+        pageNumbers.empty();
 
         const halfWindow = Math.floor(paginationLength / 2);
         let startPage = Math.max(1, currentPage - halfWindow);
@@ -539,30 +541,28 @@ if ($result->num_rows > 0) {
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            const pageNumber = document.createElement('a');
-            pageNumber.href = '#';
-            pageNumber.classList.add('page-number');
-            pageNumber.textContent = i;
+            const pageNumber = $('<button type="button"></button>').text(i).addClass('page-number');
+
             if (i === currentPage) {
-                pageNumber.classList.add('active');
+                pageNumber.addClass('active');
             }
 
-            pageNumber.addEventListener('click', (e) => {
+            pageNumber.on('click', (e) => {
                 e.preventDefault();
                 currentPage = i;
                 displayProducts();
                 updatePagination();
             });
 
-            pageNumbers.appendChild(pageNumber);
+            pageNumbers.append(pageNumber);
         }
 
-        pagination.classList.remove('d-none');
+        pagination.removeClass('d-none');
     }
 
     $('#sort').change(() => {
         const sortType = $('#sort').val();
-        products = Array.from(oldProducts);
+        products = Array.from(products);
         switch (sortType) {
             case 'price-asc':
                 products.sort((a, b) => {
@@ -585,7 +585,6 @@ if ($result->num_rows > 0) {
                 });
                 break;
             default:
-                products = oldProducts;
                 break;
         }
         $('.product-list').empty();

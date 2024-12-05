@@ -6,6 +6,11 @@ if (!isset($_SESSION['ten_dang_nhap'])) {
     exit();
 }
 
+if ($_SESSION['phan_loai_tk'] == 'nv') {
+    header("Location: ../index.php");
+    exit();
+}
+
 $username = $_SESSION['ten_dang_nhap'];
 
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
@@ -79,37 +84,37 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
-                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    placeholder="Tìm kiếm sản phẩm..">
                     <button type="button" class="search-btn border border-0 p-0 m-0"
                     id="search-btn">
                         <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
-                    <div class="login w-50">
+                    <div class="login w-50 d-flex justify-content-center">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
                             '<a href="./user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                '.$_SESSION['ho_ten'].'</a>';
+                                <span>'.$_SESSION['ho_ten'].'</span></a>';
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="./user_info.php">Thông tin cá nhân</a></div>
-                                <div><a href="./change_password.html">Đổi mật khẩu</a></div>
                                 <div><a href="./order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="./cart.php">Giỏ hàng</a></div>
                                 <div><a href="../public/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
                             '<a href="../public/login.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                Đăng nhập
+                                <span>Đăng nhập</span>
                             </a>';
                         }
                         ?>
                     </div>
-                    <div class="cart w-50">
+                    <div class="cart w-50 d-flex justify-content-center">
                         <a href="./love_list.php" class="fw-bold text-white">
                           <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -126,12 +131,12 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                           >
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                           </svg>
-                            Yêu thích
+                          <span>Yêu thích</span>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
+            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5 gap-3">
                 <div class="tab col">
                     <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
@@ -181,23 +186,23 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label" for="firstName">Họ</label>
-                                    <input type="text" class="form-control" placeholder="First name" name="firstName">
+                                    <input type="text" class="form-control" placeholder="First name" name="firstName" id="firstName">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="lastName">Tên</label>
-                                    <input type="text" class="form-control" placeholder="Last name" name="lastName">
+                                    <input type="text" class="form-control" placeholder="Last name" name="lastName" id="lastName">
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label" for="address">Địa chỉ nhận hàng</label>
-                                    <input type="text" class="form-control" placeholder="Address" name="address">
+                                    <input type="text" class="form-control" placeholder="Address" name="address" id="address">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="email">Email</label>
-                                    <input type="email" class="form-control" name="email">
+                                    <input type="email" class="form-control" name="email" id="email">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label" for="phone">Số điện thoại</label>
-                                    <input type="text" class="form-control" name="phone">
+                                    <input type="text" class="form-control" name="phone" id="phone">
                                 </div>
                             </div>
                             <div class="container p-0">
@@ -250,19 +255,19 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                                         <div class="row g-3">
                                             <div class="col-12">
                                                 <label class="form-label" for="card-owner">Tên chủ thẻ</label>
-                                                <input type="text" class="form-control" name="card-owner">
+                                                <input type="text" class="form-control" name="card-owner" id="card-owner">
                                             </div>
                                             <div class="col-12">
                                                 <label class="form-label" for="card-number">Số thẻ</label>
-                                                <input type="text" class="form-control" name="card-number">
+                                                <input type="text" class="form-control" name="card-number" id="card-number">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label" for="expiration-date">Ngày hết hạn</label>
-                                                <input type="text" class="form-control" name="expiration-date">
+                                                <input type="text" class="form-control" name="expiration-date" id="expiration-date">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label" for="cvv">CVV</label>
-                                                <input type="text" class="form-control" name="cvv">
+                                                <input type="text" class="form-control" name="cvv" id="cvv">
                                             </div>
                                         </div>
                                     </div>
@@ -343,8 +348,8 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
             </div>
         </main>
         <footer class="row bg-primary text-white p-3 justify-content-center">
-            <div class="row justify-content-evenly">
-                <div class="col-3 pt-4">
+            <div class="row justify-content-evenly infomations">
+                <div class="contact col-sm-3 col-7 pt-sm-4">
                     <h5>Tổng đài hỗ trợ</h5>
                     <div class="phone-wrapper">
                         <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
@@ -362,7 +367,8 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                     </div>
                     <p>1922-6069 (8:00 - 21:30)</p>
                 </div>
-                <div class="category col-4">
+                <!-- <div class="col-1"></div> -->
+                <div class="category col-sm-4 col-5">
                     <h5>Danh mục sản phẩm</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Điện thoại</a></li>
@@ -374,7 +380,7 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                         <li><a href="#">Bao da, ốp lưng</a></li>
                     </ul>
                 </div>
-                <div class="other-info col-4">
+                <div class="other-info col-sm-4 col-5">
                     <h5>Các thông tin khác</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Giới thiệu công ty</a></li>
@@ -387,7 +393,7 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
                 <p class="text-center m-0">© 2024 Tech House. All rights reserved.</p>
             </div>
         </footer>
-        <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="container d-flex justify-content-center align-items-center p-0">
@@ -416,10 +422,10 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
             </div>
         </div>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-<script src="../scripts/search.js"></script>
+<script src="../scripts/public/search.js"></script>
 <script>
     $("document").ready(function() {
         $("#card-form").hide();
@@ -514,6 +520,7 @@ on gio_hang.ma_sp = san_pham.ma_sp where thanh_vien = ?');
     })
 
 </script>
+</body>
 </html>
 <?php
 $conn->close();

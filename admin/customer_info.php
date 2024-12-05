@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['ten_dang_nhap'])) {
-    header('Location: login.php');
+    header('Location: ../public/login.php');
     exit();
 }
 
@@ -25,6 +25,13 @@ $sql = "select * from don_hang where thanh_vien = '" . $_GET['username'] . "'";
 $result = $conn->query($sql);
 $orders = $result->fetch_all(MYSQLI_ASSOC);
 
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$admin = $result->fetch_assoc();
+
+$stmt->close();
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -42,7 +49,7 @@ $conn->close();
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 
     <style>
         .info-value {
@@ -52,10 +59,6 @@ $conn->close();
 </head>
 
 <body>
-    <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
-    <!-- dont change code here -->
-
-    <!-- side bar -->
     <div id="sidebar">
         <div id="logo">
             Tech House
@@ -99,7 +102,13 @@ $conn->close();
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -116,18 +125,27 @@ $conn->close();
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $admin['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
-
                     </a>
 
                     <ul class="dropdown-menu">
@@ -142,7 +160,7 @@ $conn->close();
 
     <div id="body_section">
 
-        <div id="main_wrapper" class="px-5">
+        <div id="main_wrapper" class="px-2 px-md-3">
             <div class="d-flex justify-content-start align-items-center gap-3 mb-3">
                 <div class="fs-3">Thông tin khách hàng</div>
                 <div class="dropdown">
@@ -158,8 +176,8 @@ $conn->close();
                 </div>
             </div>
 
-            <div class="product-info d-flex gap-3 info-wrapper align-items-center gap-3">
-                <div class="d-flex flex-column justify-content-center align-items-center gap-2 col-3">
+            <div class="product-info d-flex gap-3 info-wrapper align-items-center flex-column flex-md-row py-3 px-3">
+                <div class="d-flex justify-content-center align-items-center col-3" style="width: inherit;">
                     <?php 
                     if ($row['avatar'] != NULL) {
                         echo '<img src="../imgs/avatars/' . $row['avatar'] . '" 
@@ -170,9 +188,9 @@ $conn->close();
                     }
                     ?>
                 </div>
-                <div class="d-flex flex-column col justify-content-evenly">
-                    <div class="d-flex">
-                        <div class="info-box col-4">
+                <div class="d-flex flex-column col justify-content-evenly w-100 px-md-0 px-5">
+                    <div class="info-grid">
+                        <div class="info-box" data-tooltip="Tên đăng nhập: <?php echo $row['ten_dang_nhap']; ?>">
                             <div class="info-type">
                                 Tên đăng nhập
                             </div>
@@ -181,7 +199,7 @@ $conn->close();
                             </div>
                         </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box" data-tooltip="Họ và tên: <?php echo $row['ho_va_ten']; ?>">
                             <div class="info-type">
                                 Họ và tên
                             </div>
@@ -190,22 +208,20 @@ $conn->close();
                             </div>
                         </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box">
                             <div class="info-type">
-                                Trạng thái tài khoản
+                                Trạng thái
                             </div>
                             <div class="info-value">
                                 <?php if ($row['active_status'] == '1') {
-                                    echo '<p class="text-success m-0">Đang hoạt động</p>';
+                                    echo '<p class="status-complete m-0">Không khóa</p>';
                                 } else {
-                                    echo '<p class="text-danger m-0">Đã khóa</p>';
+                                    echo '<p class="status-cancel m-0">Đã khóa</p>';
                                 } ?>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="d-flex">
-                        <div class="info-box col-4">
+                        <div class="info-box" data-tooltip="SĐT: <?php echo $row['sdt']; ?>">
                             <div class="info-type">
                                 Số điện thoại
                             </div>
@@ -218,7 +234,7 @@ $conn->close();
                             </div>
                         </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box" data-tooltip="Email: <?php echo $row['email']; ?>">
                             <div class="info-type">
                                 Email
                             </div>
@@ -231,9 +247,35 @@ $conn->close();
                             </div>
                         </div>
 
+                        <div class="info-box" data-tooltip="Mở tk lúc: <?php echo $row['thoi_diem_mo_tk']; ?>">
+                            <div class="info-type">
+                                Mở TK lúc
+                            </div>
+                            <div class="info-value">
+                                <?php echo $row['thoi_diem_mo_tk']; ?>
+                            </div>
+                        </div>
 
+                        <div class="info-box" data-tooltip="Khóa tk lúc:
+                        <?php if ($row['thoi_diem_huy_tk'] == NULL) {
+                                echo 'Chưa khóa';
+                            } else {
+                                echo $row['thoi_diem_huy_tk'];
+                            } ?>
+                        ">
+                            <div class="info-type">
+                                Khóa TK lúc
+                            </div>
+                            <div class="info-value">
+                                <?php if ($row['thoi_diem_huy_tk'] == NULL) {
+                                    echo 'Chưa khóa';
+                                } else {
+                                    echo $row['thoi_diem_huy_tk'];
+                                } ?>
+                            </div>
+                        </div>
 
-                        <div class="info-box col-4">
+                        <div class="info-box" data-tooltip="Địa chỉ: <?php echo $row['dia_chi']; ?>">
                             <div class="info-type">
                                 Địa chỉ
                             </div>
@@ -246,32 +288,6 @@ $conn->close();
                             </div>
                         </div>
                     </div>
-
-                    <div class="d-flex">
-
-                        <div class="info-box col-4">
-                            <div class="info-type">
-                                Thời điểm mở tài khoản
-                            </div>
-                            <div class="info-value">
-                                <?php echo $row['thoi_diem_mo_tk']; ?>
-                            </div>
-                        </div>
-
-                        <div class="info-box col-4">
-                            <div class="info-type">
-                                Thời điểm huỷ tài khoản
-                            </div>
-                            <div class="info-value">
-                                <?php if ($row['thoi_diem_huy_tk'] == NULL) {
-                                    echo 'Chưa khóa';
-                                } else {
-                                    echo $row['thoi_diem_huy_tk'];
-                                } ?>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
@@ -281,7 +297,7 @@ $conn->close();
                 style="font-style: italic">Chưa có đơn hàng nào được đặt</div>';
             } else {
             ?>
-            <div id="addtitional-info" class="info-wrapper container mt-3">
+            <div id="addtitional-info" class="info-wrapper p-3 mt-3">
                 <div class="fs-4 mb-2">Lịch sử đặt hàng</div>
                     <table class="table align-middle text-center">
                         <thead>
@@ -295,7 +311,7 @@ $conn->close();
                         <tbody>
                             <?php
                             foreach ($orders as $order) {
-                                echo '<tr class="order" data-id="' . $order['ma_don_hang'] . '">';
+                                echo '<tr class="order page-element" data-id="' . $order['ma_don_hang'] . '">';
                                 echo '<td>' . $order['ma_don_hang'] . '</td>';
                                 echo '<td>' . $order['thoi_diem_dat_hang'] . '</td>';
                                 echo '<td>' . number_format($order['tong_gia'], 0, '.', '.') . ' VND</td>';
@@ -335,85 +351,22 @@ $conn->close();
             <?php
             }
             ?>
-        </div>
-
-
-        <!-- Dont have footer! -->
-        <div id="footer" class="mb-5"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/admin/toggle_sidebar.js"></script>
+<script src="../scripts/public/pagination.js"></script>
 <script>
     let paginationLength = 5;
     let ordersPerPage = 5;
     let currentPage = 1;
-    let orders = document.querySelectorAll('.order');
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelector('.page-numbers');
+    let orders = $('.order');
+    let paginationFunc = pagination(paginationLength, ordersPerPage, orders);
 
-    function displayOrders() {
-        console.log(currentPage);
-        orders.forEach((product, index) => {
-            const start = (currentPage - 1) * ordersPerPage;
-            const end = currentPage * ordersPerPage;
-            if (index >= start && index < end) {
-                product.classList.remove('d-none');
-            } else {
-                product.classList.add('d-none');
-            }
-        });
-    }
-
-    function updatePagination() {
-        const totalPages = Math.ceil(orders.length / ordersPerPage);
-
-        if (totalPages == 1) {
-            pagination.classList.add('d-none');
-            return;
-        }
-
-        pageNumbers.innerHTML = '';
-
-        const halfWindow = Math.floor(paginationLength / 2);
-        let startPage = Math.max(1, currentPage - halfWindow);
-        let endPage = Math.min(totalPages, currentPage + halfWindow);
-
-        if (currentPage - halfWindow < 1) {
-            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
-        }
-    
-        if (currentPage + halfWindow > totalPages) {
-            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            const pageNumber = document.createElement('div');
-            pageNumber.classList.add('page-number');
-            pageNumber.textContent = i;
-            if (i === currentPage) {
-                pageNumber.classList.add('active');
-            }
-
-            pageNumber.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentPage = i;
-                displayOrders();
-                updatePagination();
-            });
-
-            pageNumbers.appendChild(pageNumber);
-        }
-
-        pagination.classList.remove('d-none');
-    }
-
-    displayOrders();
-    updatePagination();
+    paginationFunc(currentPage);
 
     $("tr.order").each(function () {
         $(this).click(function () {
@@ -453,4 +406,5 @@ $conn->close();
         });
     });
 </script>
+</body>
 </html>

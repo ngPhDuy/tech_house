@@ -25,6 +25,14 @@ if ($result->num_rows > 0) {
         $products[] = $row;
     }
 }
+
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -41,14 +49,10 @@ if ($result->num_rows > 0) {
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
-    <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
-    <!-- dont change code here -->
-
-    <!-- side bar -->
     <div id="sidebar">
         <div id="logo">
             Tech House
@@ -92,7 +96,13 @@ if ($result->num_rows > 0) {
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -109,14 +119,24 @@ if ($result->num_rows > 0) {
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -133,9 +153,6 @@ if ($result->num_rows > 0) {
 
     </div>
     <div id="body_section">
-        <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
-        <!-- TODO -->
-        <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
 
         <div id="main_wrapper" class="px-5">
             <div class="d-flex flex-column gap-3">
@@ -149,7 +166,7 @@ if ($result->num_rows > 0) {
                         <div>Lọc</div>
                     </div>
                     
-                    <div class="w-75 d-flex justify-content-between">
+                    <div class="w-75 d-flex justify-content-between align-items-center gap-3">
                         <div class="searchbar" id="searchbar">
                             <input type="text" placeholder="Nhập tên sản phẩm..." name="search">
                             <button type="button" id="search-button"><i class="fa fa-search"></i></button>
@@ -158,7 +175,6 @@ if ($result->num_rows > 0) {
                         <a href="./product_add.php" role="button"
                             class="add-product-button btn bg-warning text-light d-flex gap-2">
                             <i class='far fa-plus-square' style='font-size:24px'></i>
-                            <div>Thêm sản phẩm</div>
                         </a>
                     </div>
                 </div>
@@ -177,9 +193,9 @@ if ($result->num_rows > 0) {
                     <tbody id="product-list">
                         <?php
                         foreach ($products as $product) {
-                            echo '<tr class="product" product-id="' . $product['ma_sp'].'" 
-                            category="'.$product['phan_loai'].'" name="'.$product['ten_sp'].'"
-                            brand="'.strtolower($product['thuong_hieu']).'" price="'.$product['gia_thanh'].'" >';
+                            echo '<tr class="product page-element" data-product-id="' . $product['ma_sp'].'" 
+                            data-category="'.$product['phan_loai'].'" data-name="'.$product['ten_sp'].'"
+                            data-brand="'.strtolower($product['thuong_hieu']).'" data-price="'.$product['gia_thanh'].'" >';
                             echo "<td>";
                             echo "<img width='60' src='" . $product['hinh_anh'] . "' alt='product'>";
                             echo "</td>";
@@ -334,7 +350,7 @@ if ($result->num_rows > 0) {
                         </div>
                         <div class="brand">
                             <input type="checkbox" name="brand" id="huawei">
-                            <label for="huawai">Huawei</label>
+                            <label for="huawei">Huawei</label>
                         </div>
                     </div>
                 </div>
@@ -342,8 +358,8 @@ if ($result->num_rows > 0) {
                     <p class="m-0 fw-bold text-uppercase mb-3">Mức giá</p>
                     <div class="prices">
                         <div class="price">
-                            <input type="radio" name="price" id="all price">
-                            <label for="all price">Tất cả</label>
+                            <input type="radio" name="price" id="all-price">
+                            <label for="all-price">Tất cả</label>
                         </div>
                         <div class="price">
                             <input type="radio" name="price" id="0-10">
@@ -411,81 +427,82 @@ if ($result->num_rows > 0) {
         </div>
     </div>
 
-</body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/admin/toggle_sidebar.js"></script>
+<script src="../scripts/public/pagination.js"></script>
 <script>
     const paginationLength = 5;
     const productsPerPage = 10;
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelector('.page-numbers');
     let products = Array.from($('.product'));
     let oldProducts = products;
     let currentPage = 1;
     let brandsFilter = [];
     let priceFilter;
     let categoriesFilter = [];
-    const filterModal = document.querySelector('.filter-modal');
+    let paginationFunc = pagination(paginationLength, productsPerPage, $(products));
 
-    function displayProducts() {
-        console.log(currentPage);
-        products.forEach((product, index) => {
-            const start = (currentPage - 1) * productsPerPage;
-            const end = currentPage * productsPerPage;
-            if (index >= start && index < end) {
-                product.classList.remove('d-none');
-            } else {
-                product.classList.add('d-none');
-            }
-        });
-    }
-    function updatePagination() {
-        const totalPages = Math.ceil(products.length / productsPerPage);
+    paginationFunc(currentPage);
 
-        if (totalPages == 1) {
-            pagination.classList.add('d-none');
-            return;
-        }
+    // function displayProducts() {
+    //     console.log(currentPage);
+    //     products.forEach((product, index) => {
+    //         const start = (currentPage - 1) * productsPerPage;
+    //         const end = currentPage * productsPerPage;
+    //         if (index >= start && index < end) {
+    //             product.classList.remove('d-none');
+    //         } else {
+    //             product.classList.add('d-none');
+    //         }
+    //     });
+    // }
+    // function updatePagination() {
+    //     const totalPages = Math.ceil(products.length / productsPerPage);
 
-        pageNumbers.innerHTML = '';
+    //     if (totalPages == 1) {
+    //         pagination.classList.add('d-none');
+    //         return;
+    //     }
 
-        const halfWindow = Math.floor(paginationLength / 2);
-        let startPage = Math.max(1, currentPage - halfWindow);
-        let endPage = Math.min(totalPages, currentPage + halfWindow);
+    //     pageNumbers.innerHTML = '';
 
-        if (currentPage - halfWindow < 1) {
-            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
-        }
+    //     const halfWindow = Math.floor(paginationLength / 2);
+    //     let startPage = Math.max(1, currentPage - halfWindow);
+    //     let endPage = Math.min(totalPages, currentPage + halfWindow);
+
+    //     if (currentPage - halfWindow < 1) {
+    //         endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
+    //     }
     
-        if (currentPage + halfWindow > totalPages) {
-            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
-        }
+    //     if (currentPage + halfWindow > totalPages) {
+    //         startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
+    //     }
 
-        for (let i = startPage; i <= endPage; i++) {
-            const pageNumber = document.createElement('div');
-            pageNumber.classList.add('page-number');
-            pageNumber.textContent = i;
-            if (i === currentPage) {
-                pageNumber.classList.add('active');
-            }
+    //     for (let i = startPage; i <= endPage; i++) {
+    //         const pageNumber = document.createElement('div');
+    //         pageNumber.classList.add('page-number');
+    //         pageNumber.textContent = i;
+    //         if (i === currentPage) {
+    //             pageNumber.classList.add('active');
+    //         }
 
-            pageNumber.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentPage = i;
-                displayProducts();
-                updatePagination();
-            });
+    //         pageNumber.addEventListener('click', (e) => {
+    //             e.preventDefault();
+    //             currentPage = i;
+    //             displayProducts();
+    //             updatePagination();
+    //         });
 
-            pageNumbers.appendChild(pageNumber);
-        }
+    //         pageNumbers.appendChild(pageNumber);
+    //     }
 
-        pagination.classList.remove('d-none');
-    }
+    //     pagination.classList.remove('d-none');
+    // }
 
-    displayProducts();
-    updatePagination();
+    // displayProducts();
+    // updatePagination();
 
     $(".delete-product-button").click(function () {
         let productId = $(this).attr('data-id');
@@ -495,17 +512,17 @@ if ($result->num_rows > 0) {
 
     $("#confirm-delete-btn").click(function () {
         let productId = $(this).attr('data-id');
-        console.log(productId + ' - ' + $(`[product-id=${productId}]`).attr('category'));
+        console.log(productId + ' - ' + $(`[data-product-id=${productId}]`).attr('data-category'));
         $.ajax({
             url: './delete_product.php',
             method: 'POST',
             data: {
                 product_id: productId,
-                category : $(`[product-id=${productId}]`).attr('category')
+                category : $(`[data-product-id=${productId}]`).attr('data-category')
             },
             success: function (response) {
                 if (response == 'Xoá sản phẩm thành công') {
-                    $(`[product-id=${productId}]`).remove();
+                    $(`[data-product-id=${productId}]`).remove();
                     $("#delete-modal").modal('hide');
                 } else {
                     console.log(response);
@@ -518,8 +535,7 @@ if ($result->num_rows > 0) {
     $('#filter-button').click((e) => {
         console.log('click');
         e.preventDefault();
-        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
-        filterModalWrapper.classList.remove('d-none');
+        $('.filter-modal-wrapper').removeClass('d-none');
     });
 
     $('.filter-modal-footer button').click((e) => {
@@ -543,13 +559,13 @@ if ($result->num_rows > 0) {
         products = Array.from(oldProducts);
         if (brandsFilter.length > 0) {
             products = products.filter(product => {
-                return brandsFilter.includes($(product).attr('brand'));
+                return brandsFilter.includes($(product).attr('data-brand'));
             });
         } 
 
         if (priceFilter) {
             products = products.filter(product => {
-                const price = +$(product).attr('price');
+                const price = +$(product).attr('data-price');
                 switch (priceFilter) {
                     case '0-10':
                         return price >= 0 && price <= 10000000;
@@ -571,7 +587,7 @@ if ($result->num_rows > 0) {
 
         if (categoriesFilter.length > 0) {
             products = products.filter(product => {
-                return categoriesFilter.includes($(product).attr('category'));
+                return categoriesFilter.includes($(product).attr('data-category'));
             });
         }
 
@@ -581,16 +597,19 @@ if ($result->num_rows > 0) {
             $('#product-list').append(product);
         });
 
-        currentPage = 1;
-        displayProducts();
-        updatePagination();
+        let paginationFunc = pagination(paginationLength, productsPerPage, $(products));
+        paginationFunc(1);
     });
 
     $('.filter-modal-wrapper').click((e) => {
-        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
-        if (e.target === filterModalWrapper) {
-            filterModalWrapper.classList.add('d-none');
+        let filterModalWrapper =$('.filter-modal-wrapper');
+        if (e.target === filterModalWrapper[0]) {
+            filterModalWrapper.addClass('d-none');
         }
+        // let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
+        // if (e.target === filterModalWrapper) {
+        //     filterModalWrapper.classList.add('d-none');
+        // }
     });
 
     $('#search-button').click((e) => {
@@ -602,8 +621,8 @@ if ($result->num_rows > 0) {
         products = Array.from(oldProducts);
 
         products = products.filter(product => {
-            return $(product).attr('name').toLowerCase().includes(searchValue) ||
-                $(product).attr('brand').toLowerCase().includes(searchValue);
+            return $(product).attr('data-name').toLowerCase().includes(searchValue) ||
+                $(product).attr('data-brand').toLowerCase().includes(searchValue);
         });
 
         $('#product-list').empty();
@@ -612,11 +631,11 @@ if ($result->num_rows > 0) {
             $('#product-list').append(product);
         });
 
-        currentPage = 1;
-        displayProducts();
-        updatePagination();
+        let paginationFunc = pagination(paginationLength, productsPerPage, $(products));
+        paginationFunc(1);
     });
 </script>
+</body>
 </html>
 <?php
 $conn->close();

@@ -139,7 +139,7 @@ create table Danh_sach_yeu_thich(
     primary key (thanh_vien, ma_sp),
     foreign key (thanh_vien) references Thanh_vien(ten_dang_nhap),
     foreign key (ma_sp) references San_pham(ma_sp)
-)
+);
 
 create table Don_hang (
     ma_don_hang int primary key auto_increment,
@@ -447,6 +447,7 @@ create procedure Tao_don_hang_mot_sp(
     insert into Don_hang (thanh_vien, thoi_diem_dat_hang, tinh_trang, tong_gia) values (p_thanh_vien, now(), 0, p_tong_gia);
     set @ma_don_hang = (select ma_don_hang from Don_hang where thanh_vien = p_thanh_vien and thoi_diem_dat_hang = now());
     insert into Chi_tiet_don_hang values (@ma_don_hang, p_ma_sp, p_so_luong, p_tong_gia);
+    update San_pham set sl_ton_kho = sl_ton_kho - p_so_luong where ma_sp = p_ma_sp;
 end//
 
 delimiter ;

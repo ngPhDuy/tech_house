@@ -53,6 +53,12 @@ if ($product_baseInfo) {
     $product_techInfo = null;
 }
 
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
 // Đóng statement và kết nối
 $stmt->close();
 $conn->close();
@@ -79,8 +85,6 @@ function product_db_name($type)
             return $type;
     }
 }
-
-
 
 function translateKeyToVN($key)
 {
@@ -201,8 +205,6 @@ function translateKeyToEN($key)
     }
 }
 
-
-
 function getCategoryName($category)
 {
     switch ($category) {
@@ -232,10 +234,7 @@ function getCategoryName($category)
             return "";
     }
 }
-
 ?>
-
-
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -251,7 +250,7 @@ function getCategoryName($category)
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
@@ -299,7 +298,13 @@ function getCategoryName($category)
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -316,14 +321,24 @@ function getCategoryName($category)
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -341,25 +356,26 @@ function getCategoryName($category)
     </div>
 
     <!-- body content -->
-    <div id="body_section" class="mb-5">
-        <div id="main_wrapper" class="px-5">
+    <div id="body_section" class="mb-3">
+        <div id="main_wrapper" class="px-3">
             <div class="h2 mb-3">Chỉnh sửa sản phẩm</div>
 
             <form id="productForm" class="info d-flex flex-column gap-3">
             <input type="hidden" name="product_id"
-            value="<?php echo $product_baseInfo['ma_sp']; ?>" readonly>
+            value="<?php echo $product_baseInfo['ma_sp']; ?>">
                 <!-- Basic Information -->
-                <div class="info-wrapper container">
+                <div class="info-wrapper">
                     <div class="fs-4 mb-2">Thông tin cơ bản</div>
-                    <div class="row">
-                        <div class="col input-box">
+                    <div class="info-grid">
+                        <div class="input-box">
                             <label for="productName" class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" id="productName" name="productName"
                                 value="<?php echo htmlspecialchars($product_baseInfo['ten_sp']); ?>" required>
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="color" class="form-label">Màu sắc</label>
                             <select class="form-select" id="color" name="color" required>
+                                <option value="" disabled>Chọn màu sắc</option>
                                 <option value="Black" <?php if ($product_baseInfo['mau_sac'] == 'Black') echo 'selected'; ?>>Đen</option>
                                 <option value="White" <?php if ($product_baseInfo['mau_sac'] == 'White') echo 'selected'; ?>>Trắng</option>
                                 <option value="Purple" <?php if ($product_baseInfo['mau_sac'] == 'Purple') echo 'selected'; ?>>Tím</option>
@@ -369,30 +385,27 @@ function getCategoryName($category)
                                 <option value="Gray" <?php if ($product_baseInfo['mau_sac'] == 'Gray') echo 'selected'; ?>>Xám</option>
                             </select>
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="brand" class="form-label">Hãng</label>
                             <input type="text" class="form-control" id="brand" name="brand"
                                 value="<?php echo htmlspecialchars($product_baseInfo['thuong_hieu']); ?>" required>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-3 input-box">
+                        <div class="input-box">
                             <label for="category" class="form-label">Phân loại</label>
                             <input disabled type="text" class="form-control" id="category" name="category"
-                                value="<?php echo getCategoryName($product_baseInfo['phan_loai']); ?>" />
+                                value="<?php echo getCategoryName($product_baseInfo['phan_loai']); ?>" >
                         </div>
-                        <div class="col-3 input-box">
+                        <div class="input-box">
                             <label for="stock" class="form-label">Số lượng tồn kho</label>
                             <input type="number" class="form-control" id="stock" name="stock"
                                 value="<?php echo $product_baseInfo['sl_ton_kho']; ?>" required>
                         </div>
-                        <div class="col-3 input-box">
+                        <div class="input-box">
                             <label for="price" class="form-label">Giá thành</label>
                             <input type="number" class="form-control" id="price" name="price"
                                 value="<?php echo $product_baseInfo['gia_thanh']; ?>" required>
                         </div>
-                        <div class="col-3 input-box">
+                        <div class="input-box">
                             <label for="discount" class="form-label">Giảm giá</label>
                             <input class="form-control" id="discount" name="discount"
                                 value="<?php echo $product_baseInfo['sale_off']; ?>" required>
@@ -401,34 +414,34 @@ function getCategoryName($category)
                 </div>
 
                 <!-- Technical Information -->
-                <div class="info-wrapper container">
+                <div class="info-wrapper">
                     <div class="fs-4 mb-2">Thông tin kỹ thuật</div>
-                    <div class="specification">
+                    <div class="specification info-grid">
                         <?php foreach ($product_techInfo as $key => $value): ?>
                             <?php if ($key === 'ma_sp') continue; ?>
-                            <div class="col input-box">
+                            <div class="input-box">
                                 <label for="<?php echo translateKeyToEN($key); ?>" class="form-label">
                                     <?php echo translateKeyToVN($key); ?>
                                 </label>
                                 <input type="text" class="form-control" id="<?php echo translateKeyToEN($key); ?>" name="<?php echo translateKeyToEN($key); ?>"
-                                    value="<?php echo htmlspecialchars($value); ?>" />
+                                    value="<?php echo htmlspecialchars($value); ?>" >
                             </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
 
                 <!-- Image and Description -->
-                <div class="info-wrapper container">
+                <div class="info-wrapper">
                     <div class="fs-4 mb-2">Hình ảnh và Mô tả</div>
                     <div class="row">
-                        <div class="col-12 input-box">
+                        <div class="input-box">
                             <label for="productImage" class="form-label">Hình ảnh sản phẩm</label>
                             <input type="text" class="form-control" id="productImage" name="productImage"
-                                value="<?php echo htmlspecialchars($product_baseInfo['hinh_anh']); ?>" />
+                                value="<?php echo htmlspecialchars($product_baseInfo['hinh_anh']); ?>" >
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-12 input-box">
+                        <div class="input-box">
                             <label for="description" class="form-label">Mô tả sản phẩm</label>
                             <textarea class="form-control" id="description" name="description" rows="5"><?php echo htmlspecialchars($product_baseInfo['mo_ta']); ?></textarea>
                         </div>
@@ -454,42 +467,40 @@ function getCategoryName($category)
             </div>
         </div>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-
+<script src="../scripts/admin/toggle_sidebar.js"></script>
 <script>
     $('#productForm').submit(function(e) {
-        e.preventDefault(); // Ngừng hành động gửi form mặc định
+        e.preventDefault(); 
 
-        var formData = $(this).serialize(); // Lấy dữ liệu từ form
+        var formData = $(this).serialize(); 
 
         $.ajax({
             type: 'POST',
-            url: './product_edit_ajax.php', // URL của tệp xử lý
-            data: formData, // Dữ liệu gửi đi
-            success: function(response) {
-                var res = JSON.parse(response); // Chuyển đổi dữ liệu JSON trả về
-
-                // Hiển thị modal với thông báo từ phản hồi
-                if (res.success) {
-                    $('#message-modal .modal-body p').text(res.success); // Hiển thị thông báo thành công
-                    $('#message-modal').modal('show'); // Mở modal
+            url: './update_product_info.php',
+            data: formData, 
+            success: function(data) {
+                if (data == "Chỉnh sửa sản phẩm thành công") {
+                    $('#message-modal .modal-body p').text(data); 
+                    $('#message-modal').modal('show'); 
                     $('#message-modal').css('color', 'green');
-                } else if (res.error) {
-                    $('#message-modal .modal-body p').text(res.error); // Hiển thị thông báo lỗi
-                    $('#message-modal').modal('show'); // Mở modal
+                } else {
+                    $('#message-modal .modal-body p').text(data); 
+                    $('#message-modal').modal('show'); 
                     $('#message-modal').css('color', 'red');
                 }
             },
             error: function() {
-                $('#message-modal .modal-body p').text('Có lỗi xảy ra!'); // Thông báo lỗi nếu AJAX gặp sự cố
-                $('#message-modal').modal('show'); // Mở modal lỗi
+                $('#message-modal .modal-body p').text('Có lỗi xảy ra!');
+                $('#message-modal').css('color', 'red');
+                $('#message-modal').modal('show'); 
             }
         });
     });
 </script>
-
+</body>
 </html>

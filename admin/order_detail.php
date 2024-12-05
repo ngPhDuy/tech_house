@@ -37,6 +37,12 @@ $stmt->execute();
 $result = $stmt->get_result();
 $products = $result->fetch_all(MYSQLI_ASSOC);
 
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
 $stmt->close();
 ?>
 <!DOCTYPE html>
@@ -54,14 +60,10 @@ $stmt->close();
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
-    <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
-    <!-- dont change code here -->
-
-    <!-- side bar -->
     <div id="sidebar">
         <div id="logo">
             Tech House
@@ -105,7 +107,13 @@ $stmt->close();
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -122,14 +130,24 @@ $stmt->close();
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -148,13 +166,15 @@ $stmt->close();
 
     <div id="body_section">
 
-        <div id="main_wrapper" class="px-5">
+        <div id="main_wrapper" class="px-3">
             <div class="h3 mb-3">Thông tin đơn hàng</div>
 
             <div class="product-info d-flex flex-column gap-3">
-                <div class="info-wrapper container">
+                <div class="info-wrapper">
                     <div class="d-flex justify-content-between">
                         <div class="fs-4">Thông tin cơ bản</div>
+                        <?php if ($order['tinh_trang'] != 4 && $order['tinh_trang'] != 3) {
+                        ?>
                         <div class="dropdown">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
                                 Thao tác
@@ -164,7 +184,6 @@ $stmt->close();
                                 if ($order['tinh_trang'] == 0) {
                                     echo '<li><a class="dropdown-item" href="confirm_order.php?order_id=' . $order_id . '">Duyệt đơn hàng</a></li>';
                                     echo '<li><a class="dropdown-item" href="change_status_order.php?order_id=' . $order_id . '&order_status=4">Hủy đơn hàng</a></li>';
-                                } else if ($order['tinh_trang'] == 4) {
                                 } else {
                                     echo '<li><a class="dropdown-item" href="change_status_order.php?order_id=' . $order_id . '&order_status=2">Đang vận chuyển</a></li>';
                                     echo '<li><a class="dropdown-item" href="change_status_order.php?order_id=' . $order_id . '&order_status=3">Đã giao thành công</a></li>';
@@ -177,9 +196,12 @@ $stmt->close();
                                 <li><a class="dropdown-item" href="#">Hủy đơn hàng</a></li> -->
                             </ul>
                         </div>
+                        <?php
+                        }
+                        ?>
                     </div>
-                    <div class="row">
-                        <div class="info-box col-3">
+                    <div class="info-grid">
+                        <div class="info-box">
                             <div class="info-type">
                                 Mã đơn hàng
                             </div>
@@ -188,7 +210,7 @@ $stmt->close();
                             </div>
                         </div>
 
-                        <div class="info-box col-7">
+                        <div class="info-box">
                             <div class="info-type">
                                 Tên khách hàng
                             </div>
@@ -197,11 +219,7 @@ $stmt->close();
                             </div>
                         </div>
 
-                    </div>
-
-                    <div class="row">
-
-                        <div class="info-box col-3">
+                        <div class="info-box">
                             <div class="info-type">
                                 Tổng giá
                             </div>
@@ -212,7 +230,7 @@ $stmt->close();
                             </div>
                         </div>
 
-                        <div class="info-box col-3">
+                        <div class="info-box">
                             <div class="info-type">
                                 Tình trạng
                             </div>
@@ -233,8 +251,7 @@ $stmt->close();
                             </div>
                         </div>
 
-
-                        <div class="info-box col-3">
+                        <div class="info-box">
                             <div class="info-type">
                                 Thời điểm đặt
                             </div>
@@ -243,11 +260,7 @@ $stmt->close();
                             </div>
                         </div>
 
-
-                    </div>
-
-                    <div class="row">
-                        <div class="info-box col-3">
+                        <div class="info-box">
                             <div class="info-type">
                                 Nhân viên duyệt
                             </div>
@@ -262,15 +275,20 @@ $stmt->close();
                                     $stmt->bind_param('s', $order_id);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
-                                    $duyet = $result->fetch_assoc();
-                                    echo $duyet['ho_va_ten'];
+                                    if ($result->num_rows > 0) {
+                                        $duyet = $result->fetch_assoc();
+                                        echo $duyet['ho_va_ten'];
+                                    } else {
+                                        $duyet = null;
+                                        echo 'Chưa có';
+                                    }
                                     $stmt->close();
                                 }
                                 ?>
                             </div>
                         </div>
 
-                        <div class="info-box col-3">
+                        <div class="info-box">
                             <div class="info-type">
                                 Ngày duyệt
                             </div>
@@ -285,7 +303,7 @@ $stmt->close();
                             </div>
                         </div>
 
-                        <div class="info-box col-3">
+                        <div class="info-box">
                             <div class="info-type">
                                 Thời điểm nhận
                             </div>
@@ -303,7 +321,7 @@ $stmt->close();
 
                 </div>
 
-                <div id="addtitional-info" class="info-wrapper container">
+                <div id="addtitional-info" class="info-wrapper">
                     <div class="fs-4 mb-2">Danh sách sản phẩm</div>
 
                         <table class="table align-middle text-center">
@@ -311,7 +329,7 @@ $stmt->close();
                                 <tr>
                                     <th scope="col"></th>
                                     <th scope="col">Tên sản phẩm</th>
-                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">SL</th>
                                     <th scope="col">Đơn giá</th>
                                 </tr>
                             </thead>
@@ -336,15 +354,13 @@ $stmt->close();
             </div>
 
         </div>
-
-
-        <!-- Dont have footer! -->
-        <div id="footer" class="mb-5"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../scripts/admin/toggle_sidebar.js"></script>
 </body>
 
 </html>

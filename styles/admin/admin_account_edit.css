@@ -47,24 +47,6 @@
     position: relative;
 }
 
-.info-box:hover::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    background: rgba(138, 138, 138, 0.8);
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 4px;
-    top: 100%; /* Hiển thị bên dưới ô */
-    left: 0;
-    z-index: 10;
-    white-space: normal;
-    width: max-content;
-    max-width: 200px; /* Giới hạn chiều rộng tooltip */
-    box-shadow: 0 2px 5px rgba(138, 138, 138, 0.2);
-    pointer-events: none;
-    overflow-wrap: break-word;
-}
-
 .info-box.type-image img {
     height: 200px;
 }
@@ -88,13 +70,14 @@ tbody tr {
 }
 
 /*---------Reponsive-----------*/
-@media screen and (min-width: 576px) {
-    .info-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-}
 @media screen and (min-width: 768px) {
     .product-info > div:first-child {
         width: inherit;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .info-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 }

@@ -6,6 +6,11 @@ if (!isset($_SESSION['ten_dang_nhap'])) {
     return;
 }
 
+if ($_SESSION['phan_loai_tk'] == 'nv') {
+    header("Location: ../admin/homepage.php");
+    return;
+}
+
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -39,37 +44,37 @@ $stmt->close();
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
-                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    placeholder="Tìm kiếm sản phẩm..">
                     <button type="button" class="search-btn border border-0 p-0 m-0"
                     id="search-btn">
                         <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
-                    <div class="login w-50">
+                    <div class="login w-50 d-flex justify-content-center">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
                             '<a href="./user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                '.$_SESSION['ho_ten'].'</a>';
+                                <span>'.$_SESSION['ho_ten'].'</span></a>';
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="./user_info.php">Thông tin cá nhân</a></div>
-                                <div><a href="./change_password.html">Đổi mật khẩu</a></div>
                                 <div><a href="./order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="./cart.php">Giỏ hàng</a></div>
                                 <div><a href="../public/logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
-                            '<a href="./login.php" class="fw-bold text-white">
+                            '<a href="../public/login.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                Đăng nhập
+                                <span>Đăng nhập</span>
                             </a>';
                         }
                         ?>
                     </div>
-                    <div class="cart w-50">
+                    <div class="cart w-50 d-flex justify-content-center">
                         <a href="./love_list.php" class="fw-bold text-white">
                           <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -86,12 +91,12 @@ $stmt->close();
                           >
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                           </svg>
-                            Yêu thích
+                          <span>Yêu thích</span>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
+            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5 gap-3">
                 <div class="tab col">
                     <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
@@ -135,12 +140,12 @@ $stmt->close();
         <main>
             <div class="hello ps-3 fw-bold">
                 <h3>
-                    Xin chào, <?php echo $user['ho_va_ten']; ?>
+                    Xin chào, <?php echo $_SESSION['ho_ten']; ?>
                 </h3>
             </div>
             <div class="container-fluid mt-3">
-                <div class="d-flex">
-                    <nav class="col-md-2 sidebar">
+                <div class="d-flex justify-content-center justify-content-md-start">
+                    <nav class="col sidebar d-none d-md-block">
                         <div class="sidebar-sticky">
                             <ul class="nav border rounded-3 flex-column">
                                 <li class="nav-item active">
@@ -180,7 +185,8 @@ $stmt->close();
                                     <div class="col-12">THÔNG TIN CÁ NHÂN</div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-3 position-relative text-center d-lg-block d-none">
+                                    <div class="col-lg-3 col-12 mb-lg-0 mb-3 position-relative text-center 
+                                    d-flex justify-content-center align0items-center">
                                         <?php
                                         if ($user['avatar']) {
                                             echo '<img src="../imgs/avatars/'.$user['avatar'].'" alt="avatar" class="profile-img">';
@@ -210,7 +216,7 @@ $stmt->close();
                                             <div class="col-md-6">
                                                 <div class="d-flex flex-column align-items-start">
                                                     <div><p class="m-0">Email<p></div>
-                                                    <p class="m-0 border border-1 p-2 w-100 text-start"><?php echo $user['email']; ?></p>
+                                                    <p class="m-0 border border-1 p-2 w-100 text-start"><?php echo $user['email'] ?? "Chưa cập nhật";?></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -218,12 +224,13 @@ $stmt->close();
                                             <div class="col-md-12">
                                                 <div class="d-flex flex-column align-items-start">
                                                     <div><p class="m-0">Địa chỉ<p></div>
-                                                    <p class="m-0 border border-1 p-2 w-100 text-start"><?php echo $user['dia_chi']; ?></p>
+                                                    <p class="m-0 border border-1 p-2 w-100 text-start"><?php echo $user['dia_chi'] ?? "Chưa cập nhật";?></p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center edit-container">
-                                            <button class="btn btn-primary edit-btn">Cập nhật</button>
+                                        <div class="d-flex justify-content-end buttons">
+                                            <button type="button" class="btn change-pwd-btn">Đổi mật khẩu</button>
+                                            <button type="button" class="btn btn-primary edit-btn">Cập nhật</button>
                                         </div>
                                     </div>
                                 </div>
@@ -234,8 +241,8 @@ $stmt->close();
             </div>
         </main>
         <footer class="row bg-primary text-white p-3 justify-content-center">
-            <div class="row justify-content-evenly">
-                <div class="col-3 pt-4">
+            <div class="row justify-content-evenly infomations">
+                <div class="contact col-sm-3 col-7 pt-sm-4">
                     <h5>Tổng đài hỗ trợ</h5>
                     <div class="phone-wrapper">
                         <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
@@ -254,7 +261,7 @@ $stmt->close();
                     <p>1922-6069 (8:00 - 21:30)</p>
                 </div>
                 <!-- <div class="col-1"></div> -->
-                <div class="category col-4">
+                <div class="category col-sm-4 col-5">
                     <h5>Danh mục sản phẩm</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Điện thoại</a></li>
@@ -266,7 +273,7 @@ $stmt->close();
                         <li><a href="#">Bao da, ốp lưng</a></li>
                     </ul>
                 </div>
-                <div class="other-info col-4">
+                <div class="other-info col-sm-4 col-5">
                     <h5>Các thông tin khác</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Giới thiệu công ty</a></li>
@@ -292,28 +299,55 @@ $stmt->close();
                             <div class="mb-2">
                                 <label for="ho_va_ten" class="form-label">Họ và tên</label>
                                 <?php echo '<input type="text" class="form-control" id="ho_va_ten"
-                                default-value="'.$user['ho_va_ten'].'" value="'.$user['ho_va_ten'].'" name="ho_va_ten">';?>
+                                data-default-value="'.$user['ho_va_ten'].'" value="'.$user['ho_va_ten'].'" name="ho_va_ten">';?>
                             </div>
                             <div class="mb-2">
-                                <label for="phone" class="form-label">Số điện thoại</label>
+                                <label for="sdt" class="form-label">Số điện thoại</label>
                                 <?php echo '<input type="text" class="form-control" id="sdt" 
-                                default-value="'.$user['sdt'].'" value="'.$user['sdt'].'" name="sdt">';?>
+                                data-default-value="'.$user['sdt'].'" value="'.$user['sdt'].'" name="sdt">';?>
                             </div>
                             <div class="mb-2">
                                 <label for="email" class="form-label">Email</label>
                                 <?php echo '<input type="email" class="form-control" id="email" 
-                                default-value="'.$user['email'].'" value="'.$user['email'].'" name="email">';?>
+                                data-default-value="'.$user['email'].'" value="'.$user['email'].'" name="email">';?>
                             </div>
                             <div class="mb-2">
-                                <label for="address" class="form-label">Địa chỉ</label>
+                                <label for="dia_chi" class="form-label">Địa chỉ</label>
                                 <?php echo '<input type="text" class="form-control" id="dia_chi" 
-                                default-value="'.$user['dia_chi'].'" value="'.$user['dia_chi'].'" name="dia_chi">';?>
+                                data-default-value="'.$user['dia_chi'].'" value="'.$user['dia_chi'].'" name="dia_chi">';?>
                             </div>
                             <div class="mb-2">
                                 <label for="avatar" class="form-label">Ảnh đại diện</label>
                                 <input type="file" class="form-control" id="avatar" name="avatar">
                             </div>
-                            <button class="btn btn-primary" id="submit-edit-btn">Submit</button>
+                            <button class="btn btn-primary" id="submit-edit-btn">Xác nhận</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="changePwdModal" tabindex="-1" aria-labelledby="changePwdModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changePwdModalLabel">Đổi mật khẩu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                        <form class="d-flex flex-column justify-content-center align-items-center w-100" id="change_pwd_form">
+                            <div class="mb-2">
+                                <label for="old_pwd" class="form-label">Mật khẩu cũ</label>
+                                <input type="password" class="form-control" id="old_pwd" name="old_pwd">
+                            </div>
+                            <div class="mb-2">
+                                <label for="new_pwd" class="form-label">Mật khẩu mới</label>
+                                <input type="password" class="form-control" id="new_pwd" name="new_pwd">
+                            </div>
+                            <div class="mb-2">
+                                <label for="confirm_pwd" class="form-label">Xác nhận mật khẩu</label>
+                                <input type="password" class="form-control" id="confirm_pwd" name="confirm_pwd">
+                            </div>
+                            <button class="btn btn-primary mt-3" id="submit-change-pwd-btn">Xác nhận</button>
                         </form>
                     </div>
                 </div>
@@ -329,10 +363,10 @@ $stmt->close();
             </div>
         </div>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-<script src="../scripts/search.js"></script>
+<script src="../scripts/public/search.js"></script>
 <script>
     $(".edit-btn").click(function() {
         $("#editModal").modal("show");
@@ -347,19 +381,19 @@ $stmt->close();
         let dia_chi = $("#dia_chi").val();
 
         if (!ho_va_ten) {
-            $("#ho_va_ten").val($("#ho_va_ten").attr("default-value"));
+            $("#ho_va_ten").val($("#ho_va_ten").attr("data-default-value"));
         }
 
         if (!sdt) {
-            $("#sdt").val($("#sdt").attr("default-value"));
+            $("#sdt").val($("#sdt").attr("data-default-value"));
         }
 
         if (!email) {
-            $("#email").val($("#email").attr("default-value"));
+            $("#email").val($("#email").attr("data-default-value"));
         }
 
         if (!dia_chi) {
-            $("#dia_chi").val($("#dia_chi").attr("default-value"));
+            $("#dia_chi").val($("#dia_chi").attr("data-default-value"));
         }
 
         let editForm = $("#edit_form")[0];
@@ -379,9 +413,7 @@ $stmt->close();
                     $("#message-modal .modal-body p").css("color", "green");
                     $("#message-modal").modal("show");
                     $("#editModal").modal("hide");
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
+                    location.reload();
                 } else {
                     $("#message-modal .modal-body p").text(data);
                     $("#message-modal .modal-body p").css("color", "red");
@@ -391,7 +423,58 @@ $stmt->close();
             }
         })
     });
+
+    $(".change-pwd-btn").click(function() {
+        $("#changePwdModal").modal("show");
+    });
+
+    $("#submit-change-pwd-btn").click(function(e) {
+        e.preventDefault();
+
+        let old_pwd = $("#old_pwd").val();
+        let new_pwd = $("#new_pwd").val();
+        let confirm_pwd = $("#confirm_pwd").val();
+
+        if (!old_pwd || !new_pwd || !confirm_pwd) {
+            $("#message-modal .modal-body p").text("Vui lòng điền đầy đủ thông tin");
+            $("#message-modal .modal-body p").css("color", "red");
+            $("#message-modal").modal("show");
+            $("#changePwdModal").modal("hide");
+            return;
+        }
+
+        if (new_pwd !== confirm_pwd) {
+            $("#message-modal .modal-body p").text("Mật khẩu xác nhận không khớp");
+            $("#message-modal .modal-body p").css("color", "red");
+            $("#message-modal").modal("show");
+            $("#changePwdModal").modal("hide");
+            return;
+        }
+
+        $.ajax({
+            url: "../public/change_password.php",
+            type: "POST",
+            data: {
+                old_pwd: old_pwd,
+                new_pwd: new_pwd
+            },
+            success: function(data) {
+                if (data === "Đổi mật khẩu thành công") {
+                    $("#message-modal .modal-body p").text(data);
+                    $("#message-modal .modal-body p").css("color", "green");
+                    $("#message-modal").modal("show");
+                    $("#changePwdModal").modal("hide");
+                } else {
+                    $("#message-modal .modal-body p").text(data);
+                    $("#message-modal .modal-body p").css("color", "red");
+                    $("#message-modal").modal("show");
+                    $("#changePwdModal").modal("hide");
+                }
+            }
+        });
+    });
 </script>
+</body>
 </html>
 <?php
 $conn->close();

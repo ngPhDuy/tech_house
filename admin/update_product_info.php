@@ -2,19 +2,18 @@
 session_start();
 
 if (!isset($_SESSION['ten_dang_nhap'])) {
-    echo json_encode(['error' => 'Chưa đăng nhập']);
+    header('Location: ../public/login.php');
     exit();
 }
 
 if ($_SESSION['phan_loai_tk'] != 'nv') {
-    echo json_encode(['error' => 'Không có quyền truy cập']);
+    header('Location: ../index.php');
     exit();
 }
 
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
 if ($conn->connect_error) {
-    echo json_encode(['error' => 'Kết nối thất bại: ' . $conn->connect_error]);
-    exit();
+    die('Connection failed: '.$conn->connect_error);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -33,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $product_id);
     if (!$stmt->execute()) {
-        echo json_encode(['error' => 'Không tìm thấy sản phẩm']);
+        echo "Không thể lấy thông tin sản phẩm";
         exit();
     }
     $result = $stmt->get_result();
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($product_baseInfo) {
         $product_type = $product_baseInfo['phan_loai'];  // Loại sản phẩm
     } else {
-        echo json_encode(['error' => 'Không tìm thấy sản phẩm']);
+        echo "Không thể lấy thông tin sản phẩm";
         exit();
     }
 
@@ -50,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare("UPDATE San_pham SET ten_sp = ?, mau_sac = ?, thuong_hieu = ?, sl_ton_kho = ?, gia_thanh = ?, sale_off = ?, mo_ta = ?, hinh_anh = ? WHERE ma_sp = ?");
     $stmt->bind_param('sssiidssi', $productName, $color, $brand, $stock, $price, $discount, $description, $productImage, $product_id);
     if (!$stmt->execute()) {
-        echo json_encode(['error' => 'Lỗi cập nhật thông tin cơ bản cho sản phẩm']);
+        echo "Lỗi cập nhật thông tin cơ bản";
         exit();
     }
 
@@ -69,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $conn->prepare("UPDATE Laptop SET he_dieu_hanh = ?, bo_nho = ?, bo_xu_ly = ? , dung_luong_pin = ?, kich_thuoc_man_hinh = ?, cong_nghe_man_hinh = ?, ram = ? WHERE ma_sp = ?");
             $stmt->bind_param('sssssssi', $os, $memory, $processor, $capacity, $screenSize, $screenTech, $ram, $product_id);
             if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Lỗi cập nhật thông tin tech']);
+                echo "Lỗi cập nhật thông tin tech";
                 exit();
             }
             break;
@@ -88,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('ssssssi', $processor, $capacity, $screenSize, $screenTech, $os, $memory, $product_id);
 
             if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Lỗi cập nhật thông tin tech']);
+                echo "Lỗi cập nhật thông tin tech";
                 exit();
             }
             break;
@@ -107,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('ssssssi', $processor, $capacity, $screenSize, $screenTech, $os, $memory, $product_id);
 
             if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Lỗi cập nhật thông tin tech']);
+                echo "Lỗi cập nhật thông tin tech";
                 exit();
             }
             break;
@@ -123,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('ssssi', $connectionRange, $batteryLife, $waterProof, $soundTech, $product_id);
 
             if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Lỗi cập nhật thông tin tech']);
+                echo "Lỗi cập nhật thông tin tech";
                 exit();
             }
             break;
@@ -137,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $conn->prepare("UPDATE Ban_phim SET key_cap = ?, so_phim = ?, cong_ket_noi = ? WHERE ma_sp = ?");
             $stmt->bind_param('sssi', $keyCap, $keyNumber, $connectionType, $product_id);
             if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Lỗi cập nhật thông tin tech']);
+                echo "Lỗi cập nhật thông tin tech";
                 exit();
             }
             break;
@@ -152,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $conn->prepare("UPDATE Sac_du_phong SET dung_luong_pin = ?, cong_suat = ?, cong_ket_noi = ?, chat_lieu = ? WHERE ma_sp = ?");
             $stmt->bind_param('ssssi', $capacity, $battery, $connectionType, $material, $product_id);
             if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Lỗi cập nhật thông tin tech']);
+                echo "Lỗi cập nhật thông tin tech";
                 exit();
             }
             break;
@@ -165,19 +164,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt = $conn->prepare("UPDATE Op_lung SET chat_lieu = ?, do_day = ? WHERE ma_sp = ?");
             $stmt->bind_param('ssi', $material, $thickness, $product_id);
             if (!$stmt->execute()) {
-                echo json_encode(['error' => 'Lỗi cập nhật thông tin tech']);
+                echo "Lỗi cập nhật thông tin tech";
                 exit();
             }
             break;
 
         default:
-            echo json_encode(['error' => 'Loại sản phẩm không hợp lệ']);
+            echo "Loại sản phẩm không hợp lệ";
             exit();
     }
 
-
-
-    echo json_encode(['success' => 'Chỉnh sửa sản phẩm thành công']);
+    echo "Chỉnh sửa sản phẩm thành công";
 }
 
 $stmt->close();

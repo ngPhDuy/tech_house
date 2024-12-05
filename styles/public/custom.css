@@ -90,9 +90,9 @@ w-20 {
     background-color: #F3F9FB;
     color: #222222;
     border-radius: 18px;
-    max-width: 100%;
     padding: .5rem;
-    max-width: 50%;
+    width: 40%;
+    max-width: 150px;
     margin: 0 .5rem;
     transition: all ease-in-out .3s;
 }
@@ -133,12 +133,8 @@ header {
 }
 
 /*---------footer---------*/
-.category {
-    max-width: 18%;
-}
-
-.other-info {
-    max-width: 18%;
+.contact, .category, .other-info {
+    max-width: min(25%, 300px);
 }
 
 .category h5, .other-info h5 {
@@ -236,4 +232,30 @@ header {
 .border-gray {
   border-color: #f0f0f0 !important;
 }
-  
+
+/*-----------resonsive css------------*/
+@media screen and (max-width: 575px) {
+    .login-cart a span {
+        display: none;
+    }
+
+    .contact, .category, .other-info {
+        margin-bottom: 1rem;
+        margin-left: 1.5rem;
+        max-width: none;
+    } 
+
+    .category {
+        max-width: 45%;
+    }
+
+    .other-info {
+        max-width: 43%;
+    }
+
+    .contact h5 {
+        padding-bottom: .5rem;
+        border-bottom: 3px solid white;
+    }
+
+}

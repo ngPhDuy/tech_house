@@ -81,43 +81,43 @@ if ($result->num_rows > 0) {
         <header>
             <div class="row bg-primary align-items-center">
                 <div class="logo col-lg-3 col-3 text-white d-flex justify-content-center align-items-center ps-3">
-                    <a href="../public/product_list.php" class="text-white text-center">
+                    <a href="./product_list.php" class="text-white text-center">
                         <h1 class="fw-bold">Tech House</h1>
                     </a>
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
-                    placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
+                    placeholder="Tìm kiếm sản phẩm..">
                     <button type="button" class="search-btn border border-0 p-0 m-0"
                     id="search-btn">
                         <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
-                    <div class="login w-50">
+                    <div class="login w-50 d-flex justify-content-center">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
                             '<a href="../member/user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                '.$_SESSION['ho_ten'].'</a>';
+                                <span>'.$_SESSION['ho_ten'].'</span></a>';
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="../member/user_info.php">Thông tin cá nhân</a></div>
-                                <div><a href="../member/change_password.html">Đổi mật khẩu</a></div>
                                 <div><a href="../member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="../member/cart.php">Giỏ hàng</a></div>
                                 <div><a href="./logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
                             '<a href="./login.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                Đăng nhập
+                                <span>Đăng nhập</span>
                             </a>';
                         }
                         ?>
                     </div>
-                    <div class="cart w-50">
+                    <div class="cart w-50 d-flex justify-content-center">
                         <a href="../member/love_list.php" class="fw-bold text-white">
                           <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -134,88 +134,39 @@ if ($result->num_rows > 0) {
                           >
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                           </svg>
-                            Yêu thích
+                            <span>Yêu thích</span>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
+            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5 gap-3">
                 <div class="tab col">
                     <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
                         Trang chủ
                     </a>
                 </div>
-                <?php
-                if ($product_type == 1) {
-                    echo '<div class="tab tab-selected col">';
-                } else {
-                    echo '<div class="tab col">';
-                }
-                ?>
+                <div class="tab col">
                     <a href="./product_list.php?product_type=1">
-                        <?php
-                        if ($product_type == 1) {
-                            echo '<img src="../imgs/icons/phone_iphone_white.png" alt="phone" width="24" height="24">';
-                        } else {
-                            echo '<img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">';
-                        }
-                        ?>
+                        <img src="../imgs/icons/phone_iphone.png" alt="phone" width="24" height="24">
                         Điện thoại
                     </a>
                 </div>  
-                <?php
-                if ($product_type == 0) {
-                    echo '<div class="tab tab-selected col">';
-                } else {
-                    echo '<div class="tab col">';
-                }
-                ?>
+                <div class="tab col">
                     <a href="./product_list.php?product_type=0">
-                        <?php
-                        if ($product_type == 0) {
-                            echo '<img src="../imgs/icons/laptop_mac_white.png" alt="laptop" width="24" height="24">';
-                        } else {
-                            echo '<img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">';
-                        }
-                        ?>
+                        <img src="../imgs/icons/laptop_mac.png" alt="laptop" width="24" height="24">
                         Laptop
                     </a>
                 </div>
-                <?php
-                if ($product_type == 2) {
-                    echo '<div class="tab tab-selected col">';
-                } else {
-                    echo '<div class="tab col">';
-                }
-                ?>
+                <div class="tab col">
                     <a href="./product_list.php?product_type=2">
-                        <?php
-                        if ($product_type == 2) {
-                            echo '<img src="../imgs/icons/tablet_android_white.png" alt="tablet" width="24" height="24">';
-                        } else {
-                            echo '<img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">';
-                        }
-                        ?>
+                        <img src="../imgs/icons/tablet_android.png" alt="tablet" width="24" height="24">
                         Tablet
                     </a>
                 </div>
-                <?php
-                if ($product_type > 2) {
-                    echo '<div class="tab tab-selected col">';
-                } else {
-                    echo '<div class="tab col">';
-                }
-                ?>
+                <div class="tab col">
                     <a href="./product_list.php?product_type=3">
-                        <!-- <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24"> -->
-                        <?php
-                        if ($product_type > 2) {
-                            echo '<img src="../imgs/icons/gamepad_white.png" alt="other" width="24" height="24">';
-                        } else {
-                            echo '<img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">';
-                        }
-                        ?>
+                        <img src="../imgs/icons/gamepad.png" alt="other" width="24" height="24">
                         Phụ kiện
                         <img src="../imgs/icons/keyboard_arrow_down.png" alt="arrow-down" width="24" height="24">
                     </a>
@@ -229,7 +180,7 @@ if ($result->num_rows > 0) {
                 <div class="col-4"></div>
             </div>
         </header>
-        <main class="px-3">
+        <main>
             <div class="page-wrapper d-flex flex-column gap-3 px-5 pt-3 pb-5">
                 <div class="header d-flex justify-content-between">
                     <div class="filter-wrapper d-flex gap-1 align-items-center">
@@ -266,11 +217,10 @@ if ($result->num_rows > 0) {
                         echo 
                         '<a class="product bg-white py-2" 
                         href="./product_detail.php?product_id='.$product['ma_sp'].'"
-                        price="'.($product['gia_thanh'] * (1 - $product['sale_off'])).'" 
-                        name="'.$product['ten_sp'].'" brand="'.strtolower($product['thuong_hieu']).'">
+                        data-price="'.($product['gia_thanh'] * (1 - $product['sale_off'])).'" 
+                        data-name="'.$product['ten_sp'].'" data-brand="'.strtolower($product['thuong_hieu']).'">
                             <img class="product-img d-block mx-auto" 
-                            src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'" 
-                            width="80%" height="50%">
+                            src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'">
                             <div class="product-info d-flex flex-column gap-2 ps-2 pe-1 mt-2">
                                 <p class="m-0">'.$product['ten_sp'].'</p>
                                 <p class="m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off']), 0, '.', '.').'đ</p>';
@@ -297,8 +247,8 @@ if ($result->num_rows > 0) {
             </div>
         </main>
         <footer class="row bg-primary text-white p-3 justify-content-center">
-            <div class="row justify-content-evenly">
-                <div class="col-3 pt-4">
+            <div class="row justify-content-evenly infomations">
+                <div class="contact col-sm-3 col-7 pt-sm-4">
                     <h5>Tổng đài hỗ trợ</h5>
                     <div class="phone-wrapper">
                         <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
@@ -317,7 +267,7 @@ if ($result->num_rows > 0) {
                     <p>1922-6069 (8:00 - 21:30)</p>
                 </div>
                 <!-- <div class="col-1"></div> -->
-                <div class="category col-4">
+                <div class="category col-sm-4 col-5">
                     <h5>Danh mục sản phẩm</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Điện thoại</a></li>
@@ -329,7 +279,7 @@ if ($result->num_rows > 0) {
                         <li><a href="#">Bao da, ốp lưng</a></li>
                     </ul>
                 </div>
-                <div class="other-info col-4">
+                <div class="other-info col-sm-4 col-5">
                     <h5>Các thông tin khác</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Giới thiệu công ty</a></li>
@@ -387,8 +337,8 @@ if ($result->num_rows > 0) {
                     <p class="m-0 fw-bold text-uppercase mb-3">Mức giá</p>
                     <div class="prices">
                         <div class="price">
-                            <input type="radio" name="price" id="all price">
-                            <label for="all price">Tất cả</label>
+                            <input type="radio" name="price" id="all-price">
+                            <label for="all-price">Tất cả</label>
                         </div>
                         <div class="price">
                             <input type="radio" name="price" id="0-10">
@@ -422,10 +372,11 @@ if ($result->num_rows > 0) {
             </div>
         </div>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-<script src="../scripts/search.js"></script>
+<script src="../scripts/public/search.js"></script>
+<script src="../scripts/public/pagination.js"></script>
 <script>
     let brandsFilter = [];
     let priceFilter;
@@ -433,9 +384,10 @@ if ($result->num_rows > 0) {
     const productsPerPage = 15;
     let products = Array.from($('.product'));
     let oldProducts = products;
-    const pagination = $('.pagination');
-    const pageNumbers = $('.page-numbers');
     let currentPage = 1;
+    let paginationFunc = pagination(paginationLength, productsPerPage, $(products));
+
+    paginationFunc(1);
 
     $('.filter-wrapper').click((e) => {
         e.preventDefault();
@@ -458,13 +410,13 @@ if ($result->num_rows > 0) {
         products = Array.from(oldProducts);
         if (brandsFilter.length > 0) {
             products = products.filter(product => {
-                return brandsFilter.includes($(product).attr('brand'));
+                return brandsFilter.includes($(product).attr('data-brand'));
             });
         } 
 
         if (priceFilter) {
             products = products.filter(product => {
-                const price = +$(product).attr('price');
+                const price = +$(product).attr('data-price');
                 switch (priceFilter) {
                     case '0-10':
                         return price >= 0 && price <= 10000000;
@@ -492,9 +444,8 @@ if ($result->num_rows > 0) {
 
         $('.result-count span').text(products.length);
 
-        currentPage = 1;
-        displayProducts();
-        updatePagination();
+        let paginationFunc = pagination(paginationLength, productsPerPage, $(products));
+        paginationFunc(1);
     });
 
     $('.filter-modal-wrapper').click((e) => {;
@@ -505,60 +456,60 @@ if ($result->num_rows > 0) {
 
     //Pagination
 
-    function displayProducts() {
-        console.log(products);
-        products.forEach((product, index) => {
-            const start = (currentPage - 1) * productsPerPage;
-            const end = currentPage * productsPerPage;
-            if (index >= start && index < end) {
-                $(product).removeClass('d-none');
-            } else {
-                $(product).addClass('d-none');
-            }
-        });
-    }
+    // function displayProducts() {
+    //     console.log(products);
+    //     products.forEach((product, index) => {
+    //         const start = (currentPage - 1) * productsPerPage;
+    //         const end = currentPage * productsPerPage;
+    //         if (index >= start && index < end) {
+    //             $(product).removeClass('d-none');
+    //         } else {
+    //             $(product).addClass('d-none');
+    //         }
+    //     });
+    // }
 
-    function updatePagination() {
-        const totalPages = Math.ceil(products.length / productsPerPage);
+    // function updatePagination() {
+    //     const totalPages = Math.ceil(products.length / productsPerPage);
 
-        if (totalPages == 1) {
-            pagination.addClass('d-none');
-            return;
-        }
+    //     if (totalPages == 1) {
+    //         pagination.addClass('d-none');
+    //         return;
+    //     }
 
-        pageNumbers.empty();
+    //     pageNumbers.empty();
 
-        const halfWindow = Math.floor(paginationLength / 2);
-        let startPage = Math.max(1, currentPage - halfWindow);
-        let endPage = Math.min(totalPages, currentPage + halfWindow);
+    //     const halfWindow = Math.floor(paginationLength / 2);
+    //     let startPage = Math.max(1, currentPage - halfWindow);
+    //     let endPage = Math.min(totalPages, currentPage + halfWindow);
 
-        if (currentPage - halfWindow < 1) {
-            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
-        }
+    //     if (currentPage - halfWindow < 1) {
+    //         endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
+    //     }
     
-        if (currentPage + halfWindow > totalPages) {
-            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
-        }
+    //     if (currentPage + halfWindow > totalPages) {
+    //         startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
+    //     }
 
-        for (let i = startPage; i <= endPage; i++) {
-            const pageNumber = $('<button type="button"></button>').text(i).addClass('page-number');
+    //     for (let i = startPage; i <= endPage; i++) {
+    //         const pageNumber = $('<button type="button"></button>').text(i).addClass('page-number');
 
-            if (i === currentPage) {
-                pageNumber.addClass('active');
-            }
+    //         if (i === currentPage) {
+    //             pageNumber.addClass('active');
+    //         }
 
-            pageNumber.on('click', (e) => {
-                e.preventDefault();
-                currentPage = i;
-                displayProducts();
-                updatePagination();
-            });
+    //         pageNumber.on('click', (e) => {
+    //             e.preventDefault();
+    //             currentPage = i;
+    //             displayProducts();
+    //             updatePagination();
+    //         });
 
-            pageNumbers.append(pageNumber);
-        }
+    //         pageNumbers.append(pageNumber);
+    //     }
 
-        pagination.removeClass('d-none');
-    }
+    //     pagination.removeClass('d-none');
+    // }
 
     $('#sort').change(() => {
         const sortType = $('#sort').val();
@@ -566,22 +517,22 @@ if ($result->num_rows > 0) {
         switch (sortType) {
             case 'price-asc':
                 products.sort((a, b) => {
-                    return +$(a).attr('price') - +$(b).attr('price');
+                    return +$(a).attr('data-price') - +$(b).attr('data-price');
                 });
                 break;
             case 'price-desc':
                 products.sort((a, b) => {
-                    return +$(b).attr('price') - +$(a).attr('price');
+                    return +$(b).attr('data-price') - +$(a).attr('data-price');
                 });
                 break;
             case 'name-asc':
                 products.sort((a, b) => {
-                    return $(a).attr('name').localeCompare($(b).attr('name'));
+                    return $(a).attr('data-name').localeCompare($(b).attr('data-name'));
                 });
                 break;
             case 'name-desc':
                 products.sort((a, b) => {
-                    return $(b).attr('name').localeCompare($(a).attr('name'));
+                    return $(b).attr('data-name').localeCompare($(a).attr('data-name'));
                 });
                 break;
             default:
@@ -591,14 +542,12 @@ if ($result->num_rows > 0) {
         products.forEach(product => {
             $('.product-list').append(product);
         });
-        currentPage = 1;
-        displayProducts();
-        updatePagination();
+        
+        let paginationFunc = pagination(paginationLength, productsPerPage, $(products));
+        paginationFunc(1);
     });
-
-    displayProducts();
-    updatePagination();
 </script>
+</body>
 </html>
 <?php
 $conn->close();

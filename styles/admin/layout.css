@@ -332,3 +332,33 @@ a, a:hover {
     color: inherit;
     text-decoration: none;
 }
+
+/*----------Responsive-------------*/
+@media screen and (max-width: 768px) {
+    #sidebar {
+        width: 170px;
+        height: 100%;
+        background-color: white;
+        position: fixed;
+        top: 0;
+        left: -200px;
+        z-index: 2;
+    }
+
+    #sidebar.show {
+        left: 0; 
+    }
+
+    #body_section {
+        margin-left: 0;
+    }
+
+    #header {
+        left: 0;
+    }
+
+    #header.left {
+        left: 170px;
+    }
+
+}

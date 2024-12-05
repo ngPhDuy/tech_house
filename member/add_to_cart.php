@@ -18,7 +18,7 @@ $quantity = $_POST['quantity'];
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
 
 if ($conn->connect_error) {
-    echo '../public/404.php';
+    die('Kết nối thất bại: ' . $conn->connect_error);
     exit();
 }
 

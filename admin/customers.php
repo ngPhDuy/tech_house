@@ -16,9 +16,17 @@ if ($conn->connect_error) {
     die('Kết nối thất bại: ' . $conn->connect_error);
 }
 
+
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
 $sql = 'SELECT * FROM tai_khoan join thanh_vien on tai_khoan.ten_dang_nhap = thanh_vien.ten_dang_nhap';
 $result = $conn->query($sql);
 
+$stmt->close();
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -36,7 +44,7 @@ $conn->close();
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
@@ -83,7 +91,13 @@ $conn->close();
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -100,14 +114,24 @@ $conn->close();
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -126,7 +150,7 @@ $conn->close();
 
     <div id="body_section">
 
-        <div id="main_wrapper" class="px-5">
+        <div id="main_wrapper" class="px-3">
             <div class="h3 mb-3">Tất cả thành viên</div>
             <div class="d-flex flex-column gap-3">
                 <div id="utilities" class="d-flex justify-content-center w-100">
@@ -152,11 +176,15 @@ $conn->close();
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo '<tr class="customer" data-id="' . $row['ten_dang_nhap'] . '"
-                                name="' . $row['ho_va_ten'] . '" address="' . $row['dia_chi'] . '"
-                                phone="' . $row['sdt'] . '">';
+                                data-name="' . $row['ho_va_ten'] . '" data-address="' . $row['dia_chi'] . '"
+                                data-phone="' . $row['sdt'] . '">';
                                 echo '<td>' . $row['ten_dang_nhap'] . '</td>';
                                 echo '<td>' . $row['ho_va_ten'] . '</td>';
-                                echo '<td>' . $row['dia_chi'] . '</td>';
+                                if ($row['dia_chi'] == NULL) {
+                                    echo '<td>Chưa cập nhật</td>';
+                                } else {
+                                    echo '<td>' . $row['dia_chi'] . '</td>';
+                                }
                                 echo '<td>' . $row['sdt'] . '</td>';
                                 echo '</tr>';
                             }
@@ -185,80 +213,18 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-</body>
+
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/admin/toggle_sidebar.js"></script>
+<script src="../scripts/public/pagination.js"></script>
 <script>
     const paginationLength = 5;
     const customersPerPage = 10;
     let customers = Array.from($('.customer'));
     let oldCustomers = customers;
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelector('.page-numbers');
-    let currentPage = 1;
+    let paginationFunc = pagination(paginationLength, customersPerPage, $(customers));
 
-    function displayCustomers() {
-        console.log(currentPage);
-        customers.forEach((product, index) => {
-            const start = (currentPage - 1) * customersPerPage;
-            const end = currentPage * customersPerPage;
-            if (index >= start && index < end) {
-                product.classList.remove('d-none');
-            } else {
-                product.classList.add('d-none');
-            }
-        });
-    }
-    function updatePagination() {
-        const totalPages = Math.ceil(customers.length / customersPerPage);
-
-        if (totalPages == 1) {
-            pagination.classList.add('d-none');
-            return;
-        }
-
-        pageNumbers.innerHTML = '';
-
-        const halfWindow = Math.floor(paginationLength / 2);
-        let startPage = Math.max(1, currentPage - halfWindow);
-        let endPage = Math.min(totalPages, currentPage + halfWindow);
-
-        if (currentPage - halfWindow < 1) {
-            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
-        }
-    
-        if (currentPage + halfWindow > totalPages) {
-            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            const pageNumber = document.createElement('div');
-            pageNumber.classList.add('page-number');
-            pageNumber.textContent = i;
-            if (i === currentPage) {
-                pageNumber.classList.add('active');
-            }
-
-            pageNumber.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentPage = i;
-                displayCustomers();
-                updatePagination();
-            });
-
-            pageNumbers.appendChild(pageNumber);
-        }
-
-        pagination.classList.remove('d-none');
-    }
-
-    displayCustomers();
-    updatePagination();
-    
-    // $("tr.customer").each(function () {
-    //     $(this).click(function () {
-    //         window.location.href = 'customer_info.php?username=' + $(this).attr('data-id');
-    //     });
-    // });
+    paginationFunc(1);
 
     $(document).on('click', 'tr.customer', function () {
         window.location.href = 'customer_info.php?username=' + $(this).attr('data-id');
@@ -272,22 +238,22 @@ $conn->close();
 
         customers = Array.from(oldCustomers);
 
+        if (searchValue === '') {
+            paginationFunc = pagination(paginationLength, customersPerPage, $(customers));
+            paginationFunc(1);
+            return;
+        }
+
         customers = customers.filter(customer => {
-            return $(customer).attr('name').toLowerCase().includes(searchValue) ||
-                $(customer).attr('address').toLowerCase().includes(searchValue) ||
+            return $(customer).attr('data-name').toLowerCase().includes(searchValue) ||
+                $(customer).attr('data-address').toLowerCase().includes(searchValue) ||
                 $(customer).attr('data-id').toLowerCase().includes(searchValue) ||
-                $(customer).attr('phone').toLowerCase().includes(searchValue);
+                $(customer).attr('data-phone').toLowerCase().includes(searchValue);
         });
 
-        $('#customers-list').empty();
-
-        customers.forEach(customer => {
-            $('#customers-list').append(customer);
-        });
-
-        currentPage = 1;
-        displayCustomers();
-        updatePagination();
+        paginationFunc = pagination(paginationLength, customersPerPage, $(customers));
+        paginationFunc(1);
     });
 </script>
+</body>
 </html>

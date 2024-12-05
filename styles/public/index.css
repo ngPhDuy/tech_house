@@ -70,12 +70,12 @@
     white-space: nowrap;
 }
 
-.product p:first-child {
+/* .product p:first-child {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     white-space: normal;
-}
+} */
 
 .no-rate {
     color: gray;

@@ -177,3 +177,13 @@ tr p {
   content: url("../../imgs/icons/log-out_white.png");
 }
 
+/*----------Responive-----------*/
+@media screen and (max-width: 992px) {
+  .line {
+    width: 110px;
+  }
+
+  .label {
+    width: 40px;
+  }
+}

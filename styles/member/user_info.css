@@ -27,7 +27,7 @@ body {
   border: 5px solid #ffffff;
 }
 
-.edit-container {
+.buttons {
   display: flex;
   align-items: center;
   margin-top: 10px;
@@ -47,6 +47,15 @@ body {
   font-weight: bold;
 }
 
+.change-pwd-btn {
+  background-color: #f88030;
+  color: #fff;
+}
+
+.change-pwd-btn:hover {
+  background-color: #f8a16b;
+  color: #fff;
+}
 
 .border-bottom {
   border-bottom: 1px solid #dee2e6;

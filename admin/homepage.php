@@ -60,7 +60,7 @@ $conn->close();
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
@@ -106,7 +106,13 @@ $conn->close();
 
     </div>
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -184,7 +190,7 @@ $conn->close();
                         <div class="my-card">
                             <div class="card-body">
                                 <div class="card-content">
-                                    <div class="card-name">Số đơn hàng</div>
+                                    <div class="card-name">Tổng đơn</div>
                                     <div class="card-quantity">
                                         <?php echo $order_count; ?>
                                     </div>
@@ -264,11 +270,12 @@ $conn->close();
         </div>
         <div id="footer"></div>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/admin/toggle_sidebar.js"></script>
 <script>
     $('tr.order').each(function() {
         $(this).click(function() {
@@ -276,5 +283,5 @@ $conn->close();
         });
     })
 </script>
-
+</body>
 </html>

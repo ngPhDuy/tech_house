@@ -12,9 +12,18 @@ if ($_SESSION['phan_loai_tk'] != 'nv') {
 }
 
 $conn = new mysqli('localhost', 'root', '', 'tech_house_db');
+
 if ($conn->connect_error) {
     die('Kết nối thất bại: ' . $conn->connect_error);
 }
+
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+$stmt->close();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -116,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
@@ -164,7 +173,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -181,14 +196,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -205,22 +230,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     </div>
 
-    <!-- body content -->
-    <div id="body_section" class="mb-5">
-        <div id="main_wrapper" class="px-5">
+    <div id="body_section" class="mb-3">
+        <div id="main_wrapper" class="px-3">
             <div class="h2 mb-3">Thêm sản phẩm mới</div>
 
             <form class="info d-flex flex-column gap-3">
-                <!-- Basic Information -->
-                <div class="info-wrapper container">
+                <div class="info-wrapper">
                     <div class="fs-4 mb-2">Thông tin cơ bản</div>
-                    <div class="row">
-                        <div class="col input-box">
+                    <div class="info-grid">
+                        <div class="input-box">
                             <label for="productName" class="form-label">Tên sản phẩm</label>
                             <input type="text" class="form-control" id="productName" name="productName" 
                             placeholder="Mẫu mã - Bộ nhớ - (RAM) - Màu sắc">
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="color" class="form-label">Màu sắc</label>
                             <select class="form-select" id="color" name="color" >
                                 <option value="Black">Đen</option>
@@ -232,14 +255,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <option value="Gray">Xám</option>
                             </select>
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="brand" class="form-label">Hãng</label>
                             <input type="text" class="form-control" id="brand" name="brand" >
                         </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-3 input-box">
+
+                        <div class="input-box">
                             <label for="category" class="form-label">Phân loại</label>
                             <select class="form-select" id="category" name="category" >
                                 <option value="0">Laptop</option>
@@ -251,110 +272,107 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <option value="6">Ốp lưng</option>
                             </select>
                         </div>
-                        <div class="col-3 input-box">
+                        <div class="input-box">
                             <label for="stock" class="form-label">Số lượng tồn kho</label>
                             <input type="number" class="form-control" id="stock" name="stock" >
                         </div>
-                        <div class="col-4 input-box">
+                        <div class="input-box">
                             <label for="price" class="form-label">Giá thành</label>
                             <input type="number" class="form-control" id="price" name="price" >
                         </div>
-                        <div class="col-2 input-box">
+                        <div class="input-box">
                             <label for="discount" class="form-label">Sales off (%)</label>
                             <input type="number" class="form-control" id="discount" name="discount" >
                         </div>
                     </div>
                 </div>
 
-                <!-- Technical Information -->
-                <div class="info-wrapper container">
+                <div class="info-wrapper">
                     <div class="fs-4 mb-2">Thông tin kỹ thuật</div>
-                    <div class="specification">
-                        <div class="col input-box">
+                    <div class="specification info-grid">
+                        <div class="input-box">
                             <label for="os" class="form-label">Hệ điều hành</label>
                             <input type="text" class="form-control" id="os" name="os" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="memory" class="form-label">Bộ nhớ</label>
                             <input type="text" class="form-control" id="memory" name="memory" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="processor" class="form-label">Bộ xử lý</label>
                             <input type="text" class="form-control" id="processor" name="processor" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="battery" class="form-label">Dung lượng pin</label>
                             <input type="text" class="form-control" id="battery" name="battery" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="screenSize" class="form-label">Kích thước màn hình</label>
                             <input type="text" class="form-control" id="screenSize" name="screenSize" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="screenTech" class="form-label">Công nghệ màn hình</label>
                             <input type="text" class="form-control" id="screenTech" name="screenTech" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="ram" class="form-label">Ram</label>
                             <input type="text" class="form-control" id="ram" name="ram" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="radius" class="form-label">Phạm vi kết nối</label>
                             <input type="text" class="form-control" id="radius" name="radius" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="waterProof" class="form-label">Chống nước</label>
                             <input type="text" class="form-control" id="waterProof" name="waterProof" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="technology" class="form-label">Công nghệ âm thanh</label>
                             <input type="text" class="form-control" id="technology" name="technology" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="keycap" class="form-label">Loại phím</label>
                             <input type="text" class="form-control" id="keycap" name="keycap" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="keyNumber" class="form-label">Số phím</label>
                             <input type="text" class="form-control" id="keyNumber" name="keyNumber" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="connection" class="form-label">Cổng kết nối</label>
                             <input type="text" class="form-control" id="connection" name="connection" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="capacity" class="form-label">Công suất</label>
                             <input type="text" class="form-control" id="capacity" name="capacity" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="material" class="form-label">Chất liệu</label>
                             <input type="text" class="form-control" id="material" name="material" >
                         </div>
-                        <div class="col input-box">
+                        <div class="input-box">
                             <label for="width" class="form-label">Độ dày</label>
                             <input type="text" class="form-control" id="width" name="width" >
                         </div>
                     </div>
                 </div>
 
-                <!-- Image and Description -->
-                <div class="info-wrapper container">
+                <div class="info-wrapper">
                     <div class="fs-4 mb-2">Hình ảnh và Mô tả</div>
                     <div class="row">
-                        <div class="col-12 input-box">
+                        <div class="input-box">
                             <label for="productImage" class="form-label">Hình ảnh sản phẩm</label>
                             <input type="text" class="form-control" id="productImage" name="productImage" >
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-12 input-box">
+                        <div class="input-box">
                             <label for="description" class="form-label">Mô tả sản phẩm</label>
                             <textarea class="form-control" id="description" name="description" rows="5" ></textarea>
                         </div>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
                 <div class="text-center mt-4">
                     <button type="button" class="btn btn-lg btn-primary"
                     id="submit-btn">Lưu sản phẩm</button>
@@ -372,11 +390,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/admin/toggle_sidebar.js"></script>
 <script>
     $('document').ready(function() {
         $('#category').change();
@@ -674,4 +693,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     });
 </script>
+</body>
 </html>

@@ -2,7 +2,7 @@
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET" || !isset($_GET['product_id'])) {
-    header("Location: ../index.php");
+    header("Location: ./404.php");
     exit();
 }
 
@@ -52,37 +52,37 @@ if (isset($_SESSION['ten_dang_nhap'])) {
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
-                    placeholder="Tìm kiếm sản phẩm.." link-to="./product_list.php">
+                    placeholder="Tìm kiếm sản phẩm..">
                     <button type="button" class="search-btn border border-0 p-0 m-0"
                     id="search-btn">
                         <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
-                    <div class="login w-50">
+                    <div class="login w-50 d-flex justify-content-center">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
                             '<a href="../member/user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                '.$_SESSION['ho_ten'].'</a>';
+                                <span>'.$_SESSION['ho_ten'].'</span></a>';
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="../member/user_info.php">Thông tin cá nhân</a></div>
-                                <div><a href="../member/change_password.html">Đổi mật khẩu</a></div>
                                 <div><a href="../member/order_history_dashboard.php">Lịch sử mua hàng</a></div>
+                                <div><a href="../member/cart.php">Giỏ hàng</a></div>
                                 <div><a href="./logout.php">Đăng xuất</a></div>
                             </div>';
                         } else {
                             echo 
                             '<a href="./login.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                Đăng nhập
+                                <span>Đăng nhập</span>
                             </a>';
                         }
                         ?>
                     </div>
-                    <div class="cart w-50">
+                    <div class="cart w-50 d-flex justify-content-center">
                         <a href="../member/love_list.php" class="fw-bold text-white">
                           <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -99,12 +99,12 @@ if (isset($_SESSION['ten_dang_nhap'])) {
                           >
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                           </svg>
-                            Yêu thích
+                            <span>Yêu thích</span>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
+            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5 gap-3">
                 <div class="tab col">
                     <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
@@ -145,12 +145,12 @@ if (isset($_SESSION['ten_dang_nhap'])) {
                 <div class="col-4"></div>
             </div>
         </header>
-        <main class="p-3" product-id="<?php echo $product_id?>" product-type="<?php echo $product['phan_loai']?>">
+        <main class="p-3" data-product-id="<?php echo $product_id?>" data-product-type="<?php echo $product['phan_loai']?>">
             <div class="main-wrapper px-5">
                 <div class="product-detail-wrapper row">
                     <div class="product-preview col-6">
                         <?php
-                        echo '<img src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'"width="100%" height="100%">';
+                        echo '<img src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'">';
                         ?>
                         <div class="features-wrapper px-3 mt-3">
                             <p class="feature-title fs-5">Chính sách cho sản phẩm</p>
@@ -521,7 +521,7 @@ if (isset($_SESSION['ten_dang_nhap'])) {
                                 echo 
                                 '<a class="product d-flex justify-content-evenly align-items-center mx-2 py-1 px-2" 
                                 href="./product_detail.php?product_id='.$product['ma_sp'].'">
-                                    <img src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'" width="50%" height="50%">
+                                    <img src="'.$product['hinh_anh'].'" alt="'.$product['ten_sp'].'">
                                     <div class="content d-flex flex-column gap-3 overflow-hidden ms-1">
                                         <p class="m-0">'.$product['ten_sp'].'</p>
                                         <p class="price m-0">'.number_format($product['gia_thanh'] * (1 - $product['sale_off']), 0, '.', '.').'đ</p>
@@ -537,8 +537,8 @@ if (isset($_SESSION['ten_dang_nhap'])) {
             </div>
         </main>
         <footer class="row bg-primary text-white p-3 justify-content-center">
-            <div class="row justify-content-evenly">
-                <div class="col-3 pt-4">
+            <div class="row justify-content-evenly infomations">
+                <div class="contact col-sm-3 col-7 pt-sm-4">
                     <h5>Tổng đài hỗ trợ</h5>
                     <div class="phone-wrapper">
                         <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
@@ -557,7 +557,7 @@ if (isset($_SESSION['ten_dang_nhap'])) {
                     <p>1922-6069 (8:00 - 21:30)</p>
                 </div>
                 <!-- <div class="col-1"></div> -->
-                <div class="category col-4">
+                <div class="category col-sm-4 col-5">
                     <h5>Danh mục sản phẩm</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Điện thoại</a></li>
@@ -569,7 +569,7 @@ if (isset($_SESSION['ten_dang_nhap'])) {
                         <li><a href="#">Bao da, ốp lưng</a></li>
                     </ul>
                 </div>
-                <div class="other-info col-4">
+                <div class="other-info col-sm-4 col-5">
                     <h5>Các thông tin khác</h5>
                     <ul class="d-flex flex-column gap-1">
                         <li><a href="#">Giới thiệu công ty</a></li>
@@ -583,10 +583,10 @@ if (isset($_SESSION['ten_dang_nhap'])) {
             </div>
         </footer>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-<script src="../scripts/search.js"></script>
+<script src="../scripts/public/search.js"></script>
 <script>
     const productInfoTabs = $('.product-info-tab');
     const descriptionContent = $('.description-content');
@@ -632,8 +632,8 @@ if (isset($_SESSION['ten_dang_nhap'])) {
     $("#add-to-cart").click((e) => {
         e.preventDefault();
         const productName = $("#product-name").text().split('-')[0].trim();
-        const productId = $("main").attr('product-id');
-        const productType = $("main").attr('product-type');
+        const productId = $("main").attr('data-product-id');
+        const productType = $("main").attr('data-product-type');
         const color = $(".color-input:checked").val();
         const memory = $("#memory").val();
         const ram = $("#ram").val() ?? 'nan';
@@ -754,6 +754,7 @@ if (isset($_SESSION['ten_dang_nhap'])) {
         });
     })
 </script>
+</body>
 </html>
 <?php
 $conn->close();

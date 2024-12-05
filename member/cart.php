@@ -33,16 +33,16 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
-    />
-    <link href="../styles/public/custom.css" rel="stylesheet" />
-    <link href="../styles/member/cart.css" rel="stylesheet" />
+    >
+    <link href="../styles/public/custom.css" rel="stylesheet" >
+    <link href="../styles/member/cart.css" rel="stylesheet" >
     <title>Giỏ hàng của bạn</title>
   </head>
   <body>
@@ -56,20 +56,20 @@ $conn->close();
                 </div>
                 <div class="search-bar col d-flex align-items-center bg-secondary">
                     <input type="text" id="search-input" class="search-input bg-secondary border-0" 
-                    placeholder="Tìm kiếm sản phẩm.." link-to="../public/product_list.php">
+                    placeholder="Tìm kiếm sản phẩm..">
                     <button type="button" class="search-btn border border-0 p-0 m-0"
                     id="search-btn">
                         <img src="../imgs/icons/search.png" alt="search" width="24" height="24">
                     </button>
                 </div>
                 <div class="login-cart col-lg-3 col-4 d-flex align-items-center justify-content-evenly">
-                    <div class="login w-50">
+                    <div class="login w-50 d-flex justify-content-center">
                         <?php
                         if (isset($_SESSION['ten_dang_nhap'])) {
                             echo 
                             '<a href="./user_info.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                '.$_SESSION['ho_ten'].'</a>';
+                                <span>'.$_SESSION['ho_ten'].'</span></a>';
                             echo '
                             <div class="dropdown-content">
                                 <div><a href="./user_info.php">Thông tin cá nhân</a></div>
@@ -81,12 +81,12 @@ $conn->close();
                             echo 
                             '<a href="../public/login.php" class="fw-bold text-white">
                                 <img src="../imgs/icons/user.png" alt="user" width="32" height="32">
-                                Đăng nhập
+                                <span>Đăng nhập</span>
                             </a>';
                         }
                         ?>
                     </div>
-                    <div class="cart w-50">
+                    <div class="cart w-50 d-flex justify-content-center">
                         <a href="./love_list.php" class="fw-bold text-white">
                           <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -101,14 +101,14 @@ $conn->close();
                           class="heart-icon me-1"
                           style="cursor: pointer;"
                           >
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                           </svg>
-                            Yêu thích
+                          <span>Yêu thích</span>
                         </a>
                     </div>
                 </div>
             </div>
-            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5">
+            <div class="tabs row justify-content-between align-items-center bg-white p-3 ps-5 gap-3">
                 <div class="tab col">
                     <a href="../index.php">
                         <img src="../imgs/icons/house.png" alt="home" width="24" height="24">
@@ -156,18 +156,20 @@ $conn->close();
               <h5 class="fs-3">Giỏ hàng</h5>
               <table class="table table-striped">
                 <thead>
-                  <th class="w-10"></th>
-                    <th clas="w-40">Sản phẩm</th>
-                    <th class="">Đơn giá (VND)</th>
-                    <th class="w-20">Số lượng</th>
-                    <th class="">Tổng cộng (VND)</th>
+                    <tr>
+                      <th class="w-10"></th>
+                      <th class="w-35">Sản phẩm</th>
+                      <th class="">Đơn giá (VND)</th>
+                      <th class="w-20">Số lượng</th>
+                      <th class="">Tổng cộng (VND)</th>
+                    </tr>
                 </thead>
                 <tbody>
                   <?php
                   foreach ($cart_items as $item) {
                     echo '
-                    <tr data-id="'.$item['ma_sp'].'" sale-off= "'.$item['sale_off'].'"
-                    price="'.$item['gia_thanh'].'">
+                    <tr class="product" data-id="'.$item['ma_sp'].'" data-sale-off= "'.$item['sale_off'].'"
+                    data-price="'.$item['gia_thanh'].'">
                         <td>
                             <button type="button" class="p-0 border border-0 delete-btn"
                             data-id="'.$item['ma_sp'].'"><img src="../imgs/icons/XCircle.png" alt="delete" width="24" height="24"></button>
@@ -194,10 +196,19 @@ $conn->close();
                   ?>
                 </tbody>
               </table>
+              <div class="pagination mt-3 d-none">
+                  <div class="page-numbers d-flex justify-content-center gap-2">
+                      <a href="#" class="page-number">01</a>
+                      <a href="#" class="page-number">02</a>
+                      <a href="#" class="page-number">03</a>
+                      <a href="#" class="page-number">04</a>
+                      <a href="#" class="page-number">05</a>
+                  </div>
+              </div>
             </div>
-            <div class="col-12 col-lg-3 d-flex flex-column">
+            <div class="col-12 col-lg-3 d-flex flex-column p-0">
               <div
-                class="row border border-2 border-gray ms-2 mb-3"
+                class="row border border-2 border-gray ms-0 ms-lg-2 mb-3"
               >
                 <div class="mb-2 mt-2">
                   <h1 class="fs-4">Chi tiết</h1>
@@ -291,7 +302,7 @@ $conn->close();
                       type="text"
                       placeholder="Email address"
                       class="w-100 border border-0"
-                    />
+                    >
                   </div>
                   <div>
                     <div class="d-flex align-items-center mb-3 justify-content-center">
@@ -305,65 +316,50 @@ $conn->close();
       </main>
 
       <footer class="row bg-primary text-white p-3 justify-content-center">
-        <div class="row justify-content-evenly">
-          <div class="col-3 pt-4">
-            <h5>Tổng đài hỗ trợ</h5>
-            <div class="phone-wrapper">
-              <img
-                src="../imgs/icons/call_icon.png"
-                alt="phone"
-                width="24"
-                height="24"
-              />
-              <span>Gọi mua:</span>
-            </div>
-            <p>1922-6067 (8:00 - 21:30)</p>
-            <div class="phone-wrapper">
-              <img
-                src="../imgs/icons/call_icon.png"
-                alt="phone"
-                width="24"
-                height="24"
-              />
-              <span>Bảo hành:</span>
-            </div>
-            <p>1922-6068 (8:00 - 21:30)</p>
-            <div class="phone-wrapper">
-              <img
-                src="../imgs/icons/call_icon.png"
-                alt="phone"
-                width="24"
-                height="24"
-              />
-              <span>Khiếu nại:</span>
-            </div>
-            <p>1922-6069 (8:00 - 21:30)</p>
+          <div class="row justify-content-evenly infomations">
+              <div class="contact col-sm-3 col-7 pt-sm-4">
+                  <h5>Tổng đài hỗ trợ</h5>
+                  <div class="phone-wrapper">
+                      <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
+                      <span>Gọi mua:</span>
+                  </div>
+                  <p>1922-6067 (8:00 - 21:30)</p>
+                  <div class="phone-wrapper">
+                      <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
+                      <span>Bảo hành:</span>
+                  </div>
+                  <p>1922-6068 (8:00 - 21:30)</p>
+                  <div class="phone-wrapper">
+                      <img src="../imgs/icons/call_icon.png" alt="phone" width="24" height="24">
+                      <span>Khiếu nại:</span>
+                  </div>
+                  <p>1922-6069 (8:00 - 21:30)</p>
+              </div>
+              <!-- <div class="col-1"></div> -->
+              <div class="category col-sm-4 col-5">
+                  <h5>Danh mục sản phẩm</h5>
+                  <ul class="d-flex flex-column gap-1">
+                      <li><a href="#">Điện thoại</a></li>
+                      <li><a href="#">Laptop</a></li>
+                      <li><a href="#">Tablet</a></li>
+                      <li><a href="#">Tai nghe</a></li>
+                      <li><a href="#">Bàn phím</a></li>
+                      <li><a href="#">Sạc dự phòng</a></li>
+                      <li><a href="#">Bao da, ốp lưng</a></li>
+                  </ul>
+              </div>
+              <div class="other-info col-sm-4 col-5">
+                  <h5>Các thông tin khác</h5>
+                  <ul class="d-flex flex-column gap-1">
+                      <li><a href="#">Giới thiệu công ty</a></li>
+                      <li><a href="#">Chính sách bảo hành</a></li>
+                      <li><a href="#">Góp ý, khiếu nại</a></li>
+                  </ul>
+              </div>
           </div>
-          <!-- <div class="col-1"></div> -->
-          <div class="category col-4">
-            <h5>Danh mục sản phẩm</h5>
-            <ul class="d-flex flex-column gap-1">
-              <li><a href="#">Điện thoại</a></li>
-              <li><a href="#">Laptop</a></li>
-              <li><a href="#">Tablet</a></li>
-              <li><a href="#">Tai nghe</a></li>
-              <li><a href="#">Bàn phím</a></li>
-              <li><a href="#">Sạc dự phòng</a></li>
-              <li><a href="#">Bao da, ốp lưng</a></li>
-            </ul>
+          <div class="row">
+              <p class="text-center m-0">© 2024 Tech House. All rights reserved.</p>
           </div>
-          <div class="other-info col-4">
-            <h5>Các thông tin khác</h5>
-            <ul class="d-flex flex-column gap-1">
-              <li><a href="#">Giới thiệu công ty</a></li>
-              <li><a href="#">Chính sách bảo hành</a></li>
-              <li><a href="#">Góp ý, khiếu nại</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <p class="text-center m-0">© 2024 Tech House. All rights reserved.</p>
-        </div>
       </footer>
       <div class="modal" id="delete-modal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
@@ -383,17 +379,22 @@ $conn->close();
             </div>
         </div>
     </div>
-  </body>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"
   ></script>
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="../scripts/search.js"></script>
+  <script src="../scripts/public/search.js"></script>
+  <script src="../scripts/public/pagination.js"></script>
   <script>
     const decrementBtns = $('.decrement-btn');
     const incrementBtns = $('.increment-btn');
+    let paginationLength = 5;
+    let productsPerPage = 5;
+    let paginationFunc = pagination(paginationLength, productsPerPage, $('.product'));
+
+    paginationFunc(1);
 
     function callToUpdateQuantityApi(productId, newQuantity) {
       console.log("Product ID: " + productId + ", New quantity: " + newQuantity);
@@ -420,8 +421,8 @@ $conn->close();
           $('#order-total-price').text((orderPrice + 0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
           let discount = 0;
           $('tbody tr').each(function() {
-            let saleOff = $(this).attr('sale-off');
-            let price = $(this).attr('price');
+            let saleOff = $(this).attr('data-sale-off');
+            let price = $(this).attr('data-price');
             let quantity = +$('.quantity-value[data-id="' + $(this).attr('data-id') + '"]').text();
             discount += saleOff * price * quantity;
           });
@@ -506,6 +507,9 @@ $conn->close();
             $('#order-total-price').text((orderPrice + 0.01 * orderPrice).toLocaleString('vi-VN') + ' VND');
 
             $('#delete-modal').modal('hide');
+
+            let paginationFunc = pagination(paginationLength, productsPerPage, $('.product'));
+            paginationFunc(1);
           } else {
             alert("Xóa sản phẩm khỏi giỏ hàng thất bại");
           }
@@ -513,4 +517,5 @@ $conn->close();
       });
     });
   </script>
+  </body>
 </html>

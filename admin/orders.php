@@ -26,6 +26,14 @@ if ($result->num_rows > 0) {
     }
 }
 
+$stmt = $conn->prepare('select * from tai_khoan join nhan_vien on tai_khoan.ten_dang_nhap = nhan_vien.ten_dang_nhap where tai_khoan.ten_dang_nhap = ?');
+$stmt->bind_param('s', $_SESSION['ten_dang_nhap']);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+$stmt->close();
+
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -43,7 +51,7 @@ $conn->close();
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
@@ -90,7 +98,13 @@ $conn->close();
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -107,14 +121,24 @@ $conn->close();
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -160,10 +184,10 @@ $conn->close();
                         <tr class="align-middle">
                             <th>Mã ĐH</th>
                             <th>Tên khách hàng</th>
-                            <th class="w-35">Địa chỉ</th>
+                            <th class="w-30">Địa chỉ</th>
                             <th>Tạo lúc</th>
                             <th>Tổng giá</th>
-                            <th>Trạng thái</th>
+                            <th class="w-15">Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody id="orders-list">
@@ -171,9 +195,9 @@ $conn->close();
                         foreach ($orders as $order) {
                         ?>
                         <tr class="order" data-id="<?php echo $order['ma_don_hang']; ?>"
-                        category="<?php echo $order['tinh_trang']; ?>"
-                        address="<?php echo $order['dia_chi']; ?>"
-                        name="<?php echo $order['ho_va_ten']; ?>">
+                        data-category="<?php echo $order['tinh_trang']; ?>"
+                        data-address="<?php echo $order['dia_chi']; ?>"
+                        data-name="<?php echo $order['ho_va_ten']; ?>">
                             <td><?php echo $order['ma_don_hang']; ?></td>
                             <td><?php echo $order['ho_va_ten']; ?></td>
                             <td><?php echo $order['dia_chi']; ?></td>
@@ -259,86 +283,22 @@ $conn->close();
             </div>
         </div>
     </div>
-</body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 crossorigin="anonymous"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../scripts/admin/toggle_sidebar.js"></script>
+<script src="../scripts/public/pagination.js"></script>
 <script>
     const paginationLength = 5;
     const ordersPerPage = 10;
-    const pagination = document.querySelector('.pagination');
-    const pageNumbers = document.querySelector('.page-numbers');
     let orders = Array.from($('.order'));
     let oldOrders = orders;
-    let currentPage = 1;
-    const filterModal = document.querySelector('.filter-modal');
     let categoriesFilter = [];
+    let paginationFunc = pagination(paginationLength, ordersPerPage, $(orders));
 
-    function displayOrders() {
-        console.log(currentPage);
-        orders.forEach((product, index) => {
-            const start = (currentPage - 1) * ordersPerPage;
-            const end = currentPage * ordersPerPage;
-            if (index >= start && index < end) {
-                product.classList.remove('d-none');
-            } else {
-                product.classList.add('d-none');
-            }
-        });
-    }
-
-    function updatePagination() {
-        const totalPages = Math.ceil(orders.length / ordersPerPage);
-
-        if (totalPages == 1) {
-            pagination.classList.add('d-none');
-            return;
-        }
-
-        pageNumbers.innerHTML = '';
-
-        const halfWindow = Math.floor(paginationLength / 2);
-        let startPage = Math.max(1, currentPage - halfWindow);
-        let endPage = Math.min(totalPages, currentPage + halfWindow);
-
-        if (currentPage - halfWindow < 1) {
-            endPage = Math.min(totalPages, endPage + (halfWindow - (currentPage - 1)));
-        }
-    
-        if (currentPage + halfWindow > totalPages) {
-            startPage = Math.max(1, startPage - (currentPage + halfWindow - totalPages));
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
-            const pageNumber = document.createElement('div');
-            pageNumber.classList.add('page-number');
-            pageNumber.textContent = i;
-            if (i === currentPage) {
-                pageNumber.classList.add('active');
-            }
-
-            pageNumber.addEventListener('click', (e) => {
-                e.preventDefault();
-                currentPage = i;
-                displayOrders();
-                updatePagination();
-            });
-
-            pageNumbers.appendChild(pageNumber);
-        }
-
-        pagination.classList.remove('d-none');
-    }
-
-    displayOrders();
-    updatePagination();
-
-    // $("tr").each(function () {
-    //     $(this).click(function () {
-    //         window.location.href = `./order_detail.php?order_id=${$(this).attr('data-id')}`;
-    //     });
-    // });
+    paginationFunc(1);
 
     $(document).on('click', '.order', function () {
         window.location.href = `./order_detail.php?order_id=${$(this).attr('data-id')}`;
@@ -347,8 +307,7 @@ crossorigin="anonymous"></script>
     $('#filter-button').click((e) => {
         console.log('click');
         e.preventDefault();
-        let filterModalWrapper = document.querySelector('.filter-modal-wrapper');
-        filterModalWrapper.classList.remove('d-none');
+        $('.filter-modal-wrapper').removeClass('d-none');
     });
 
     $('.filter-modal-footer button').click((e) => {
@@ -364,7 +323,7 @@ crossorigin="anonymous"></script>
 
         if (categoriesFilter.length > 0) {
             orders = orders.filter(order => {
-                return categoriesFilter.includes($(order).attr('category'));
+                return categoriesFilter.includes($(order).attr('data-category'));
             });
         }
 
@@ -374,9 +333,8 @@ crossorigin="anonymous"></script>
             $('#orders-list').append(order);
         });
 
-        currentPage = 1;
-        displayOrders();
-        updatePagination();
+        let paginationFunc = pagination(paginationLength, ordersPerPage, $(orders));
+        paginationFunc(1);
     });
 
     $('.filter-modal-wrapper').click((e) => {
@@ -394,8 +352,8 @@ crossorigin="anonymous"></script>
 
         orders = Array.from(oldOrders);
         orders = orders.filter(order => {
-            return $(order).attr('address').toLowerCase().includes(searchValue) ||
-                $(order).attr('name').toLowerCase().includes(searchValue);
+            return $(order).attr('data-address').toLowerCase().includes(searchValue) ||
+                $(order).attr('data-name').toLowerCase().includes(searchValue);
         });
 
         $('#orders-list').empty();
@@ -404,9 +362,9 @@ crossorigin="anonymous"></script>
             $('#orders-list').append(order);
         });
 
-        currentPage = 1;
-        displayOrders();
-        updatePagination();
+        let paginationFunc = pagination(paginationLength, ordersPerPage, $(orders));
+        paginationFunc(1);
     });
 </script>
+</body>
 </html>

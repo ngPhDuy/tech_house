@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['ten_dang_nhap'])) {
-    header('Location: login.php');
+    header('Location: ../public/login.php');
     exit();
 }
 
@@ -23,10 +23,6 @@ WHERE Tai_khoan.ten_dang_nhap = '" . $_SESSION['ten_dang_nhap'] . "'";
 
 $result = $conn->query($sql);
 $row = $result->fetch_assoc();
-
-$sql = "select * from don_hang where thanh_vien = '" . $_GET['username'] . "'";
-$result = $conn->query($sql);
-$orders = $result->fetch_all(MYSQLI_ASSOC);
 
 $conn->close();
 
@@ -99,21 +95,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech house</title>
 
-    <link rel="stylesheet" href="../styles/admin/customer_info.css">
+    <link rel="stylesheet" href="../styles/admin/admin_account_edit.css">
     <link rel="stylesheet" href="../styles/admin/layout.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Nunito+Sans' rel='stylesheet'>
 </head>
 
 <body>
-    <!-- @@@@@@@@@@@@@@@@@@@@@@@ -->
-    <!-- dont change code here -->
-
-    <!-- side bar -->
     <div id="sidebar">
         <div id="logo">
             Tech House
@@ -157,7 +149,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <div id="header">
-        <div id="left_section"></div>
+        <div id="left_section">
+            <div id="hamburger-menu" class="d-block d-md-none">
+                <button class="btn" type="button">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
 
         <div id="right_section">
             <div id="notification_utility" class="dropdown">
@@ -174,14 +172,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </ul>
             </div>
 
-             <div id="profile" class="me-2">
+            <div id="profile" class="me-2">
                 <div id="profile_dropdown" class="dropdown">
                     <a class="btn dropdown-bs-toggle" href="#" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <div id="profile_account">
-                            <img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">
-                            <div id="profile_text">
-                                <div id="profile_name">Dung Bui</div>
+                            <?php
+                            if ($row['avatar'] == NULL) {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/default.png" alt="avatar">';
+                            } else {
+                                echo '<img id="profile_avatar" src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar">';
+                            }
+                            ?>
+                            <div id="profile_text" class="ms-3">
+                                <div id="profile_name">
+                                    <?php
+                                    echo $_SESSION['ho_ten'];
+                                    ?>
+                                </div>
                                 <div id="profile_role">Admin</div>
                             </div>
                         </div>
@@ -200,67 +208,69 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <div id="body_section">
 
-        <div id="main_wrapper" class="px-5">
+        <div id="main_wrapper" class="ps-3 pe-3 pe-md-1">
             <div class="d-flex justify-content-start align-items-center gap-3 mb-3">
                 <div class="fs-3">Cập nhật thông tin tài khoản</div>
             </div>
 
-            <form action="./admin_account_edit.php" method="post">
-                <div class="product-info d-flex gap-3 info-wrapper align-items-center gap-3">
-                    <div class="d-flex flex-column justify-content-center align-items-center gap-2 col-3">
-                        <img src="../imgs/avatars/default.png" alt="avatar" class="user-avatar" width="150" height="150">
+            <form action="./admin_account_edit.php" method="post" class="p-2">
+                <div class="product-info d-flex gap-3 info-wrapper align-items-center flex-column flex-md-row px-3">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-2 col-3 mt-2 mt-md-0">
+                        <?php
+                        if ($row['avatar'] == NULL) {
+                            echo '<img src="../imgs/avatars/default.png" alt="avatar" class="user-avatar border rounded-circle" width="150" height="150">';
+                        } else {
+                            echo '<img src="../imgs/avatars/' . $row['avatar'] . '" alt="avatar" class="user-avatar border rounded-circle" width="150" height="150">';
+                        }
+                        ?>
                     </div>
 
-                    <div class="d-flex flex-column col justify-content-evenly">
-                        <div class="row">
-                            <div class="col-4 input-box">
+                    <div class="d-flex flex-column col justify-content-evenly w-100">
+                        <div class="info-grid">
+                            <div class="info-box">
                                 <label for="username" class="form-label">Tên đăng nhập</label>
                                 <input disabled type="text" class="form-control" id="username" name="username"
-                                    value="<?php echo $row['ten_dang_nhap'] ?? '...'; ?>" required />
+                                    value="<?php echo $row['ten_dang_nhap'] ?? '...'; ?>" required>
                             </div>
-                            <div class="col-4 input-box">
+                            <div class="info-box">
                                 <label for="fullname" class="form-label">Họ và tên</label>
                                 <input type="text" class="form-control" id="fullname" name="fullname"
-                                    value="<?php echo $row['ho_va_ten'] ?? '...'; ?>" required />
+                                    value="<?php echo $row['ho_va_ten'] ?? '...'; ?>" required>
                             </div>
-                            <div class="col-4 input-box">
-                                <label for="cccd" class="form-label">Căn cước công dân</label>
+                            <div class="info-box">
+                                <label for="cccd" class="form-label">CCCD</label>
                                 <input type="text" class="form-control" id="cccd" name="cccd"
-                                    value="<?php echo $row['cccd'] ?? '...'; ?>" required />
+                                    value="<?php echo $row['cccd'] ?? '...'; ?>" required>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-4 input-box">
+                            <div class="info-box">
                                 <label for="gender" class="form-label">Giới tính</label>
                                 <input type="text" class="form-control" id="gender" name="gender"
-                                    value="<?php echo $row['gioi_tinh'] ?? '...'; ?>" required />
+                                    value="<?php echo $row['gioi_tinh'] ?? '...'; ?>" required>
                             </div>
 
-                            <div class="col-4 input-box">
+                            <div class="info-box">
                                 <label for="birthdate" class="form-label">Ngày sinh</label>
                                 <input type="date" class="form-control" id="birthdate" name="birthdate"
-                                    value="<?php echo $row['ngay_sinh'] ? date('Y-m-d', strtotime($row['ngay_sinh'])) : ''; ?>" required />
+                                    value="<?php echo $row['ngay_sinh'] ? date('Y-m-d', strtotime($row['ngay_sinh'])) : ''; ?>" required>
                             </div>
 
-                            <div class="col-4 input-box">
+                            <div class="info-box">
                                 <label for="address" class="form-label">Địa chỉ</label>
                                 <input type="text" class="form-control" id="address" name="address"
-                                    value="<?php echo $row['dia_chi'] ?? '...'; ?>" required />
+                                    value="<?php echo $row['dia_chi'] ?? '...'; ?>" required>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-4 input-box">
+                            <div class="info-box">
                                 <label for="phone" class="form-label">Số điện thoại</label>
                                 <input type="text" class="form-control" id="phone" name="phone"
-                                    value="<?php echo $row['sdt'] ?? '...'; ?>" required />
+                                    value="<?php echo $row['sdt'] ?? '...'; ?>" required>
                             </div>
 
-                            <div class="col-4 input-box">
+                            <div class="info-box">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="email"
-                                    value="<?php echo $row['email'] ?? '...'; ?>" required />
+                                    value="<?php echo $row['email'] ?? '...'; ?>" required>
                             </div>
                         </div>
                     </div>
@@ -276,16 +286,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         </div>
 
-
-        <!-- Dont have footer! -->
-        <div id="footer" class="mb-5"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../scripts/admin/toggle_sidebar.js"></script>
 </body>
-<script src="../node_modules/jquery/dist/jquery.min.js"></script>
-
 </html>

@@ -1,7 +1,9 @@
 <?php
+session_start();
+
 $baseUrl = 'http://'.$_SERVER['HTTP_HOST'];
-// $baseUrl = $baseUrl.'/tech_house';
-$baseUrl = $baseUrl;
+$baseUrl = $baseUrl.'/tech_house';
+// $baseUrl = $baseUrl;
 $thisFolder = $baseUrl.'/public';
 
 // echo '<br>baseUrl: '.$baseUrl;
@@ -235,5 +237,5 @@ $thisFolder = $baseUrl.'/public';
     crossorigin="anonymous"
   ></script>
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="<?php echo $baseUrl; ?>/scripts/search.js"></script>
+  <script src="<?php echo $baseUrl; ?>/scripts/public/search.js"></script>
 </html>

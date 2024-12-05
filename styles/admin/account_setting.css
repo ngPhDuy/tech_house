@@ -88,13 +88,14 @@ tbody tr {
 }
 
 /*---------Reponsive-----------*/
-@media screen and (min-width: 576px) {
-    .info-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    }
-}
 @media screen and (min-width: 768px) {
     .product-info > div:first-child {
         width: inherit;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .info-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 }

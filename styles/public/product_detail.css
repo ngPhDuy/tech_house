@@ -195,7 +195,7 @@ select {
 }
 
 a.product {
-    width: 20%;
+    width: auto;
     max-height: 120px;
     border: 2px solid #E4E7E9;
     border-radius: 3px;
@@ -307,5 +307,15 @@ a.product p:first-child {
     .quantity-wrapper {
         width: 100%;
         max-width: none;
+    }
+
+    div.products a.product:last-child {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .feature {
+        width: 100%;
     }
 }

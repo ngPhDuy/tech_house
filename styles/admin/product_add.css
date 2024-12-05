@@ -10,12 +10,19 @@
     border: 1px var(--border-color-gray) solid;
 }
 
-.input-box {
-    margin-bottom: 20px;
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    padding: .5rem;
 }
 
-.specification {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+.input-box {
+    margin-bottom: 1rem;
 }
+
+/* .specification {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+} */
